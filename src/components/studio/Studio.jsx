@@ -14,7 +14,6 @@ import Panel from './Panel.jsx';
 import ImageSection from './ImageSection.jsx';
 import TreatmentSection from './TreatmentSection.jsx';
 import ExportSection from './ExportSection.jsx';
-import './Studio.scss';
 
 // One style's workspace: canvas on the left, controls on the right.
 export default function Studio({ style }) {

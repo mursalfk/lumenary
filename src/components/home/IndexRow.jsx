@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import KindBadge from '../ui/KindBadge.jsx';
 import withThumb from '../../hoc/withThumb.jsx';
 import { pad } from '../../utils/format.js';
-import './IndexRow.scss';
 
 function IndexRow({ style, thumb, onActivate, onDeactivate }) {
   return (

@@ -15,6 +15,10 @@ Nothing is uploaded. All processing happens on the visitor's device with the Can
 - [Git](https://git-scm.com). Check with `git --version`.
 - A free [GitHub](https://github.com) account and a free [Vercel](https://vercel.com) account.
 
+## Preview without installing anything
+
+`npm run build:single` writes one self-contained file, `dist-single/index.html`, with scripts, styles and fonts inlined. Open it by double-clicking. It uses `#/` URLs so it works from disk.
+
 ## Run it on your computer
 
 ```bash
@@ -66,11 +70,12 @@ src/
   hoc/                     withStyleRoute, withThumb, withDocumentTitle
   engine/                  the image processing; no React in here
     styles/                one file per treatment + index.js
-  styles/                  SCSS tokens (abstracts/), base styles (main.scss)
+  styles/main.scss         the one stylesheet for the whole app
+  styles/abstracts/        SCSS variables and mixins
   data/, utils/            static content and tiny helpers
 ```
 
-Every component sits in its own file with its own `.scss` beside it. SCSS is nested under one root class per component, so a style problem is found by opening the component's folder.
+Every component sits in its own file. All styling lives in `src/styles/main.scss`, in one pattern: one nested block per component, named after it, with short child selectors inside. To fix a style, search that file for the component's name.
 
 ## Add a treatment
 

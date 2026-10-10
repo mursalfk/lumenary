@@ -1,4 +1,3 @@
-import './SectionHead.scss';
 
 export default function SectionHead({ title, text }) {
   return (

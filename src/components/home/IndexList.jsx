@@ -1,6 +1,5 @@
 import { STYLES } from '../../engine/styles/index.js';
 import IndexRow from './IndexRow.jsx';
-import './IndexList.scss';
 
 // Two columns of ten. Hovering one row dims the rest.
 export default function IndexList({ onActivate, onDeactivate }) {

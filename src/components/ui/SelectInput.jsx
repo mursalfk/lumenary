@@ -1,4 +1,3 @@
-import './SelectInput.scss';
 
 // options: [[value, label], ...]
 export default function SelectInput({ options, onChange, ...rest }) {

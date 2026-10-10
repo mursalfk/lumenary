@@ -1,5 +1,4 @@
 import { cx } from '../../utils/cx.js';
-import './Hint.scss';
 
 // tone: 'hint' (muted) | 'note' (live status line)
 export default function Hint({ tone = 'hint', children }) {

@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import NavLinks from './NavLinks.jsx';
 import { NAV_ITEMS } from '../../data/nav.js';
-import './TopBar.scss';
 
 export default function TopBar() {
   return (

@@ -1,4 +1,3 @@
-import './StageMeta.scss';
 
 export default function StageMeta({ name, width, height, live }) {
   return (

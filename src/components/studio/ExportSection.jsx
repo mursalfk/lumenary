@@ -3,7 +3,6 @@ import Button from '../ui/Button.jsx';
 import Field from '../ui/Field.jsx';
 import Segmented from '../ui/Segmented.jsx';
 import Hint from '../ui/Hint.jsx';
-import './ExportSection.scss';
 
 const SCALES = [[1, '1×'], [2, '2×'], [3, '3×']];
 

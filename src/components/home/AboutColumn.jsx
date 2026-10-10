@@ -1,4 +1,3 @@
-import './AboutColumn.scss';
 
 export default function AboutColumn({ title, text }) {
   return (

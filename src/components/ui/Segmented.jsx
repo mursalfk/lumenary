@@ -1,5 +1,4 @@
 import { cx } from '../../utils/cx.js';
-import './Segmented.scss';
 
 // Radio-style pill group. options: [[value, label], ...]
 export default function Segmented({ options, value, onChange, labelledBy }) {

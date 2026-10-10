@@ -1,4 +1,3 @@
-import './DisplayTitle.scss';
 
 export default function DisplayTitle({ lead, italic, tail, className }) {
   return (

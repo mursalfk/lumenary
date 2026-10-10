@@ -2,7 +2,6 @@ import Eyebrow from '../ui/Eyebrow.jsx';
 import DisplayTitle from './DisplayTitle.jsx';
 import Cta from './Cta.jsx';
 import HeroCard from './HeroCard.jsx';
-import './Hero.scss';
 
 export default function Hero() {
   return (

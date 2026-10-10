@@ -2,7 +2,6 @@ import { useState } from 'react';
 import SectionHead from './SectionHead.jsx';
 import IndexList from './IndexList.jsx';
 import FloatingPreview from './FloatingPreview.jsx';
-import './IndexSection.scss';
 
 export default function IndexSection() {
   const [active, setActive] = useState(null);

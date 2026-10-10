@@ -1,4 +1,3 @@
-import './Section.scss';
 
 // Titled block with an optional action on the right of the heading.
 export default function Section({ title, action, children }) {

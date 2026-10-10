@@ -1,5 +1,4 @@
 import { cx } from '../../utils/cx.js';
-import './Stage.scss';
 
 // The canvas surface. Accepts drag/drop handlers via `drop` and pointer handlers via `pointer`.
 export default function Stage({ canvasRef, label, dragging, drop, pointer }) {

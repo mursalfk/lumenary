@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import Plate from '../ui/Plate.jsx';
 import withThumb from '../../hoc/withThumb.jsx';
 import { pad } from '../../utils/format.js';
-import './FeaturedLink.scss';
 
 function FeaturedLink({ style, thumb }) {
   return (

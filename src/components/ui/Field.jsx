@@ -1,5 +1,4 @@
 import { cx } from '../../utils/cx.js';
-import './Field.scss';
 
 // Label (+ optional value readout) with its control. `inline` puts the control beside the label.
 export default function Field({ label, htmlFor, labelId, aside, inline = false, children }) {

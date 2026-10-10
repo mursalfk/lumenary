@@ -1,5 +1,4 @@
 import { cx } from '../../utils/cx.js';
-import './Plate.scss';
 
 // Framed 4:5 preview image with a placeholder while it is being made.
 export default function Plate({ src, placeholder = '', className }) {

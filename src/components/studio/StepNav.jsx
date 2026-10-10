@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import './StepNav.scss';
 
 // Round arrow links to the neighbouring styles.
 export default function StepNav({ prev, next }) {

@@ -1,4 +1,3 @@
-import './Panel.scss';
 
 export default function Panel({ blurb, children }) {
   return (

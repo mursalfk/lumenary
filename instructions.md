@@ -1,5 +1,9 @@
 # Instructions
 
+## 0. Just look at it
+
+Open `twenty.html` in any browser. No install needed.
+
 ## 1. Run it
 
 ```bash

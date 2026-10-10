@@ -1,4 +1,3 @@
-import './ColorInput.scss';
 
 export default function ColorInput({ value, onChange, ...rest }) {
   return (

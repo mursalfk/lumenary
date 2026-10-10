@@ -2,7 +2,6 @@ import Section from '../ui/Section.jsx';
 import Button from '../ui/Button.jsx';
 import FilePicker from '../ui/FilePicker.jsx';
 import Hint from '../ui/Hint.jsx';
-import './ImageSection.scss';
 
 export default function ImageSection({ onFile, onReset, isSample, error }) {
   return (
