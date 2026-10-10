@@ -17,7 +17,7 @@ Nothing is uploaded. All processing happens on the visitor's device with the Can
 
 ## Preview without installing anything
 
-`npm run build:single` writes one self-contained file, `dist-single/index.html`, with scripts, styles and fonts inlined. Open it by double-clicking. It uses `#/` URLs so it works from disk.
+`npm run build:single` writes one self-contained file, `dist-single/index.html`, with scripts, styles and fonts inlined. Open it by double-clicking. It keeps its route in memory, so it also works inside preview panes and in-app viewers.
 
 ## Run it on your computer
 

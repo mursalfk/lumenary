@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter, HashRouter } from 'react-router-dom';
+import { BrowserRouter, MemoryRouter } from 'react-router-dom';
 
 import '@fontsource/bodoni-moda/400.css';
 import '@fontsource/bodoni-moda/400-italic.css';
@@ -17,8 +17,9 @@ import './styles/main.scss';
 
 import App from './App.jsx';
 
-// The single-file build (npm run build:single) opens from disk, so it routes with #/ URLs.
-const Router = import.meta.env.VITE_SINGLE ? HashRouter : BrowserRouter;
+// The single-file build (npm run build:single) runs inside viewers with no real URL (file, srcdoc,
+// blob), so it keeps its route in memory instead of the address bar.
+const Router = import.meta.env.VITE_SINGLE ? MemoryRouter : BrowserRouter;
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
