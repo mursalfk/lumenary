@@ -1,0 +1,9 @@
+@use '../../styles/abstracts' as *;
+.about {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(24px, 4vw, 64px);
+  padding: clamp(48px, 8vh, 96px) $gut;
+  border-top: 1px solid $line;
+  @include below($bp-lg) { grid-template-columns: 1fr; }
+}

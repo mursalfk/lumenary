@@ -1,0 +1,10 @@
+@use '../../styles/abstracts' as *;
+.text-input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid $line-2;
+  border-radius: 0;
+  background: $ink-2;
+  font-size: 14px;
+  &:focus { border-color: $paper; outline: 0; }
+}

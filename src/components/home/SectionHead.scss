@@ -1,0 +1,14 @@
+@use '../../styles/abstracts' as *;
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px 48px;
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid $line-2;
+
+  h2 { font-family: $display; font-weight: 400; font-size: clamp(36px, 5vw, 64px); letter-spacing: -0.01em; }
+  p { max-width: 420px; font-size: 15px; color: $mute; }
+}

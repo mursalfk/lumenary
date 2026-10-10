@@ -1,0 +1,16 @@
+@use '../../styles/abstracts' as *;
+.field {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 12px;
+  align-items: center;
+
+  .name { font-size: 14px; color: $paper; }
+  .aside { @include label(12px, 0); text-transform: none; color: $soft; }
+  .control { grid-column: 1 / -1; min-width: 0; }
+
+  &.inline {
+    cursor: pointer;
+    .control { grid-column: 2; grid-row: 1; }
+  }
+}

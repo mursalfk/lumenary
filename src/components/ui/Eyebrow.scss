@@ -1,0 +1,5 @@
+@use '../../styles/abstracts' as *;
+.eyebrow {
+  @include label(12px, 0.16em);
+  color: $mute;
+}

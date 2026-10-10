@@ -1,0 +1,13 @@
+@use '../../styles/abstracts' as *;
+.step-nav {
+  justify-self: end;
+  display: flex;
+  gap: 8px;
+  a {
+    display: grid; place-items: center;
+    width: 40px; height: 40px;
+    border: 1px solid $line-2; border-radius: 50%;
+    transition: background 0.3s, color 0.3s;
+    &:hover { background: $paper; color: $ink; }
+  }
+}

@@ -1,0 +1,11 @@
+@use '../../styles/abstracts' as *;
+.stage-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 12px;
+  color: $mute;
+  @include label(11px, 0.08em);
+  text-transform: none;
+  .name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}

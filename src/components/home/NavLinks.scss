@@ -1,0 +1,9 @@
+@use '../../styles/abstracts' as *;
+.nav-links {
+  display: flex;
+  gap: 32px;
+  color: $soft;
+  @include label(12px, 0.12em);
+  a { transition: color 0.3s; &:hover { color: $white; } }
+  @include below($bp-sm) { gap: 20px; }
+}

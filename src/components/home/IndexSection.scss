@@ -1,0 +1,2 @@
+@use '../../styles/abstracts' as *;
+.index-section { padding: clamp(64px, 10vh, 120px) $gut; }

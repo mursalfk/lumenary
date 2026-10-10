@@ -1,0 +1,21 @@
+@use 'vars' as *;
+
+@mixin label($size: 12px, $track: 0.14em) {
+  font-family: $mono;
+  font-size: $size;
+  letter-spacing: $track;
+  text-transform: uppercase;
+}
+@mixin below($width) {
+  @media (max-width: $width) { @content; }
+}
+@mixin hover-only {
+  @media (hover: hover) { @content; }
+}
+@mixin touch-only {
+  @media (hover: none) { @content; }
+}
+@mixin fill {
+  position: absolute;
+  inset: 0;
+}

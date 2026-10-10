@@ -1,0 +1,9 @@
+@use '../../styles/abstracts' as *;
+.back-link {
+  justify-self: start;
+  color: $soft;
+  @include label(12px, 0.12em);
+  transition: color 0.3s;
+  &:hover { color: $white; }
+  @include below($bp-sm) { font-size: 0; span { font-size: 18px; } }
+}

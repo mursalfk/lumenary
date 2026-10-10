@@ -1,0 +1,12 @@
+@use '../../styles/abstracts' as *;
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 26px;
+  border: 1px solid $paper;
+  border-radius: 999px;
+  @include label();
+  transition: background 0.35s $ease, color 0.35s $ease;
+  &:hover { background: $paper; color: $ink; }
+}

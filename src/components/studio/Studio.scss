@@ -1,0 +1,18 @@
+@use '../../styles/abstracts' as *;
+.studio {
+  min-height: 100vh;
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 380px;
+    gap: clamp(24px, 3vw, 48px);
+    align-items: start;
+    padding: $gut;
+    @include below($bp-lg) { grid-template-columns: 1fr; }
+  }
+  .stage-col {
+    position: sticky;
+    top: 100px;
+    @include below($bp-lg) { position: static; }
+  }
+}

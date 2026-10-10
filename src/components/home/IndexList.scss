@@ -1,0 +1,14 @@
+@use '../../styles/abstracts' as *;
+.index-list {
+  display: grid;
+  grid-template-rows: repeat(10, auto);
+  grid-auto-flow: column;
+  column-gap: clamp(32px, 5vw, 80px);
+
+  @include below($bp-lg) { grid-template-rows: none; grid-auto-flow: row; grid-template-columns: 1fr; }
+
+  @include hover-only {
+    &:hover .index-row { opacity: 0.32; }
+    &:hover .index-row:hover, &:hover .index-row:focus-within { opacity: 1; a { padding-left: 14px; } }
+  }
+}

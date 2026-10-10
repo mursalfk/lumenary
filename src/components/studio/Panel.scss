@@ -1,0 +1,11 @@
+@use '../../styles/abstracts' as *;
+.panel {
+  .blurb {
+    padding-bottom: 28px;
+    border-bottom: 1px solid $line;
+    font-family: $display;
+    font-size: 20px;
+    line-height: 1.4;
+    color: $soft;
+  }
+}

@@ -1,0 +1,7 @@
+@use '../../styles/abstracts' as *;
+.hint {
+  margin-top: 12px;
+  font-size: 13px;
+  color: $mute;
+  &.note { min-height: 1.4em; margin-top: 8px; color: $soft; }
+}
