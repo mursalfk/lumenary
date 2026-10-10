@@ -253,7 +253,7 @@ Each entry: what it does, why it exists, where it is used, how it works.
 #### `usePointerBridge(canvasRef, rtRef)` → handler object
 
 - **What:** converts mouse and touch events on the canvas into 0 to 1 coordinates for the runtime.
-- **Why:** live styles react to the cursor (particles repel, liquid ripples, neon follows). The maths is the same for every style, so it is done once.
+- **Why:** live styles react to the cursor (for example the particles scatter away from it). The maths is the same for every style, so it is done once.
 - **Where:** `Studio` spreads the result onto `Stage`'s canvas as `{...pointer}`.
 - **How:** one inner `send(e, patch)` measures the canvas with `getBoundingClientRect`, normalises `clientX/clientY`, and calls `rt.setPointer`. The five handlers (`move`, `enter`, `leave`, `down`, `up`) differ only in the `patch` (`inside`, `down`). Wrapped in `useMemo` so the object is stable.
 
@@ -376,7 +376,7 @@ File: `src/hoc/withThumb.jsx`
 - **What it does:** looks up the preview image for `props.style.id` and passes it down as a `thumb` prop.
 - **Why:** two unrelated components (`IndexRow` and `FeaturedLink`) both show a style's preview. Each should be a pure function of `{ style, thumb }`. The HOC supplies `thumb` from the preview store so neither component imports the store or calls the hook itself, and both get it identically.
 - **Where:** `IndexRow` (twenty of them on the homepage) and `FeaturedLink` (the hero card).
-- **How:** calls `useThumb(props.style.id)` and renders `<Component {...props} thumb={thumb} />`. Because each wrapped row subscribes separately, a preview arriving re-renders only the components that show that preview's id... in practice the store notifies all subscribers and each re-reads its own id, which React compares and bails out of when unchanged.
+- **How:** calls `useThumb(props.style.id)` and renders `<Component {...props} thumb={thumb} />`. Each wrapped component subscribes to the preview store and re-reads only its own id, so a preview arriving leaves the others visually unchanged.
 
 ### 8.5 `withDocumentTitle(getTitle)(Component)` — a configurable (factory) HOC
 
@@ -490,7 +490,7 @@ The nav links and the "Enter the index" button use `href="#index"`, with an `onC
 
 ## 10. Styling with one SCSS file
 
-All styling for the app is in **`src/styles/main.scss`**. That is deliberate: one file means one pattern. A new component can only be styled the way the other sixty are.
+All styling for the app is in **`src/styles/main.scss`**. That is deliberate: one file means one pattern. A new component can only be styled the way the other fifty are.
 
 ### The pattern
 
