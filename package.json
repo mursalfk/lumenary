@@ -1,9 +1,9 @@
 {
-  "name": "twenty",
+  "name": "lumenary",
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Twenty ways to see an image. A browser-only image studio with twenty visual treatments.",
+  "description": "Lumenary: twenty ways to see an image. A browser-only image studio with twenty visual treatments.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

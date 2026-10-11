@@ -1,4 +1,4 @@
-# Instructions
+# Lumenary: instructions
 
 Follow in order. Each step says what you should see when it worked.
 
@@ -16,15 +16,15 @@ Terminal: Terminal on Mac, PowerShell or Git Bash on Windows.
 
 ## Step 0. Just look at it (optional, no install)
 
-Double-click `twenty.html` (sent separately). It opens in your browser. Use the on-page links to move around; the browser back button will not change pages in this file.
+Double-click `lumenary.html` (sent separately). It opens in your browser. Use the on-page links to move around; the browser back button will not change pages in this file.
 
 ## Step 1. Unzip
 
-1. Unzip `twenty.zip`. You get a folder named `twenty`.
+1. Unzip `lumenary.zip`. You get a folder named `lumenary`.
 2. In the terminal, go into it:
 
 ```bash
-cd path/to/twenty
+cd path/to/lumenary
 ```
 
 Check: `ls` (Mac) or `dir` (Windows) shows `package.json`, `README.md`, `src`.
@@ -36,7 +36,7 @@ npm install
 npm run dev
 ```
 
-Check: the terminal prints a line like `Local: http://localhost:5173/`. Open that address. You should see the black homepage with "Twenty". Click any style, upload a photo, move the sliders. Press `Ctrl+C` in the terminal to stop.
+Check: the terminal prints a line like `Local: http://localhost:5173/`. Open that address. You should see the black homepage with "Lumenary". Click any style, upload a photo, move the sliders. Press `Ctrl+C` in the terminal to stop.
 
 ## Step 3. Test the production build (optional but recommended)
 
@@ -50,17 +50,17 @@ Check: `build` ends with `built in …s`. Open the address `preview` prints and 
 ## Step 4. Create the GitHub repository
 
 1. Go to https://github.com/new.
-2. Repository name: `twenty` (or anything you like).
+2. Repository name: `lumenary` (or anything you like).
 3. Choose Public or Private.
 4. **Do not** tick "Add a README", ".gitignore" or a licence. Leave the repo empty.
-5. Click **Create repository**. Keep the page open; you need its address, which looks like `https://github.com/<your-username>/twenty.git`.
+5. Click **Create repository**. Keep the page open; you need its address, which looks like `https://github.com/<your-username>/lumenary.git`.
 
 ## Step 5. Push the code
 
-The folder is already a git repository with one commit. In the terminal, inside the `twenty` folder:
+The folder is already a git repository with one commit. In the terminal, inside the `lumenary` folder:
 
 ```bash
-git remote add origin https://github.com/<your-username>/twenty.git
+git remote add origin https://github.com/<your-username>/lumenary.git
 git branch -M main
 git push -u origin main
 ```
@@ -69,7 +69,7 @@ Replace `<your-username>` with yours. If asked to sign in, use your GitHub login
 
 Check: refresh the GitHub page. You see the files and the README.
 
-If `git push` says "remote origin already exists", run `git remote set-url origin https://github.com/<your-username>/twenty.git` and push again.
+If `git push` says "remote origin already exists", run `git remote set-url origin https://github.com/<your-username>/lumenary.git` and push again.
 
 If git says it does not know who you are when committing later, run once:
 ```bash
@@ -81,11 +81,11 @@ git config --global user.email "you@example.com"
 
 1. Go to https://vercel.com/new and sign in with GitHub.
 2. If your repo is not listed, click **Adjust GitHub App Permissions** and allow access to it.
-3. Click **Import** next to `twenty`.
+3. Click **Import** next to `lumenary`.
 4. Leave everything as detected. It should show: Framework **Vite**, Build Command `npm run build`, Output Directory `dist`. (These come from `vercel.json`.)
 5. Click **Deploy**. Wait about a minute.
 
-Check: Vercel shows a "Congratulations" page with a preview. Click it. You get a link like `https://twenty-xxxx.vercel.app`.
+Check: Vercel shows a "Congratulations" page with a preview. Click it. You get a link like `https://lumenary.vercel.app`.
 
 ## Step 7. Verify the live site
 

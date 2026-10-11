@@ -1,4 +1,4 @@
-# Twenty
+# Lumenary
 
 Twenty ways to see an image. A browser-only studio: pick one of twenty treatments, drop in a photo, adjust a few controls, save the result.
 
@@ -276,7 +276,7 @@ Each entry: what it does, why it exists, where it is used, how it works.
 - **What:** saving a PNG, and recording a 6 second WebM for live styles, with a busy flag and a status message.
 - **Why:** both actions are asynchronous, can fail, and need the same bookkeeping (set busy, try, report the error, clear busy). A shared internal `run(kind, work)` does that so the two actions only describe what is different.
 - **Where:** `Studio` → `ExportSection` (`busy` disables the buttons and switches the label to "Recording…"; `note` is the status line).
-- **How:** `savePng` asks `rt.exportBlob(animated ? 1 : scale)`; `record` asks `rt.recordWebM(6)`. Both hand the blob to `useDownload` with a filename like `twenty-halftone.png`.
+- **How:** `savePng` asks `rt.exportBlob(animated ? 1 : scale)`; `record` asks `rt.recordWebM(6)`. Both hand the blob to `useDownload` with a filename like `lumenary-halftone.png`.
 
 #### `useDownload()` → `(blob, name) => void`
 
@@ -323,7 +323,7 @@ Each entry: what it does, why it exists, where it is used, how it works.
 #### `useDocumentTitle(title)`
 
 - **What:** sets the browser tab title.
-- **Why:** each page has its own title ("Halftone — Twenty").
+- **Why:** each page has its own title ("Halftone — Lumenary").
 - **Where:** only inside the `withDocumentTitle` HOC; pages never call it directly.
 - **How:** `useEffect(() => { document.title = title; }, [title])`.
 
@@ -384,7 +384,7 @@ File: `src/hoc/withDocumentTitle.jsx`
 
 - **What it does:** sets the tab title from the component's props.
 - **Why a factory:** the title differs per page and sometimes depends on props. So this HOC takes a *function* first (`props => string`) and returns the actual HOC. That is "a function that returns a function that returns a component", and it lets one HOC serve the homepage (a constant) and style pages (from the style's name).
-- **Where:** `HomePage` (`() => 'Twenty — twenty ways to see an image'`) and `StylePage` (`({ style }) => `${style.name} — Twenty``).
+- **Where:** `HomePage` (`() => 'Lumenary — twenty ways to see an image'`) and `StylePage` (`({ style }) => `${style.name} — Lumenary``).
 - **How:** the wrapper calls `useDocumentTitle(getTitle(props))`, then renders the original component untouched.
 
 ### 8.6 Rules all three HOCs follow
@@ -407,7 +407,7 @@ export const compose = (...fns) => (x) => fns.reduceRight((acc, fn) => fn(acc), 
 ```js
 export default compose(
   withStyleRoute,                                   // outermost: resolves the style, or redirects
-  withDocumentTitle(({ style }) => `${style.name} — Twenty`)  // needs the `style` prop
+  withDocumentTitle(({ style }) => `${style.name} — Lumenary`)  // needs the `style` prop
 )(Studio);
 ```
 

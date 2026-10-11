@@ -17,13 +17,13 @@ export default function useExport(rtRef, style, animated, scale) {
     setNote('');
     const blob = await rtRef.current.exportBlob(animated ? 1 : scale);
     if (!blob) throw new Error('Could not save the image. Try a smaller size.');
-    download(blob, `twenty-${style.id}.png`);
+    download(blob, `lumenary-${style.id}.png`);
   }), [run, rtRef, animated, scale, style, download]);
 
   const record = useCallback(() => run('rec', async () => {
     setNote('Recording six seconds…');
     const blob = await rtRef.current.recordWebM(6);
-    download(blob, `twenty-${style.id}.webm`);
+    download(blob, `lumenary-${style.id}.webm`);
     setNote('Clip saved.');
   }), [run, rtRef, style, download]);
 

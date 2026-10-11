@@ -22,4 +22,4 @@ function HomePage() {
   );
 }
 
-export default withDocumentTitle(() => 'Twenty — twenty ways to see an image')(HomePage);
+export default withDocumentTitle(() => 'Lumenary — twenty ways to see an image')(HomePage);

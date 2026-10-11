@@ -7,7 +7,7 @@ export default function Hero() {
   return (
     <section className="hero">
       <Eyebrow className="kicker">An image studio · twenty treatments</Eyebrow>
-      <DisplayTitle className="title" lead="Twenty" italic="ways to see" tail="an image." />
+      <DisplayTitle className="title" lead="Lumenary" italic="twenty ways" tail="to see an image." />
       <div className="foot">
         <p className="lede">
           Choose a treatment, drop in a photograph, adjust a few dials and take the result home.
