@@ -1,12 +1,21 @@
-@use 'abstracts' as *;
+@use "abstracts" as *;
 
 // ═════ base ═════
-*, *::before, *::after { box-sizing: border-box; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 html {
   -webkit-text-size-adjust: 100%;
-  &.lenis, &.lenis body { height: auto; }
-  &.lenis-smooth { scroll-behavior: auto !important; }
+  &.lenis,
+  &.lenis body {
+    height: auto;
+  }
+  &.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
 }
 
 body {
@@ -19,30 +28,70 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 
-  h1, h2, h3, p, ol, ul, figure { margin: 0; padding: 0; }
-  ol, ul { list-style: none; }
-  a { color: inherit; text-decoration: none; }
-  img, canvas { display: block; max-width: 100%; }
-  button, input, select { font: inherit; color: inherit; }
-  button { cursor: pointer; }
-  ::selection { background: $paper; color: $ink; }
-  :focus-visible { outline: 1px solid $paper; outline-offset: 3px; }
+  h1,
+  h2,
+  h3,
+  p,
+  ol,
+  ul,
+  figure {
+    margin: 0;
+    padding: 0;
+  }
+  ol,
+  ul {
+    list-style: none;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  img,
+  canvas {
+    display: block;
+    max-width: 100%;
+  }
+  button,
+  input,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+  button {
+    cursor: pointer;
+  }
+  ::selection {
+    background: $paper;
+    color: $ink;
+  }
+  :focus-visible {
+    outline: 1px solid $paper;
+    outline-offset: 3px;
+  }
 }
 
 .sr-only {
   position: absolute;
-  width: 1px; height: 1px;
-  margin: -1px; padding: 0;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
   border: 0;
 }
-.magnetic { display: inline-block; }
-.perspective { transform-style: preserve-3d; }
+.magnetic {
+  display: inline-block;
+}
+.perspective {
+  transform-style: preserve-3d;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation: none !important;
     transition: none !important;
     scroll-behavior: auto !important;
@@ -57,14 +106,24 @@ body {
   border-radius: 999px;
   background: transparent;
   @include label(14px);
-  transition: background 0.3s, color 0.3s, border-color 0.3s;
-  &:hover:not(:disabled) { border-color: $paper; }
-  &:disabled { opacity: 0.35; cursor: not-allowed; }
+  transition:
+    background 0.3s,
+    color 0.3s,
+    border-color 0.3s;
+  &:hover:not(:disabled) {
+    border-color: $paper;
+  }
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
   &.solid {
     background: $paper;
     color: $ink;
     border-color: $paper;
-    &:hover:not(:disabled) { background: $white; }
+    &:hover:not(:disabled) {
+      background: $white;
+    }
   }
 }
 
@@ -73,9 +132,13 @@ body {
   display: inline-flex;
   align-items: center;
   @include label(15px);
-  transition: background 0.4s $ease, color 0.4s $ease, border-color 0.4s;
+  transition:
+    background 0.4s $ease,
+    color 0.4s $ease,
+    border-color 0.4s;
 
-  &.solid, &.ghost {
+  &.solid,
+  &.ghost {
     padding: 16px 30px;
     border: 1px solid $paper;
     border-radius: 999px;
@@ -83,18 +146,27 @@ body {
   &.solid {
     background: $paper;
     color: $ink;
-    &:hover { background: transparent; color: $paper; }
+    &:hover {
+      background: transparent;
+      color: $paper;
+    }
   }
   &.ghost {
     color: $paper;
-    &:hover { background: $paper; color: $ink; }
+    &:hover {
+      background: $paper;
+      color: $ink;
+    }
   }
   &.text {
     padding: 2px 0;
     color: $soft;
     @include underlined;
     background-size: 100% 1px;
-    &:hover { color: $white; background-size: 100% 1px; }
+    &:hover {
+      color: $white;
+      background-size: 100% 1px;
+    }
   }
 }
 
@@ -107,7 +179,9 @@ body {
   @include label(13px);
   text-decoration: underline;
   text-underline-offset: 4px;
-  &:hover { color: $white; }
+  &:hover {
+    color: $white;
+  }
 }
 
 // Eyebrow
@@ -125,7 +199,10 @@ body {
     align-items: baseline;
     justify-content: space-between;
     margin-bottom: 18px;
-    h2 { @include voice(18px); color: $soft; }
+    h2 {
+      @include voice(18px);
+      color: $soft;
+    }
   }
 }
 
@@ -134,7 +211,11 @@ body {
   margin-top: 12px;
   font-size: 13px;
   color: $mute;
-  &.note { min-height: 1.4em; margin-top: 8px; color: $soft; }
+  &.note {
+    min-height: 1.4em;
+    margin-top: 8px;
+    color: $soft;
+  }
 }
 
 // Field
@@ -143,12 +224,25 @@ body {
   grid-template-columns: 1fr auto;
   gap: 8px 12px;
   align-items: center;
-  .name { font-size: 14px; color: $paper; }
-  .aside { font-size: 13px; color: $soft; font-variant-numeric: tabular-nums; }
-  .control { grid-column: 1 / -1; min-width: 0; }
+  .name {
+    font-size: 14px;
+    color: $paper;
+  }
+  .aside {
+    font-size: 13px;
+    color: $soft;
+    font-variant-numeric: tabular-nums;
+  }
+  .control {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
   &.inline {
     cursor: pointer;
-    .control { grid-column: 2; grid-row: 1; }
+    .control {
+      grid-column: 2;
+      grid-row: 1;
+    }
   }
 }
 
@@ -160,17 +254,34 @@ body {
   height: 20px;
   margin: 0;
   background: transparent;
-  &::-webkit-slider-runnable-track { height: 1px; background: $line-2; }
-  &::-moz-range-track { height: 1px; background: $line-2; }
+  &::-webkit-slider-runnable-track {
+    height: 1px;
+    background: $line-2;
+  }
+  &::-moz-range-track {
+    height: 1px;
+    background: $line-2;
+  }
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 14px; height: 14px; margin-top: -7px;
-    border: 0; border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    margin-top: -7px;
+    border: 0;
+    border-radius: 50%;
     background: $paper;
     transition: transform 0.2s;
   }
-  &::-moz-range-thumb { width: 14px; height: 14px; border: 0; border-radius: 50%; background: $paper; }
-  &:hover::-webkit-slider-thumb { transform: scale(1.25); }
+  &::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border: 0;
+    border-radius: 50%;
+    background: $paper;
+  }
+  &:hover::-webkit-slider-thumb {
+    transform: scale(1.25);
+  }
 }
 
 // Switch
@@ -179,24 +290,35 @@ body {
   appearance: none;
   position: relative;
   flex: none;
-  width: 40px; height: 22px;
+  width: 40px;
+  height: 22px;
   border: 1px solid $line-2;
   border-radius: 999px;
   background: transparent;
   cursor: pointer;
-  transition: background 0.25s, border-color 0.25s;
+  transition:
+    background 0.25s,
+    border-color 0.25s;
   &::after {
-    content: '';
-    position: absolute; top: 3px; left: 3px;
-    width: 14px; height: 14px;
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
     background: $soft;
-    transition: transform 0.25s $ease, background 0.25s;
+    transition:
+      transform 0.25s $ease,
+      background 0.25s;
   }
   &:checked {
     background: $paper;
     border-color: $paper;
-    &::after { transform: translateX(18px); background: $ink; }
+    &::after {
+      transform: translateX(18px);
+      background: $ink;
+    }
   }
 }
 
@@ -208,7 +330,10 @@ body {
   border-radius: 0;
   background: $ink-2;
   font-size: 14px;
-  &:focus { border-color: $paper; outline: 0; }
+  &:focus {
+    border-color: $paper;
+    outline: 0;
+  }
 }
 
 // SelectInput
@@ -220,13 +345,21 @@ body {
   border: 1px solid $line-2;
   border-radius: 0;
   background-color: $ink-2;
-  background-image: linear-gradient(45deg, transparent 50%, $soft 50%), linear-gradient(135deg, $soft 50%, transparent 50%);
-  background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+  background-image:
+    linear-gradient(45deg, transparent 50%, $soft 50%), linear-gradient(135deg, $soft 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 50%,
+    calc(100% - 13px) 50%;
   background-size: 5px 5px;
   background-repeat: no-repeat;
   font-size: 14px;
-  &:focus { border-color: $paper; outline: 0; }
-  option { background: $ink; }
+  &:focus {
+    border-color: $paper;
+    outline: 0;
+  }
+  option {
+    background: $ink;
+  }
 }
 
 // ColorInput
@@ -234,16 +367,34 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  code { font-family: $mono; font-size: 12px; color: $soft; text-transform: uppercase; }
+  code {
+    font-family: $mono;
+    font-size: 12px;
+    color: $soft;
+    text-transform: uppercase;
+  }
   input {
     -webkit-appearance: none;
     appearance: none;
-    width: 30px; height: 30px; padding: 0;
-    border: 1px solid $line-2; border-radius: 50%;
-    background: none; overflow: hidden; cursor: pointer;
-    &::-webkit-color-swatch-wrapper { padding: 0; }
-    &::-webkit-color-swatch { border: 0; border-radius: 50%; }
-    &::-moz-color-swatch { border: 0; border-radius: 50%; }
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 1px solid $line-2;
+    border-radius: 50%;
+    background: none;
+    overflow: hidden;
+    cursor: pointer;
+    &::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+    &::-webkit-color-swatch {
+      border: 0;
+      border-radius: 50%;
+    }
+    &::-moz-color-swatch {
+      border: 0;
+      border-radius: 50%;
+    }
   }
 }
 
@@ -262,9 +413,16 @@ body {
     background: transparent;
     color: $soft;
     @include label(13px);
-    transition: background 0.25s, color 0.25s;
-    &:not(.on):hover { color: $white; }
-    &.on { background: $paper; color: $ink; }
+    transition:
+      background 0.25s,
+      color 0.25s;
+    &:not(.on):hover {
+      color: $white;
+    }
+    &.on {
+      background: $paper;
+      color: $ink;
+    }
   }
 }
 
@@ -275,8 +433,18 @@ body {
   overflow: hidden;
   border: 1px solid $line;
   background: $ink-2;
-  img { width: 100%; height: 100%; object-fit: cover; }
-  .wait { @include fill; display: grid; place-items: center; @include label(13px); color: $mute; }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .wait {
+    @include fill;
+    display: grid;
+    place-items: center;
+    @include label(13px);
+    color: $mute;
+  }
 }
 
 // KindBadge
@@ -286,16 +454,42 @@ body {
   gap: 8px;
   color: $mute;
   @include voice(15px);
-  i { width: 5px; height: 5px; border-radius: 50%; background: $paper; animation: kind-pulse 2.6s ease-in-out infinite; }
+  i {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: $paper;
+    animation: kind-pulse 2.6s ease-in-out infinite;
+  }
 }
-@keyframes kind-pulse { 50% { opacity: 0.2; } }
+@keyframes kind-pulse {
+  50% {
+    opacity: 0.2;
+  }
+}
 
 // Equation (KaTeX output lives inside .math)
 .equation {
-  .math { display: block; overflow-x: auto; overflow-y: hidden; padding: 4px 0; }
-  .katex { color: $white; font-size: 1.12em; }
-  .katex-display { margin: 0; }
-  figcaption { margin-top: 10px; font-size: 14px; line-height: 1.55; color: $mute; max-width: 62ch; }
+  .math {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 4px 0;
+  }
+  .katex {
+    color: $white;
+    font-size: 1.12em;
+  }
+  .katex-display {
+    margin: 0;
+  }
+  figcaption {
+    margin-top: 10px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: $mute;
+    max-width: 62ch;
+  }
 }
 
 // ═════ controls ═════
@@ -325,9 +519,14 @@ body {
   a {
     color: $soft;
     transition: color 0.3s;
-    &:hover, &[aria-current='page'] { color: $white; }
+    &:hover,
+    &[aria-current="page"] {
+      color: $white;
+    }
   }
-  @include below($bp-sm) { gap: 22px; }
+  @include below($bp-sm) {
+    gap: 22px;
+  }
 }
 
 // TopBar
@@ -336,7 +535,11 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 30px $gut;
-  .mark { font-family: $display; font-size: 24px; letter-spacing: -0.01em; }
+  .mark {
+    font-family: $display;
+    font-size: 24px;
+    letter-spacing: -0.01em;
+  }
 }
 
 // Hero
@@ -349,9 +552,18 @@ body {
     align-items: start;
     margin-top: clamp(20px, 4vh, 48px);
     padding-bottom: clamp(64px, 12vh, 120px);
-    @include below($bp-lg) { grid-template-columns: 1fr; }
+    @include below($bp-lg) {
+      grid-template-columns: 1fr;
+    }
   }
-  .card { justify-self: end; width: 100%; max-width: 300px; @include below($bp-lg) { justify-self: start; } }
+  .card {
+    justify-self: end;
+    width: 100%;
+    max-width: 300px;
+    @include below($bp-lg) {
+      justify-self: start;
+    }
+  }
 }
 
 // LitWordmark and Letters
@@ -360,15 +572,26 @@ body {
   font-family: $display;
   font-weight: 400;
   font-size: clamp(60px, 19.5vw, 400px);
-  @include below($bp-sm) { font-size: 17.4vw; }
+  @include below($bp-sm) {
+    font-size: 17.4vw;
+  }
   line-height: 0.9;
   letter-spacing: -0.035em;
   user-select: none;
   touch-action: pan-y;
 
-  .layer { display: flex; white-space: nowrap; }
-  .dim { color: #1c1c1c; }
-  .lit { @include fill; color: $white; pointer-events: none; }
+  .layer {
+    display: flex;
+    white-space: nowrap;
+  }
+  .dim {
+    color: #1c1c1c;
+  }
+  .lit {
+    @include fill;
+    color: $white;
+    pointer-events: none;
+  }
   .letter {
     display: inline-block;
     overflow: hidden;
@@ -387,8 +610,19 @@ body {
     color: $white;
     margin-bottom: 22px;
   }
-  p { max-width: 46ch; margin-bottom: 34px; font-size: 17px; line-height: 1.65; color: $soft; }
-  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 18px 30px; }
+  p {
+    max-width: 46ch;
+    margin-bottom: 34px;
+    font-size: 17px;
+    line-height: 1.65;
+    color: $soft;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 18px 30px;
+  }
 }
 
 // TiltPlate
@@ -397,7 +631,11 @@ body {
   transform-style: preserve-3d;
   will-change: transform;
   box-shadow: 0 40px 80px -30px rgba(255, 255, 255, 0.08);
-  .glare { @include fill; pointer-events: none; mix-blend-mode: soft-light; }
+  .glare {
+    @include fill;
+    pointer-events: none;
+    mix-blend-mode: soft-light;
+  }
 }
 
 // FeaturedLink
@@ -408,13 +646,21 @@ body {
     align-items: baseline;
     gap: 14px;
     padding-top: 12px;
-    .num { @include voice(16px); color: $mute; }
-    .name { font-size: 14px; color: $soft; }
+    .num {
+      @include voice(16px);
+      color: $mute;
+    }
+    .name {
+      font-size: 14px;
+      color: $soft;
+    }
   }
 }
 
 // Manifesto and ScrollWords
-.manifesto { padding: clamp(96px, 22vh, 240px) $gut; }
+.manifesto {
+  padding: clamp(96px, 22vh, 240px) $gut;
+}
 .scroll-words {
   max-width: 21em;
   font-family: $display;
@@ -434,12 +680,24 @@ body {
   margin-bottom: 40px;
   padding-bottom: 28px;
   border-bottom: 1px solid $line-2;
-  h2 { font-family: $display; font-weight: 400; font-size: clamp(40px, 5.6vw, 84px); letter-spacing: -0.02em; line-height: 1; }
-  p { max-width: 38ch; font-size: 16px; color: $mute; }
+  h2 {
+    font-family: $display;
+    font-weight: 400;
+    font-size: clamp(40px, 5.6vw, 84px);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  p {
+    max-width: 38ch;
+    font-size: 16px;
+    color: $mute;
+  }
 }
 
 // IndexSection
-.index-section { padding: 0 $gut clamp(72px, 12vh, 140px); }
+.index-section {
+  padding: 0 $gut clamp(72px, 12vh, 140px);
+}
 
 // IndexList
 .index-list {
@@ -447,10 +705,22 @@ body {
   grid-template-rows: repeat(10, auto);
   grid-auto-flow: column;
   column-gap: clamp(32px, 5vw, 80px);
-  @include below($bp-lg) { grid-template-rows: none; grid-auto-flow: row; grid-template-columns: 1fr; }
+  @include below($bp-lg) {
+    grid-template-rows: none;
+    grid-auto-flow: row;
+    grid-template-columns: 1fr;
+  }
   @include hover-only {
-    &:hover .index-row { opacity: 0.28; }
-    &:hover .index-row:hover, &:hover .index-row:focus-within { opacity: 1; a { padding-left: 16px; } }
+    &:hover .index-row {
+      opacity: 0.28;
+    }
+    &:hover .index-row:hover,
+    &:hover .index-row:focus-within {
+      opacity: 1;
+      a {
+        padding-left: 16px;
+      }
+    }
   }
 }
 
@@ -466,31 +736,61 @@ body {
     border-bottom: 1px solid $line;
     transition: padding 0.5s $ease;
   }
-  .num { @include voice(16px); color: $mute; }
-  .name { font-family: $display; font-size: clamp(26px, 3vw, 44px); line-height: 1.08; letter-spacing: -0.01em; }
-  .thumb { display: none; }
+  .num {
+    @include voice(16px);
+    color: $mute;
+  }
+  .name {
+    font-family: $display;
+    font-size: clamp(26px, 3vw, 44px);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+  }
+  .thumb {
+    display: none;
+  }
   @include touch-only {
-    a { grid-template-columns: 64px 1fr auto; align-items: center; }
-    .num { display: none; }
-    .thumb {
-      display: block; grid-column: 1; grid-row: 1;
-      width: 64px; aspect-ratio: 4 / 5; overflow: hidden; background: $ink-2;
-      img { width: 100%; height: 100%; object-fit: cover; }
+    a {
+      grid-template-columns: 64px 1fr auto;
+      align-items: center;
     }
-    .name { grid-column: 2; grid-row: 1; }
+    .num {
+      display: none;
+    }
+    .thumb {
+      display: block;
+      grid-column: 1;
+      grid-row: 1;
+      width: 64px;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      background: $ink-2;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+    .name {
+      grid-column: 2;
+      grid-row: 1;
+    }
   }
 }
 
 // FloatingPreview
 .floating-preview {
   position: fixed;
-  left: 0; top: 0;
+  left: 0;
+  top: 0;
   z-index: 40;
   width: 240px;
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.3s;
-  &.on { opacity: 1; }
+  &.on {
+    opacity: 1;
+  }
 }
 
 // MethodTeaser
@@ -503,12 +803,31 @@ body {
   padding: clamp(64px, 12vh, 140px) 0;
   border-top: 1px solid $line;
   .text {
-    h2 { font-family: $display; font-weight: 400; font-size: clamp(36px, 4.6vw, 68px); line-height: 1.04; letter-spacing: -0.02em; margin-bottom: 22px; }
-    p { max-width: 44ch; margin-bottom: 32px; font-size: 17px; line-height: 1.65; color: $soft; }
+    h2 {
+      font-family: $display;
+      font-weight: 400;
+      font-size: clamp(36px, 4.6vw, 68px);
+      line-height: 1.04;
+      letter-spacing: -0.02em;
+      margin-bottom: 22px;
+    }
+    p {
+      max-width: 44ch;
+      margin-bottom: 32px;
+      font-size: 17px;
+      line-height: 1.65;
+      color: $soft;
+    }
   }
-  .equation .katex { font-size: clamp(1.1em, 2.2vw, 1.9em); }
-  .equation figcaption { margin-top: 18px; }
-  @include below($bp-lg) { grid-template-columns: 1fr; }
+  .equation .katex {
+    font-size: clamp(1.1em, 2.2vw, 1.9em);
+  }
+  .equation figcaption {
+    margin-top: 18px;
+  }
+  @include below($bp-lg) {
+    grid-template-columns: 1fr;
+  }
 }
 
 // About and AboutColumn
@@ -519,11 +838,20 @@ body {
   margin: 0 $gut;
   padding: clamp(48px, 8vh, 96px) 0;
   border-top: 1px solid $line;
-  @include below($bp-lg) { grid-template-columns: 1fr; }
+  @include below($bp-lg) {
+    grid-template-columns: 1fr;
+  }
 }
 .about-column {
-  h3 { margin-bottom: 12px; @include voice(28px); }
-  p { max-width: 36ch; font-size: 15px; color: $soft; }
+  h3 {
+    margin-bottom: 12px;
+    @include voice(28px);
+  }
+  p {
+    max-width: 36ch;
+    font-size: 15px;
+    color: $soft;
+  }
 }
 
 // Footer and Credit
@@ -537,7 +865,10 @@ body {
     justify-content: space-between;
     gap: 16px 40px;
     margin-top: clamp(56px, 10vh, 110px);
-    small { font-size: 13px; color: $mute; }
+    small {
+      font-size: 13px;
+      color: $mute;
+    }
   }
 }
 .credit {
@@ -545,8 +876,16 @@ body {
   font-size: clamp(32px, 6vw, 96px);
   line-height: 1.1;
   letter-spacing: -0.02em;
-  a { font-style: italic; padding: 0 0.04em; @include underlined; }
-  [role='img'] { font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif; font-size: 0.78em; vertical-align: 0.04em; }
+  a {
+    font-style: italic;
+    padding: 0 0.04em;
+    @include underlined;
+  }
+  [role="img"] {
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+    font-size: 0.78em;
+    vertical-align: 0.04em;
+  }
 }
 
 // ═════ studio ═════
@@ -556,15 +895,30 @@ body {
   color: $soft;
   @include label(14px);
   transition: color 0.3s;
-  &:hover { color: $white; }
-  @include below($bp-sm) { font-size: 0; span { font-size: 18px; } }
+  &:hover {
+    color: $white;
+  }
+  @include below($bp-sm) {
+    font-size: 0;
+    span {
+      font-size: 18px;
+    }
+  }
 }
 
 // TitleBlock
 .title-block {
   text-align: center;
-  .eyebrow { display: block; font-size: 14px; }
-  h1 { font-family: $display; font-weight: 400; font-size: clamp(24px, 3vw, 36px); line-height: 1.1; }
+  .eyebrow {
+    display: block;
+    font-size: 14px;
+  }
+  h1 {
+    font-family: $display;
+    font-weight: 400;
+    font-size: clamp(24px, 3vw, 36px);
+    line-height: 1.1;
+  }
 }
 
 // StepNav
@@ -573,17 +927,27 @@ body {
   display: flex;
   gap: 8px;
   a {
-    display: grid; place-items: center;
-    width: 40px; height: 40px;
-    border: 1px solid $line-2; border-radius: 50%;
-    transition: background 0.3s, color 0.3s;
-    &:hover { background: $paper; color: $ink; }
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid $line-2;
+    border-radius: 50%;
+    transition:
+      background 0.3s,
+      color 0.3s;
+    &:hover {
+      background: $paper;
+      color: $ink;
+    }
   }
 }
 
 // StudioBar
 .studio-bar {
-  position: sticky; top: 0; z-index: 20;
+  position: sticky;
+  top: 0;
+  z-index: 20;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
@@ -592,7 +956,9 @@ body {
   border-bottom: 1px solid $line;
   background: rgba(0, 0, 0, 0.9);
   backdrop-filter: blur(10px);
-  @include below($bp-sm) { grid-template-columns: auto 1fr auto; }
+  @include below($bp-sm) {
+    grid-template-columns: auto 1fr auto;
+  }
 }
 
 // Stage
@@ -610,16 +976,32 @@ $fit: calc(100vh - 220px);
     linear-gradient(45deg, #151515 25%, transparent 25%, transparent 75%, #151515 75%),
     linear-gradient(45deg, #151515 25%, transparent 25%, transparent 75%, #151515 75%);
   background-size: 24px 24px;
-  background-position: 0 0, 12px 12px;
-  &.dragging { border-color: $paper; }
-  canvas { width: auto; height: auto; max-width: 100%; max-height: $fit; touch-action: none; }
+  background-position:
+    0 0,
+    12px 12px;
+  &.dragging {
+    border-color: $paper;
+  }
+  canvas {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: $fit;
+    touch-action: none;
+  }
   .overlay {
     @include fill;
-    display: grid; place-items: center;
+    display: grid;
+    place-items: center;
     background: rgba(0, 0, 0, 0.82);
     @include voice(28px);
   }
-  @include below($bp-lg) { max-height: 70vh; canvas { max-height: 70vh; } }
+  @include below($bp-lg) {
+    max-height: 70vh;
+    canvas {
+      max-height: 70vh;
+    }
+  }
 }
 
 // StageMeta
@@ -630,12 +1012,24 @@ $fit: calc(100vh - 220px);
   margin-top: 12px;
   color: $mute;
   font-size: 13px;
-  .name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
 // ImageSection / ExportSection
-.image-actions, .export-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-.export-actions { margin-top: 18px; }
+.image-actions,
+.export-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.export-actions {
+  margin-top: 18px;
+}
 
 // Panel
 .panel {
@@ -657,12 +1051,16 @@ $fit: calc(100vh - 220px);
     gap: clamp(24px, 3vw, 48px);
     align-items: start;
     padding: $gut;
-    @include below($bp-lg) { grid-template-columns: 1fr; }
+    @include below($bp-lg) {
+      grid-template-columns: 1fr;
+    }
   }
   .stage-col {
     position: sticky;
     top: 100px;
-    @include below($bp-lg) { position: static; }
+    @include below($bp-lg) {
+      position: static;
+    }
   }
 }
 
@@ -670,8 +1068,22 @@ $fit: calc(100vh - 220px);
 // TheoryHero
 .theory-hero {
   padding: clamp(32px, 8vh, 96px) $gut clamp(56px, 10vh, 120px);
-  h1 { font-family: $display; font-weight: 400; font-size: clamp(80px, 17vw, 300px); line-height: 0.9; letter-spacing: -0.035em; color: $white; }
-  p { max-width: 58ch; margin-top: clamp(40px, 7vh, 72px); @include voice(clamp(20px, 2vw, 28px)); line-height: 1.4; color: $soft; font-style: normal; }
+  h1 {
+    font-family: $display;
+    font-weight: 400;
+    font-size: clamp(80px, 17vw, 300px);
+    line-height: 0.9;
+    letter-spacing: -0.035em;
+    color: $white;
+  }
+  p {
+    max-width: 58ch;
+    margin-top: clamp(40px, 7vh, 72px);
+    @include voice(clamp(20px, 2vw, 28px));
+    line-height: 1.4;
+    color: $soft;
+    font-style: normal;
+  }
 }
 
 // Theory layout
@@ -682,13 +1094,20 @@ $fit: calc(100vh - 220px);
     gap: clamp(40px, 7vw, 120px);
     align-items: start;
     padding: 0 $gut;
-    @include below($bp-lg) { grid-template-columns: minmax(0, 1fr); .theory-nav { display: none; } }
+    @include below($bp-lg) {
+      grid-template-columns: minmax(0, 1fr);
+      .theory-nav {
+        display: none;
+      }
+    }
   }
   .group-title {
     margin: clamp(56px, 10vh, 112px) 0 8px;
     @include voice(clamp(40px, 5vw, 72px));
     color: $mute;
-    &:first-child { margin-top: 0; }
+    &:first-child {
+      margin-top: 0;
+    }
   }
 }
 
@@ -700,8 +1119,14 @@ $fit: calc(100vh - 220px);
   overflow-y: auto;
   padding-right: 8px;
   scrollbar-width: thin;
-  .group + .group { margin-top: 28px; }
-  h2 { margin-bottom: 10px; @include voice(16px); color: $mute; }
+  .group + .group {
+    margin-top: 28px;
+  }
+  h2 {
+    margin-bottom: 10px;
+    @include voice(16px);
+    color: $mute;
+  }
   a {
     display: flex;
     gap: 12px;
@@ -709,9 +1134,17 @@ $fit: calc(100vh - 220px);
     font-size: 14px;
     color: $mute;
     transition: color 0.25s;
-    &:hover { color: $soft; }
-    &.on { color: $white; }
-    .num { @include voice(14px); width: 22px; flex: none; }
+    &:hover {
+      color: $soft;
+    }
+    &.on {
+      color: $white;
+    }
+    .num {
+      @include voice(14px);
+      width: 22px;
+      flex: none;
+    }
   }
 }
 
@@ -726,12 +1159,29 @@ $fit: calc(100vh - 220px);
     align-items: baseline;
     gap: 6px 18px;
     margin-bottom: 28px;
-    .num { @include voice(22px); color: $mute; }
-    h3 { font-family: $display; font-weight: 400; font-size: clamp(34px, 4.2vw, 60px); line-height: 1.05; letter-spacing: -0.015em; }
+    .num {
+      @include voice(22px);
+      color: $mute;
+    }
+    h3 {
+      font-family: $display;
+      font-weight: 400;
+      font-size: clamp(34px, 4.2vw, 60px);
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+    }
   }
   .prose {
     max-width: 66ch;
-    p { margin-bottom: 1.15em; font-size: 17px; line-height: 1.75; color: $soft; &:last-child { margin-bottom: 0; } }
+    p {
+      margin-bottom: 1.15em;
+      font-size: 17px;
+      line-height: 1.75;
+      color: $soft;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
   }
   .equations {
     display: grid;
@@ -746,5 +1196,7 @@ $fit: calc(100vh - 220px);
       background: rgba(255, 255, 255, 0.025);
     }
   }
-  .button-link { margin-top: 36px; }
+  .button-link {
+    margin-top: 36px;
+  }
 }

@@ -50,11 +50,11 @@ Open the address it prints (normally http://localhost:5173).
 
 ### Scripts
 
-| Command | What it does |
-| --- | --- |
-| `npm run dev` | Dev server with hot reload. |
-| `npm run build` | Production build into `dist/`. This is what Vercel runs. |
-| `npm run preview` | Serves `dist/` locally so you can test the production build. |
+| Command                | What it does                                                                                      |
+| ---------------------- | ------------------------------------------------------------------------------------------------- |
+| `npm run dev`          | Dev server with hot reload.                                                                       |
+| `npm run build`        | Production build into `dist/`. This is what Vercel runs.                                          |
+| `npm run preview`      | Serves `dist/` locally so you can test the production build.                                      |
 | `npm run build:single` | Writes one self-contained file, `dist-single/index.html`, with scripts, styles and fonts inlined. |
 
 ### Preview without installing anything
@@ -204,15 +204,15 @@ Rules every hook here follows:
 
 ### 7.2 The built-in hooks and where they are used
 
-| Built-in hook | Used for | Where |
-| --- | --- | --- |
-| `useState` | Values the screen depends on | `useStyleParams`, `useDropZone`, `useExport`, `useImageInput`, `useCycle`, `useRuntime` (canvas size), `Studio` (export scale), `IndexSection` (hovered style) |
-| `useEffect` | Talking to things outside React: listeners, timers, the canvas runtime, `document.title` | `useInterval`, `useFollowPointer`, `usePasteImage`, `useRuntime`, `useDocumentTitle`, `ScrollToTop`, `HomePage` |
-| `useRef` | Holding something that must survive renders without causing one | `useRuntime` (`rtRef`), `useInterval` (saved callback), `FilePicker` (hidden input), `Studio` (`canvasRef`), `FloatingPreview` (element) |
-| `useCallback` | Giving a function a stable identity | `useStyleParams`, `useImageInput`, `useExport`, `useDownload` |
-| `useMemo` | Giving an object a stable identity | `useDropZone` (the `bind` handlers), `usePointerBridge` (the pointer handlers) |
-| `useId` | Unique ids that match a label to its input | every control in `controls/` |
-| `useSyncExternalStore` | Reading data that lives outside React | `useMediaQuery`, `useSource` (in `source.js`), `useThumb` / `useThumbCount` (in `thumbs.js`) |
+| Built-in hook          | Used for                                                                                 | Where                                                                                                                                                          |
+| ---------------------- | ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `useState`             | Values the screen depends on                                                             | `useStyleParams`, `useDropZone`, `useExport`, `useImageInput`, `useCycle`, `useRuntime` (canvas size), `Studio` (export scale), `IndexSection` (hovered style) |
+| `useEffect`            | Talking to things outside React: listeners, timers, the canvas runtime, `document.title` | `useInterval`, `useFollowPointer`, `usePasteImage`, `useRuntime`, `useDocumentTitle`, `ScrollToTop`, `HomePage`                                                |
+| `useRef`               | Holding something that must survive renders without causing one                          | `useRuntime` (`rtRef`), `useInterval` (saved callback), `FilePicker` (hidden input), `Studio` (`canvasRef`), `FloatingPreview` (element)                       |
+| `useCallback`          | Giving a function a stable identity                                                      | `useStyleParams`, `useImageInput`, `useExport`, `useDownload`                                                                                                  |
+| `useMemo`              | Giving an object a stable identity                                                       | `useDropZone` (the `bind` handlers), `usePointerBridge` (the pointer handlers)                                                                                 |
+| `useId`                | Unique ids that match a label to its input                                               | every control in `controls/`                                                                                                                                   |
+| `useSyncExternalStore` | Reading data that lives outside React                                                    | `useMediaQuery`, `useSource` (in `source.js`), `useThumb` / `useThumbCount` (in `thumbs.js`)                                                                   |
 
 **Not used, on purpose:**
 
@@ -609,31 +609,31 @@ To add a new **control type**, write `XControl.jsx` in `src/components/controls/
 
 ## 14. Troubleshooting
 
-| Problem | Fix |
-| --- | --- |
-| `npm: command not found` | Install Node.js, then reopen the terminal. |
-| Blank page after deploy | Check that Vercel's output directory is `dist`. |
-| 404 when refreshing `/style/...` | `vercel.json` must be in the repo root and committed. |
-| Fonts look different in a saved PNG | Wait a second after the page loads before saving; fonts load once. |
-| Huge photo is slow | Images are capped at 3200 px on load. Try the 1x export size. |
-| "Record 6 s clip" does nothing | Needs a browser with `MediaRecorder` (current Chrome, Edge, Firefox, Safari 14.1+). |
-| Single-file preview shows a URL error | Rebuild with `npm run build:single`; the router must be `MemoryRouter` (set in `main.jsx` through `VITE_SINGLE`). |
-| A slider does nothing | Check the browser console. A style's `render` throwing stops that style only; the others still work. |
-| A style behaves oddly after editing it | Stills cache work between renders in `cache`; keep the cache key in sync with the parameters it depends on. |
+| Problem                                | Fix                                                                                                               |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `npm: command not found`               | Install Node.js, then reopen the terminal.                                                                        |
+| Blank page after deploy                | Check that Vercel's output directory is `dist`.                                                                   |
+| 404 when refreshing `/style/...`       | `vercel.json` must be in the repo root and committed.                                                             |
+| Fonts look different in a saved PNG    | Wait a second after the page loads before saving; fonts load once.                                                |
+| Huge photo is slow                     | Images are capped at 3200 px on load. Try the 1x export size.                                                     |
+| "Record 6 s clip" does nothing         | Needs a browser with `MediaRecorder` (current Chrome, Edge, Firefox, Safari 14.1+).                               |
+| Single-file preview shows a URL error  | Rebuild with `npm run build:single`; the router must be `MemoryRouter` (set in `main.jsx` through `VITE_SINGLE`). |
+| A slider does nothing                  | Check the browser console. A style's `render` throwing stops that style only; the others still work.              |
+| A style behaves oddly after editing it | Stills cache work between renders in `cache`; keep the cache key in sync with the parameters it depends on.       |
 
 ### Where to look when something is wrong
 
-| Symptom | Start in |
-| --- | --- |
-| Canvas blank or not updating | `hooks/useRuntime.js`, then the style's file in `engine/styles/` |
-| Upload, drop or paste ignored | `hooks/useImageInput.js`, `useDropZone.js`, `usePasteImage.js`, `source.js` |
-| Wrong or missing homepage preview | `thumbs.js`, `hoc/withThumb.jsx` |
-| Page shows wrong style, or redirects home | `hoc/withStyleRoute.jsx`, `engine/styles/index.js` |
-| Save or record fails | `hooks/useExport.js`, `engine/runtime.js` |
-| Cursor has no effect on a live style | `hooks/usePointerBridge.js` |
-| Floating preview missing | `hooks/useFollowPointer.js`, `hooks/useMediaQuery.js` |
-| A control looks or behaves wrong | `components/controls/<Type>Control.jsx`, then `components/ui/` |
-| A visual problem | the component's block in `styles/main.scss` |
+| Symptom                                   | Start in                                                                    |
+| ----------------------------------------- | --------------------------------------------------------------------------- |
+| Canvas blank or not updating              | `hooks/useRuntime.js`, then the style's file in `engine/styles/`            |
+| Upload, drop or paste ignored             | `hooks/useImageInput.js`, `useDropZone.js`, `usePasteImage.js`, `source.js` |
+| Wrong or missing homepage preview         | `thumbs.js`, `hoc/withThumb.jsx`                                            |
+| Page shows wrong style, or redirects home | `hoc/withStyleRoute.jsx`, `engine/styles/index.js`                          |
+| Save or record fails                      | `hooks/useExport.js`, `engine/runtime.js`                                   |
+| Cursor has no effect on a live style      | `hooks/usePointerBridge.js`                                                 |
+| Floating preview missing                  | `hooks/useFollowPointer.js`, `hooks/useMediaQuery.js`                       |
+| A control looks or behaves wrong          | `components/controls/<Type>Control.jsx`, then `components/ui/`              |
+| A visual problem                          | the component's block in `styles/main.scss`                                 |
 
 ---
 
@@ -649,15 +649,15 @@ There is no analytics, no backend and no network request after the page loads. P
 
 **One memorable thing.** Everything is quiet except the hero wordmark: "Lumenary" is set very large in near-black, and a white copy is revealed under a soft spotlight that follows the cursor (and drifts on its own when idle, so touch screens and idle visitors still see it). The letters also rise into place once on load. Every other effect is small and answers the visitor's own action.
 
-| Piece | Library feature | Where |
-|---|---|---|
-| Cursor spotlight | `useMotionValue`, `useSpring`, `useMotionTemplate` | `useSpotlight`, `LitWordmark` |
-| Letter rise on load | `motion.span` with `initial`/`animate` | `Letters` |
-| 3D tilting picture | `useTransform`, `useSpring`, CSS `perspective` | `useTilt`, `TiltPlate` |
-| Crossfading previews | `AnimatePresence` | `HeroCard` |
-| Words brightening as you scroll | `useScroll`, `useTransform` | `ScrollWords`, `ScrollWord` |
-| Magnetic button | `useSpring` | `useMagnetic`, `withMagnetic` |
-| Smooth scrolling | `lenis` | `SmoothScroll`, `utils/scroller.js` |
+| Piece                           | Library feature                                    | Where                               |
+| ------------------------------- | -------------------------------------------------- | ----------------------------------- |
+| Cursor spotlight                | `useMotionValue`, `useSpring`, `useMotionTemplate` | `useSpotlight`, `LitWordmark`       |
+| Letter rise on load             | `motion.span` with `initial`/`animate`             | `Letters`                           |
+| 3D tilting picture              | `useTransform`, `useSpring`, CSS `perspective`     | `useTilt`, `TiltPlate`              |
+| Crossfading previews            | `AnimatePresence`                                  | `HeroCard`                          |
+| Words brightening as you scroll | `useScroll`, `useTransform`                        | `ScrollWords`, `ScrollWord`         |
+| Magnetic button                 | `useSpring`                                        | `useMagnetic`, `withMagnetic`       |
+| Smooth scrolling                | `lenis`                                            | `SmoothScroll`, `utils/scroller.js` |
 
 **Why Motion.** Its motion values change styles without React re-rendering, so pointer-driven effects stay smooth. It is imported from `motion/react`.
 

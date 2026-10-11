@@ -26,4 +26,4 @@ function HomePage() {
   );
 }
 
-export default withDocumentTitle(() => 'Lumenary — twenty ways to see an image')(HomePage);
+export default withDocumentTitle(() => 'Lumenary | How many ways are there to see an image?')(HomePage);
