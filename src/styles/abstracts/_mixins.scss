@@ -1,10 +1,18 @@
 @use 'vars' as *;
 
-@mixin label($size: 12px, $track: 0.14em) {
-  font-family: $mono;
+// Small interface text: sentence case, medium weight. No tracked capitals.
+@mixin label($size: 13px, $track: 0.01em) {
+  font-family: $body;
   font-size: $size;
+  font-weight: 500;
   letter-spacing: $track;
-  text-transform: uppercase;
+}
+// The serif used for numbers and voice.
+@mixin voice($size: 16px) {
+  font-family: $display;
+  font-style: italic;
+  font-size: $size;
+  font-weight: 400;
 }
 @mixin below($width) {
   @media (max-width: $width) { @content; }
@@ -18,4 +26,13 @@
 @mixin fill {
   position: absolute;
   inset: 0;
+}
+// Underline that stays under the text and thickens on hover.
+@mixin underlined {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 100% 1px;
+  transition: background-size 0.4s $ease;
+  &:hover { background-size: 100% 100%; color: $ink; }
 }

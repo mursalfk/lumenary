@@ -4,8 +4,8 @@ Twenty ways to see an image. A browser-only studio: pick one of twenty treatment
 
 Nothing is uploaded. All processing happens on the visitor's device with the Canvas 2D API, so there is no server, no API key and no database.
 
-- **Stack:** Vite, React 18, React Router 6, SCSS. No other runtime dependencies.
-- **Routes:** `/` is the homepage. `/style/<slug>` is one page per treatment (twenty in total).
+- **Stack:** Vite, React 18, React Router 6, SCSS, plus three small libraries for the interface: `motion` (springs and scroll-linked animation), `lenis` (smooth scrolling) and `katex` (typeset equations). The image engine itself has no dependencies.
+- **Routes:** `/` is the homepage. `/theory` explains the maths behind every treatment. `/style/<slug>` is one page per treatment (twenty in total).
 - **Palette:** black is primary, white is secondary, with greys in between.
 - **Treatments:** 9 are live (animated, respond to the cursor, can record a 6 second WebM clip) and 11 are stills (export a PNG at 1x to 3x).
 
@@ -26,6 +26,8 @@ Nothing is uploaded. All processing happens on the visitor's device with the Can
 13. [Change the look](#13-change-the-look)
 14. [Troubleshooting](#14-troubleshooting)
 15. [Privacy](#15-privacy)
+16. [The homepage design and motion](#16-the-homepage-design-and-motion)
+17. [The theory page](#17-the-theory-page)
 
 ---
 
@@ -95,12 +97,13 @@ Read this first; the rest of the document zooms in on each part.
                       main.jsx
           BrowserRouter (or MemoryRouter in the single-file build)
                          │
-                      App.jsx ── ScrollToTop
-              ┌──────────┴───────────┐
-        "/"  HomePage         "/style/:slug"  StylePage
+                      App.jsx ── SmoothScroll, ScrollToTop
+        ┌─────────────┼───────────────┐
+   "/" HomePage   "/theory" TheoryPage   "/style/:slug" StylePage
               │                         │
-   TopBar, Hero, IndexSection,     withStyleRoute → withDocumentTitle → Studio
-   About, Footer, Grain                 │
+   TopBar, Hero, Manifesto,        withStyleRoute → withDocumentTitle → Studio
+   IndexSection, MethodTeaser,          │
+   About, Footer, Grain
                                   useStyleParams  useImageInput  useRuntime
                                   useExport  useDropZone  usePasteImage …
                                         │
@@ -136,26 +139,32 @@ src/
   thumbs.js                homepage previews (external store)
   pages/
     HomePage.jsx           route level only
+    TheoryPage.jsx         route level: groups the theory data, runs the scroll-spy
     StylePage.jsx          route level only (composed from HOCs)
   components/
-    ScrollToTop.jsx
+    ScrollToTop.jsx        resets or hash-scrolls on navigation
+    SmoothScroll.jsx       starts Lenis once for the whole app
     ui/                    generic building blocks, no knowledge of this app
-      Button, LinkButton, Field, Slider, Switch, TextInput, SelectInput,
+      Button, ButtonLink, MagneticButtonLink, LinkButton, Equation, Field, Slider, Switch, TextInput, SelectInput,
       ColorInput, Segmented, FilePicker, Section, Hint, Eyebrow, Plate, KindBadge
     controls/              turn a style's parameter schema into UI
       Control (registry), ControlList, RangeControl, SelectControl,
       ToggleControl, ColorControl, TextControl, ShuffleControl
     home/                  homepage sections
-      TopBar, NavLinks, Hero, DisplayTitle, Cta, HeroCard, FeaturedLink,
+      TopBar, NavLinks, Hero, LitWordmark, Letters, HeroIntro, TiltPlate,
+      HeroCard, FeaturedLink, Manifesto, ScrollWords, ScrollWord,
       IndexSection, SectionHead, IndexList, IndexRow, FloatingPreview,
-      About, AboutColumn, Footer, Grain
+      MethodTeaser, About, AboutColumn, Credit, Footer, Grain
+    theory/                the theory page
+      TheoryHero, TheoryNav, TheoryBlock, StyleTheory
     studio/                the style page
       Studio, StudioBar, BackLink, TitleBlock, StepNav, Stage, StageMeta,
       Panel, ImageSection, TreatmentSection, ExportSection
-  hooks/                   14 custom hooks (section 7)
-  hoc/                     3 higher-order components (section 8)
-  data/                    static copy: nav.js, about.js
-  utils/                   cx, compose, format, jumpTo
+  hooks/                   18 custom hooks (section 7)
+  hoc/                     5 higher-order components (section 8)
+  data/                    static copy: nav.js, about.js, copy.js (author, manifesto),
+                           theory.js (all theory text and LaTeX)
+  utils/                   cx, compose, format, jumpTo, scroller
   styles/
     main.scss              the one stylesheet for the whole app
     abstracts/             _vars.scss, _mixins.scss, _index.scss
@@ -218,7 +227,9 @@ They are not sprinkled everywhere. Each use has a concrete reason: the value end
 - `usePointerBridge` returns five handlers. They are memoised so the canvas element does not receive new props on every render, and so they only change if the canvas ref or runtime ref changes (they never do).
 - `useExport` returns `savePng` and `record`; both are `useCallback`s because they depend on `scale`, `style` and the runtime ref, and callers pass them to buttons.
 
-### 7.4 The fourteen custom hooks
+### 7.4 The eighteen custom hooks
+
+The last four (`useSpotlight`, `useTilt`, `useMagnetic`, `useScrollSpy`) were added with the redesigned homepage and are described after `useDocumentTitle`.
 
 Each entry: what it does, why it exists, where it is used, how it works.
 
@@ -327,6 +338,34 @@ Each entry: what it does, why it exists, where it is used, how it works.
 - **Where:** only inside the `withDocumentTitle` HOC; pages never call it directly.
 - **How:** `useEffect(() => { document.title = title; }, [title])`.
 
+#### `useSpotlight(ref, { radius })` → `{ mask, bind }`
+
+- **What:** a pool of light that follows the pointer and, when nobody is pointing, drifts back and forth across the element on its own.
+- **Why:** it drives the one signature moment on the homepage: the giant wordmark is dark grey, and a white copy of it is revealed only inside this light. Keeping the logic in a hook keeps `LitWordmark` a plain layout component.
+- **Where:** `LitWordmark`.
+- **How:** the pointer position is written to two `useMotionValue`s, smoothed by `useSpring`, and turned into a CSS `radial-gradient` mask string with `useMotionTemplate`. Motion values update the element's style directly, so the cursor does not cause React re-renders. The idle drift is two looping `animate()` calls (different durations, so the path never repeats exactly) that are stopped when the pointer enters and restarted when it leaves. `useReducedMotion` turns the drift off.
+
+#### `useTilt({ max })` → `{ style, glare, bind }`
+
+- **What:** rotates an element in 3D toward the pointer and slides a soft highlight across it.
+- **Why:** a small, physical cue that the hero picture is an object, not a flat image.
+- **Where:** `TiltPlate`.
+- **How:** pointer position is normalised to -0.5…0.5, mapped to `rotateX`/`rotateY` with `useTransform`, and sprung with `useSpring`. The glare is another `useMotionTemplate`. Real depth needs a `perspective` on the parent, which is what the `withPerspective` HOC adds.
+
+#### `useMagnetic(strength)` → `{ style, bind }`
+
+- **What:** pulls an element slightly toward the pointer while it hovers.
+- **Why:** gives the main call to action weight without extra decoration.
+- **Where:** inside the `withMagnetic` HOC, used for `MagneticButtonLink`.
+- **How:** the offset from the element's centre, multiplied by `strength`, is sprung into `x`/`y` motion values and released to zero on leave.
+
+#### `useScrollSpy(ids)` → active id
+
+- **What:** reports which section is currently in the reading zone.
+- **Why:** the sticky table of contents on the theory page highlights where you are.
+- **Where:** `TheoryPage`, passed to `TheoryNav`.
+- **How:** one `IntersectionObserver` watches all section elements with a `rootMargin` that makes the top third of the viewport the "reading zone"; the observer is disconnected in the effect cleanup.
+
 ### 7.5 External stores: `source.js` and `thumbs.js`
 
 These are not hooks, but they feed three of them and the pattern deserves a note.
@@ -357,7 +396,7 @@ Hooks and HOCs overlap, and we use both on purpose.
 - Use a **hook** when the component itself needs the value to do its job (`Studio` needs `params`).
 - Use a **HOC** when the component should not need to know the thing exists, or when the wrapper must *decide whether to render the component at all*. A hook cannot do that: it cannot return a redirect instead of the component.
 
-All three HOCs here are applied once at the file that exports the component, so the component's own body stays free of that concern and can be tested by simply passing props.
+All five HOCs here are applied once at the file that exports the component, so the component's own body stays free of that concern and can be tested by simply passing props.
 
 ### 8.3 `withStyleRoute(Component)` — a route-guard / prop-injector HOC
 
@@ -387,14 +426,21 @@ File: `src/hoc/withDocumentTitle.jsx`
 - **Where:** `HomePage` (`() => 'Lumenary — twenty ways to see an image'`) and `StylePage` (`({ style }) => `${style.name} — Lumenary``).
 - **How:** the wrapper calls `useDocumentTitle(getTitle(props))`, then renders the original component untouched.
 
-### 8.6 Rules all three HOCs follow
+### 8.6 `withMagnetic(Component, strength)` and `withPerspective(Component, perspective)`
+
+Two more factory HOCs came with the new homepage.
+
+- **`withMagnetic`** wraps a component in a `motion.span` driven by `useMagnetic`, so *any* component can lean toward the pointer without knowing about springs. `MagneticButtonLink = withMagnetic(ButtonLink, 0.28)`. A hook could not do this without editing `ButtonLink` itself, and a magnetic button should still be an ordinary button elsewhere.
+- **`withPerspective`** wraps a component in a `div` with a CSS `perspective`, which 3D transforms inside need to look deep rather than flat. `TiltPlate = withPerspective(TiltPlate, 1100)`. The plate stays unaware of the frame it sits in.
+
+### 8.7 Rules all five HOCs follow
 
 1. **Pass props through** (`{...props}`) so wrapping never hides anything.
 2. **Set `displayName`** (`withThumb(IndexRow)`), so React DevTools and error messages show a readable name instead of `Anonymous`.
 3. **Never create a HOC inside a render.** They are applied at module level. Creating one during render would make a new component type each time and remount the whole subtree.
 4. **No behaviour inside the wrapped component changes**; the HOC only adds props or decides whether to render.
 
-### 8.7 `compose` — stacking HOCs
+### 8.8 `compose` — stacking HOCs
 
 File: `src/utils/compose.js`
 
@@ -594,3 +640,43 @@ To add a new **control type**, write `XControl.jsx` in `src/components/controls/
 ## 15. Privacy
 
 There is no analytics, no backend and no network request after the page loads. Photos are read with the browser's file APIs and stay in memory.
+
+---
+
+## 16. The homepage design and motion
+
+**Direction.** Pure black ground, neutral greys, one serif display face (Bodoni Moda) with one grotesque for text (Hanken Grotesk). Labels are sentence case, there are no all-caps eyebrows, no gradients and no cards, because the content (twenty pictures) is the decoration.
+
+**One memorable thing.** Everything is quiet except the hero wordmark: "Lumenary" is set very large in near-black, and a white copy is revealed under a soft spotlight that follows the cursor (and drifts on its own when idle, so touch screens and idle visitors still see it). The letters also rise into place once on load. Every other effect is small and answers the visitor's own action.
+
+| Piece | Library feature | Where |
+|---|---|---|
+| Cursor spotlight | `useMotionValue`, `useSpring`, `useMotionTemplate` | `useSpotlight`, `LitWordmark` |
+| Letter rise on load | `motion.span` with `initial`/`animate` | `Letters` |
+| 3D tilting picture | `useTransform`, `useSpring`, CSS `perspective` | `useTilt`, `TiltPlate` |
+| Crossfading previews | `AnimatePresence` | `HeroCard` |
+| Words brightening as you scroll | `useScroll`, `useTransform` | `ScrollWords`, `ScrollWord` |
+| Magnetic button | `useSpring` | `useMagnetic`, `withMagnetic` |
+| Smooth scrolling | `lenis` | `SmoothScroll`, `utils/scroller.js` |
+
+**Why Motion.** Its motion values change styles without React re-rendering, so pointer-driven effects stay smooth. It is imported from `motion/react`.
+
+**Why no three.js.** The 3D here is only a tilt. CSS 3D transforms driven by springs do that with no WebGL context and a fraction of the bundle size.
+
+**Why Lenis.** Smooth scrolling makes the scroll-linked words feel continuous. `utils/scroller.js` keeps a single reference to the Lenis instance so `jumpTo` and `ScrollToTop` scroll through it instead of fighting it. If Lenis is not running, they fall back to native scrolling.
+
+**Reduced motion.** `useReducedMotion` disables the drift, tilt and magnetism, and the stylesheet disables CSS animation.
+
+**Footer credit.** `components/home/Credit.jsx` renders "Created with 💓 by Mursal", with the name linking to the portfolio. The name and URL live in `data/copy.js` (`AUTHOR`); change them there.
+
+---
+
+## 17. The theory page
+
+Route `/theory`. It explains, for every treatment, how the picture is generated and which equations are used.
+
+- **Data:** all text and LaTeX live in `src/data/theory.js`: an intro, six `FOUNDATIONS` (brightness, smoothing and edges, interpolation, randomness, tone and colour, compositing), and a `THEORY` object keyed by the same ids as the engine's styles, each with `paragraphs` and `equations` (`tex` plus a one-line `note`).
+- **Rendering:** `TheoryPage` groups the data; `TheoryBlock` is one section; `StyleTheory` fills a block for a treatment and links to its page; `Equation` typesets LaTeX with KaTeX (`renderToString` inside `useMemo`, so each formula is computed once). The KaTeX stylesheet is imported in `Equation.jsx`.
+- **Navigation:** `TheoryNav` is a sticky contents list highlighted by `useScrollSpy`. It is hidden below 1000 px.
+- **Adding a treatment's theory:** add an entry to `THEORY` with the new style's id. Nothing else changes.
+- **Safety note:** `dangerouslySetInnerHTML` is used only for KaTeX output generated from the repository's own strings, never from user input.

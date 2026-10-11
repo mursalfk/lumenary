@@ -6,11 +6,10 @@ import { pad } from '../../utils/format.js';
 function FeaturedLink({ style, thumb }) {
   return (
     <Link to={`/style/${style.id}`} className="featured-link" aria-label={`Open ${style.name}`}>
-      <Plate key={style.id} src={thumb} placeholder="Preparing previews" />
+      <Plate src={thumb} placeholder="Preparing previews" />
       <div className="caption">
-        <span>{pad(style.number)}</span>
-        <span>{style.name}</span>
-        <span className="arrow">→</span>
+        <span className="num">{pad(style.number)}</span>
+        <span className="name">{style.name}</span>
       </div>
     </Link>
   );

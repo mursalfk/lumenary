@@ -7,7 +7,7 @@ export default function IndexSection() {
   const [active, setActive] = useState(null);
   return (
     <section id="index" className="index-section">
-      <SectionHead title="The index" text="Twenty treatments. Live ones move and respond to your cursor; still ones render once." />
+      <SectionHead title="Twenty treatments" text="Live ones move and answer your cursor. Still ones are drawn once and saved at up to three times the size." />
       <IndexList onActivate={setActive} onDeactivate={() => setActive(null)} />
       <FloatingPreview style={active} />
     </section>

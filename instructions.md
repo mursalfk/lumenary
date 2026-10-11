@@ -16,7 +16,7 @@ Terminal: Terminal on Mac, PowerShell or Git Bash on Windows.
 
 ## Step 0. Just look at it (optional, no install)
 
-Double-click `lumenary.html` (sent separately). It opens in your browser. Use the on-page links to move around; the browser back button will not change pages in this file.
+Double-click `lumenary.html` (sent separately). It opens in your browser. The Theory page explains the maths behind each treatment. Use the on-page links to move around; the browser back button will not change pages in this file.
 
 ## Step 1. Unzip
 
@@ -36,7 +36,7 @@ npm install
 npm run dev
 ```
 
-Check: the terminal prints a line like `Local: http://localhost:5173/`. Open that address. You should see the black homepage with "Lumenary". Click any style, upload a photo, move the sliders. Press `Ctrl+C` in the terminal to stop.
+Check: the terminal prints a line like `Local: http://localhost:5173/`. Open that address. You should see the black homepage with a huge "Lumenary" wordmark that lights up under your cursor. Open **Theory** in the top bar to see the equations. Click any style, upload a photo, move the sliders. Press `Ctrl+C` in the terminal to stop.
 
 ## Step 3. Test the production build (optional but recommended)
 
@@ -136,3 +136,15 @@ Vercel → your project → **Settings** → **Domains** → add the domain and 
 
 - Try each of the twenty styles with two or three of your own photos, on desktop and phone.
 - The palette is black and white for now. Accent colour goes in `src/styles/abstracts/_vars.scss`.
+
+## Changing the credit line
+
+The footer reads "Created with 💓 by Mursal". The name and portfolio link are in `src/data/copy.js` under `AUTHOR`.
+
+## Rebuilding the single HTML preview
+
+```bash
+npm run build:single
+```
+
+The file is written to `dist-single/index.html`.

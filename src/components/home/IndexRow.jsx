@@ -16,7 +16,6 @@ function IndexRow({ style, thumb, onActivate, onDeactivate }) {
         <span className="num">{pad(style.number)}</span>
         <span className="name">{style.name}</span>
         <KindBadge style={style} />
-        <span className="arrow" aria-hidden="true">→</span>
         <span className="thumb" aria-hidden="true">{thumb && <img src={thumb} alt="" />}</span>
       </Link>
     </li>
