@@ -700,82 +700,233 @@ body {
   padding: 0 $gut clamp(72px, 12vh, 140px);
 }
 
-// SectionJump
-.section-jump {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 28px;
-  margin-bottom: clamp(40px, 7vh, 80px);
-  a {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 10px;
-    font-size: 15px;
-    color: $soft;
-    transition: color 0.3s;
-    &:hover {
-      color: $white;
+// PortalList
+.portal-list {
+  @include hover-only {
+    &:hover .portal-row {
+      opacity: 0.3;
     }
-    .letter {
-      @include voice(16px);
-      color: $mute;
+    &:hover .portal-row:hover,
+    &:hover .portal-row:focus-within {
+      opacity: 1;
     }
   }
 }
 
-// IndexGroup
-.index-group {
-  scroll-margin-top: 24px;
-  & + .index-group {
-    margin-top: clamp(72px, 12vh, 140px);
-  }
-  header {
+// PortalRow
+.portal-row {
+  transition: opacity 0.35s;
+  a {
     display: grid;
-    grid-template-columns: 52px minmax(0, 1fr) auto;
-    align-items: baseline;
-    gap: 6px 12px;
-    margin-bottom: 18px;
+    grid-template-columns: clamp(44px, 6vw, 96px) minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      "letter title previews meta"
+      "letter blurb previews go";
+    align-items: center;
+    column-gap: clamp(16px, 3vw, 40px);
+    row-gap: 10px;
+    padding: clamp(26px, 5vh, 48px) 0;
+    border-bottom: 1px solid $line;
+    transition: padding 0.5s $ease;
+    @include below($bp-lg) {
+      grid-template-columns: 40px minmax(0, 1fr) auto;
+      grid-template-areas:
+        "letter title go"
+        "letter blurb blurb"
+        "letter meta meta"
+        "letter previews previews";
+      align-items: start;
+    }
+  }
+  @include hover-only {
+    a:hover {
+      padding-left: 16px;
+    }
+    a:hover .go {
+      transform: translateX(6px);
+      color: $white;
+    }
+    a:hover .preview {
+      opacity: 1;
+    }
+  }
+  .letter {
+    grid-area: letter;
+    @include voice(clamp(26px, 3vw, 44px));
+    color: $mute;
+  }
+  .title {
+    grid-area: title;
+    font-family: $display;
+    font-size: clamp(30px, 4.2vw, 64px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+  .blurb {
+    grid-area: blurb;
+    max-width: 54ch;
+    font-size: 15px;
+    color: $mute;
+  }
+  .meta {
+    grid-area: meta;
+    justify-self: end;
+    font-size: 14px;
+    color: $mute;
+    white-space: nowrap;
+    @include below($bp-lg) {
+      justify-self: start;
+    }
+  }
+  .go {
+    grid-area: go;
+    justify-self: end;
+    font-size: 26px;
+    color: $mute;
+    transition:
+      transform 0.5s $ease,
+      color 0.3s;
+  }
+  .previews {
+    grid-area: previews;
+    display: flex;
+    gap: 8px;
+    @include below($bp-lg) {
+      margin-top: 6px;
+    }
+  }
+  .preview {
+    display: block;
+    width: clamp(48px, 5vw, 64px);
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: $ink-2;
+    opacity: 0.8;
+    transition: opacity 0.4s;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+// StyleIndex (the section)
+.style-index {
+  padding: 0 $gut clamp(56px, 10vh, 110px);
+}
+
+// GroupHero
+.group-hero {
+  padding: clamp(20px, 5vh, 56px) $gut clamp(40px, 8vh, 88px);
+  .back {
+    margin-bottom: clamp(28px, 6vh, 64px);
+    font-size: 15px;
+  }
+  h1 {
+    max-width: 14em;
+    font-family: $display;
+    font-weight: 400;
+    font-size: clamp(42px, 7vw, 112px);
+    line-height: 1;
+    letter-spacing: -0.03em;
     .letter {
-      @include voice(22px);
+      @include voice(0.38em);
+      margin-right: 0.5em;
+      letter-spacing: 0;
       color: $mute;
     }
-    h3 {
-      font-family: $display;
-      font-weight: 400;
-      font-size: clamp(28px, 3.2vw, 46px);
-      line-height: 1.05;
-      letter-spacing: -0.015em;
-    }
-    p {
-      grid-column: 2 / -1;
-      max-width: 60ch;
+  }
+  .blurb {
+    max-width: 52ch;
+    margin-top: clamp(24px, 4vh, 40px);
+    @include voice(clamp(18px, 1.8vw, 26px));
+    font-style: normal;
+    line-height: 1.45;
+    color: $soft;
+  }
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 28px;
+    margin-top: clamp(28px, 5vh, 44px);
+    .meta {
       font-size: 15px;
       color: $mute;
     }
-    .count {
-      grid-column: 3;
-      grid-row: 1;
+  }
+}
+
+// PageNeighbors
+.page-neighbors {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 0 $gut;
+  padding: 32px 0 clamp(56px, 10vh, 110px);
+  border-top: 1px solid $line;
+  a {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    .dir {
       font-size: 14px;
       color: $mute;
-      white-space: nowrap;
     }
-    @include below($bp-sm) {
-      grid-template-columns: 1fr auto;
-      .letter {
-        display: none;
-      }
-      .count {
-        grid-column: 2;
-      }
-      p {
-        grid-column: 1 / -1;
-      }
+    .name {
+      font-family: $display;
+      font-size: clamp(20px, 2.6vw, 36px);
+      line-height: 1.1;
+      transition: color 0.3s;
+      color: $soft;
+    }
+    &:hover .name {
+      color: $white;
+    }
+    &.next {
+      align-items: flex-end;
+      text-align: right;
     }
   }
 }
 
-// IndexList
-.index-list {
+// StyleFilters
+.style-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 28px;
+  margin-bottom: clamp(22px, 4vh, 36px);
+  padding-bottom: 18px;
+  border-bottom: 1px solid $line;
+  .count {
+    font-size: 14px;
+    color: $mute;
+  }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+  }
+  .find {
+    display: block;
+    .text-input {
+      width: clamp(180px, 22vw, 260px);
+      padding: 9px 14px;
+      border-radius: 999px;
+      font-size: 14px;
+    }
+  }
+  .segmented {
+    min-width: 200px;
+  }
+}
+
+// StyleIndex
+.style-list {
   display: grid;
   grid-template-rows: repeat(var(--rows, 10), auto);
   grid-auto-flow: column;
@@ -786,11 +937,11 @@ body {
     grid-template-columns: 1fr;
   }
   @include hover-only {
-    &:hover .index-row {
+    &:hover .style-row {
       opacity: 0.28;
     }
-    &:hover .index-row:hover,
-    &:hover .index-row:focus-within {
+    &:hover .style-row:hover,
+    &:hover .style-row:focus-within {
       opacity: 1;
       a {
         padding-left: 16px;
@@ -798,27 +949,34 @@ body {
     }
   }
 }
+.style-empty {
+  max-width: 44ch;
+  padding: 40px 0;
+  @include voice(20px);
+  color: $soft;
+}
 
-// IndexRow
-.index-row {
+// StyleRow
+.style-row {
   transition: opacity 0.35s;
   a {
     display: grid;
     grid-template-columns: 52px 1fr auto;
     align-items: baseline;
     gap: 12px;
-    padding: 22px 0;
+    padding: 18px 0;
     border-bottom: 1px solid $line;
     transition: padding 0.5s $ease;
+    outline-offset: 4px;
   }
   .num {
-    @include voice(16px);
+    @include voice(15px);
     color: $mute;
   }
   .name {
     font-family: $display;
-    font-size: clamp(26px, 3vw, 44px);
-    line-height: 1.08;
+    font-size: clamp(24px, 2.6vw, 36px);
+    line-height: 1.1;
     letter-spacing: -0.01em;
   }
   .thumb {
@@ -826,7 +984,7 @@ body {
   }
   @include touch-only {
     a {
-      grid-template-columns: 64px 1fr auto;
+      grid-template-columns: 56px 1fr auto;
       align-items: center;
     }
     .num {
@@ -836,7 +994,7 @@ body {
       display: block;
       grid-column: 1;
       grid-row: 1;
-      width: 64px;
+      width: 56px;
       aspect-ratio: 4 / 5;
       overflow: hidden;
       background: $ink-2;
@@ -865,6 +1023,11 @@ body {
   transition: opacity 0.3s;
   &.on {
     opacity: 1;
+  }
+}
+@keyframes tile-wait {
+  to {
+    background-position: -200% 0;
   }
 }
 
@@ -967,6 +1130,10 @@ body {
 // BackLink
 .back-link {
   justify-self: start;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: $soft;
   @include label(14px);
   transition: color 0.3s;
@@ -986,7 +1153,12 @@ body {
   margin-top: 28px;
   padding-top: 20px;
   border-top: 1px solid $line;
+  min-width: 0;
   h2 {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
     margin-bottom: 12px;
     font-size: 14px;
     font-weight: 400;
@@ -1002,14 +1174,30 @@ body {
       margin-right: 10px;
       color: $mute;
     }
+    .all {
+      flex: none;
+      color: $mute;
+      text-decoration: underline;
+      text-underline-offset: 5px;
+    }
   }
   ul {
     display: flex;
-    flex-wrap: wrap;
-    gap: 6px 20px;
+    gap: 6px 22px;
+    overflow-x: auto;
+    padding: 0 28px 8px 4px;
+    scrollbar-width: none;
+    mask-image: linear-gradient(to right, transparent, #000 18px, #000 calc(100% - 28px), transparent);
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    li {
+      flex: none;
+    }
   }
-  a {
+  li a {
     font-size: 14px;
+    white-space: nowrap;
     color: $mute;
     transition: color 0.25s;
     &:hover {
@@ -1020,9 +1208,6 @@ body {
       text-decoration: underline;
       text-underline-offset: 5px;
     }
-  }
-  h2 a {
-    color: $soft;
   }
 }
 
@@ -1059,6 +1244,31 @@ body {
     &:hover {
       background: $paper;
       color: $ink;
+    }
+  }
+}
+
+// BarActions and TheoryLink
+.bar-actions {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.theory-link {
+  &.in-bar {
+    padding: 9px 20px;
+    font-size: 14px;
+    @include below($bp-sm) {
+      display: none;
+    }
+  }
+  &.in-panel {
+    margin: 20px 0 4px;
+    padding: 10px 22px;
+    font-size: 14px;
+    @media (min-width: ($bp-sm + 1px)) {
+      display: none;
     }
   }
 }
@@ -1172,10 +1382,11 @@ $fit: calc(100vh - 220px);
     align-items: start;
     padding: $gut;
     @include below($bp-lg) {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
     }
   }
   .stage-col {
+    min-width: 0;
     position: sticky;
     top: 100px;
     @include below($bp-lg) {
@@ -1221,28 +1432,28 @@ $fit: calc(100vh - 220px);
       }
     }
   }
-  .group-title {
-    margin: clamp(72px, 12vh, 140px) 0 8px;
-    h2 {
-      @include voice(clamp(40px, 5vw, 72px));
-      color: $mute;
-      line-height: 1.05;
-      .letter {
-        margin-right: 0.45em;
-        font-size: 0.6em;
-        color: $line-2;
-      }
-    }
-    p {
-      max-width: 56ch;
-      margin-top: 14px;
-      font-size: 16px;
-      color: $mute;
-    }
+}
+
+// TheoryIndex
+.theory-index {
+  padding: 0 $gut clamp(72px, 12vh, 140px);
+}
+
+// TheoryJump: the phone version of the table of contents.
+.theory-jump {
+  display: none;
+  @include below($bp-lg) {
+    display: block;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    margin: 0 calc(-1 * #{$gut});
+    padding: 10px $gut;
+    background: rgba(0, 0, 0, 0.94);
+    border-bottom: 1px solid $line;
   }
-  main > :first-child .group-title,
-  main > .group-title:first-child {
-    margin-top: 0;
+  .select-input {
+    width: 100%;
   }
 }
 
@@ -1334,4 +1545,432 @@ $fit: calc(100vh - 220px);
   .button-link {
     margin-top: 36px;
   }
+
+  // The fuller story: facts, why, how, history, uses, tips, glossary, related.
+  .theory-section {
+    max-width: 66ch;
+    margin-top: 48px;
+    &:first-child {
+      margin-top: 0;
+    }
+    h4 {
+      margin-bottom: 14px;
+      @include voice(24px);
+      color: $white;
+    }
+    .plain {
+      font-size: 17px;
+      line-height: 1.75;
+      color: $soft;
+    }
+    &.math {
+      max-width: none;
+      .prose {
+        margin-top: 0;
+      }
+    }
+  }
+  .theory-facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px 32px;
+    margin: 0 0 8px;
+    padding: 18px 0;
+    border-top: 1px solid $line;
+    border-bottom: 1px solid $line;
+    @include below($bp-lg) {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 14px;
+    }
+    dt {
+      margin-bottom: 4px;
+      @include label(13px);
+      color: $mute;
+    }
+    dd {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.5;
+      color: $paper;
+    }
+  }
+  .theory-steps {
+    counter-reset: step;
+    display: grid;
+    gap: 14px;
+    li {
+      position: relative;
+      counter-increment: step;
+      padding-left: 40px;
+      font-size: 17px;
+      line-height: 1.7;
+      color: $soft;
+      &::before {
+        content: counter(step);
+        position: absolute;
+        left: 0;
+        top: 0;
+        @include voice(22px);
+        color: $mute;
+      }
+    }
+  }
+  .theory-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 clamp(32px, 5vw, 72px);
+    max-width: 960px;
+    margin-top: 48px;
+    @include below($bp-lg) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .theory-section {
+      max-width: none;
+      margin-top: 0;
+      @include below($bp-lg) {
+        &:not(:first-child) {
+          margin-top: 40px;
+        }
+      }
+    }
+  }
+  .theory-list {
+    display: grid;
+    gap: 12px;
+    li {
+      position: relative;
+      padding-left: 26px;
+      font-size: 16px;
+      line-height: 1.65;
+      color: $soft;
+      &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.9em;
+        width: 14px;
+        height: 1px;
+        background: $mute;
+      }
+    }
+  }
+  .theory-tips {
+    display: grid;
+    li {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px 24px;
+      padding: 16px 0;
+      border-top: 1px solid $line;
+      &:last-child {
+        border-bottom: 1px solid $line;
+      }
+      p {
+        flex: 1 1 36ch;
+        font-size: 16px;
+        line-height: 1.65;
+        color: $soft;
+      }
+      .button-link {
+        flex: none;
+        margin-top: 0;
+      }
+    }
+  }
+  .theory-terms {
+    display: grid;
+    div {
+      display: grid;
+      grid-template-columns: minmax(120px, 0.34fr) minmax(0, 1fr);
+      gap: 4px 24px;
+      padding: 14px 0;
+      border-top: 1px solid $line;
+      @include below($bp-sm) {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      &:last-child {
+        border-bottom: 1px solid $line;
+      }
+    }
+    dt {
+      @include voice(19px);
+      color: $white;
+    }
+    dd {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.65;
+      color: $soft;
+    }
+  }
+  .theory-related {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    a {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 10px;
+      padding: 8px 16px;
+      border: 1px solid $line-2;
+      border-radius: 999px;
+      font-size: 14px;
+      color: $paper;
+      transition: border-color 0.25s;
+      @include hover-only {
+        &:hover {
+          border-color: $soft;
+        }
+      }
+      .num {
+        @include voice(14px);
+        color: $mute;
+      }
+    }
+  }
+}
+
+// ═════ about ═════
+// A calm blank page while a reading page loads.
+.route-wait {
+  min-height: 100vh;
+  background: $ink;
+}
+
+// The About page. Every block sits in a two column grid: a small heading on the left, the words on the right.
+.maker {
+  .maker-hero {
+    padding: clamp(32px, 8vh, 96px) $gut clamp(56px, 10vh, 120px);
+    h1 {
+      font-family: $display;
+      font-weight: 400;
+      font-size: clamp(80px, 17vw, 300px);
+      line-height: 0.9;
+      letter-spacing: -0.035em;
+      color: $white;
+    }
+    .tagline {
+      max-width: 17em;
+      margin-top: clamp(32px, 6vh, 64px);
+      font-family: $display;
+      font-size: clamp(28px, 3.6vw, 56px);
+      line-height: 1.12;
+      letter-spacing: -0.015em;
+      color: $white;
+    }
+    .intro {
+      max-width: 54ch;
+      margin-top: clamp(20px, 3.5vh, 36px);
+      @include voice(clamp(18px, 1.8vw, 24px));
+      font-style: normal;
+      line-height: 1.5;
+      color: $soft;
+    }
+  }
+
+  .maker-block {
+    display: grid;
+    grid-template-columns: minmax(180px, 300px) minmax(0, 1fr);
+    gap: 24px clamp(32px, 7vw, 120px);
+    margin: 0 $gut;
+    padding: clamp(40px, 8vh, 88px) 0;
+    border-top: 1px solid $line;
+    @include below($bp-lg) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    header {
+      align-self: start;
+      h2 {
+        font-family: $display;
+        font-weight: 400;
+        font-size: clamp(26px, 2.6vw, 38px);
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+        color: $white;
+      }
+      .lead {
+        max-width: 28ch;
+        margin-top: 14px;
+        @include voice(18px);
+        font-style: normal;
+        line-height: 1.4;
+        color: $mute;
+      }
+    }
+    .body {
+      min-width: 0;
+      > * + * {
+        margin-top: clamp(28px, 5vh, 48px);
+      }
+    }
+  }
+
+  .prose {
+    p {
+      max-width: 58ch;
+      font-size: clamp(17px, 1.45vw, 20px);
+      line-height: 1.65;
+      color: $soft;
+      &:first-child {
+        color: $paper;
+      }
+      + p {
+        margin-top: 1.1em;
+      }
+    }
+  }
+
+  .fact-list {
+    margin: 0;
+    .fact {
+      display: grid;
+      grid-template-columns: minmax(96px, 150px) minmax(0, 1fr);
+      gap: 4px 24px;
+      padding: 16px 0;
+      border-top: 1px solid $line;
+      &:last-child {
+        border-bottom: 1px solid $line;
+      }
+      @include below($bp-sm) {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    dt {
+      @include label(14px);
+      color: $mute;
+    }
+    dd {
+      max-width: 60ch;
+      margin: 0;
+      font-size: 15.5px;
+      color: $soft;
+    }
+  }
+
+  .project-list {
+    .project-row a {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas:
+        "title go"
+        "blurb blurb"
+        "meta meta";
+      align-items: baseline;
+      gap: 10px 24px;
+      padding: clamp(22px, 4vh, 36px) 0;
+      border-top: 1px solid $line;
+      transition: padding 0.5s $ease;
+    }
+    .project-row:last-child a {
+      border-bottom: 1px solid $line;
+    }
+    @include hover-only {
+      .project-row a:hover {
+        padding-left: 14px;
+      }
+      .project-row a:hover .go {
+        transform: translateX(5px);
+        color: $white;
+      }
+    }
+    .title {
+      grid-area: title;
+      font-family: $display;
+      font-size: clamp(26px, 3vw, 42px);
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+      color: $white;
+    }
+    .blurb {
+      grid-area: blurb;
+      max-width: 62ch;
+      font-size: 15.5px;
+      color: $soft;
+    }
+    .meta {
+      grid-area: meta;
+      font-size: 14px;
+      color: $mute;
+    }
+    .go {
+      grid-area: go;
+      justify-self: end;
+      font-size: 24px;
+      color: $mute;
+      transition:
+        transform 0.5s $ease,
+        color 0.3s;
+    }
+  }
+
+  .pull-quote {
+    max-width: 22em;
+    margin: 0;
+    @include voice(clamp(26px, 3.2vw, 46px));
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: $white;
+  }
+
+  // The one loud moment on the page: numbers counted from the treatments themselves.
+  .figures {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px clamp(16px, 3vw, 40px);
+    @include below($bp-sm) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    li {
+      padding-top: 16px;
+      border-top: 1px solid $line-2;
+    }
+    .value {
+      display: block;
+      font-family: $display;
+      font-size: clamp(48px, 5.4vw, 88px);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      font-variant-numeric: lining-nums;
+      color: $white;
+    }
+    .label {
+      display: block;
+      margin-top: 10px;
+      font-size: 14px;
+      color: $mute;
+    }
+  }
+
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(28px, 4vw, 56px) clamp(24px, 4vw, 56px);
+    @include below($bp-sm) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .about-column p {
+      max-width: 40ch;
+    }
+  }
+
+  .find-me {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px clamp(24px, 4vw, 48px);
+    a {
+      font-family: $display;
+      font-size: clamp(28px, 3.6vw, 54px);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      @include underlined;
+    }
+  }
+}
+
+// A quiet link under the three columns on the home page.
+.about .about-more {
+  grid-column: 1 / -1;
+  justify-self: start;
 }

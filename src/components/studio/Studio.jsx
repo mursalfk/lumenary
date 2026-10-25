@@ -16,6 +16,7 @@ import ImageSection from './ImageSection.jsx';
 import TreatmentSection from './TreatmentSection.jsx';
 import ExportSection from './ExportSection.jsx';
 import SectionLinks from './SectionLinks.jsx';
+import TheoryLink from './TheoryLink.jsx';
 
 // One style's workspace: canvas on the left, controls on the right.
 export default function Studio({ style }) {
@@ -44,6 +45,7 @@ export default function Studio({ style }) {
           <SectionLinks style={style} />
         </div>
         <Panel blurb={style.blurb}>
+          <TheoryLink style={style} className="in-panel" />
           <ImageSection onFile={take} onReset={useSample} isSample={src.sample} error={error} />
           <TreatmentSection defs={style.params} values={params} onChange={set} onReset={reset} />
           <ExportSection

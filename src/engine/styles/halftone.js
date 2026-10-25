@@ -18,7 +18,7 @@ export default still({
   id: 'halftone',
   number: 15,
   name: 'Halftone',
-  blurb: 'Print-shop dots: one ink, four inks, or color on black.',
+  blurb: 'Print-shop dots: one ink, four inks, or colour on black.',
   maxSide: 1100,
   params: [
     { key: 'cells', label: 'Dots across', type: 'range', min: 30, max: 170, step: 1, default: 80 },

@@ -4,7 +4,7 @@ export default still({
   id: 'isometric',
   number: 8,
   name: 'Isometric',
-  blurb: 'A city of blocks: height follows brightness, color follows the picture.',
+  blurb: 'A city of blocks: height follows brightness, colour follows the picture.',
   maxSide: 1100,
   params: [
     { key: 'cols', label: 'Blocks across', type: 'range', min: 14, max: 90, step: 1, default: 56 },

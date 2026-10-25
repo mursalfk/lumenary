@@ -10,7 +10,7 @@ export default function ImageSection({ onFile, onReset, isSample, error }) {
         <FilePicker variant="solid" onFile={onFile}>Choose image</FilePicker>
         <Button onClick={onReset} disabled={isSample}>Use sample</Button>
       </div>
-      <Hint>Or drop a file on the preview, or paste one. It stays on your device.</Hint>
+      <Hint>You can also drag a photo onto the preview, or paste one. It stays on your device.</Hint>
       <Hint tone="note">{error}</Hint>
     </Section>
   );

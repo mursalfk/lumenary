@@ -1,6 +1,6 @@
 // src/engine/helpers.js
 // Building blocks shared by the newer treatments. Pure JS, no DOM.
-import { clamp, hexToRgb, rng, lumArray, boxBlur, sobel, smoothstep } from './utils.js';
+import { clamp, hexToRgb, rng, hash2, lumArray, boxBlur, sobel, smoothstep, vnoise } from './utils.js';
 
 // Pixel data of the working canvas, read once and kept in `cache`.
 export function pixels(work, W, H, cache) {
@@ -72,6 +72,49 @@ export function vignette(ctx, W, H, strength, color = '0,0,0') {
   g.addColorStop(1, `rgba(${color},${strength})`);
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, W, H);
+}
+
+// Luminance with the darkest and lightest 2% clipped, then stretched to 0..1.
+export function stretch(L, lo = 0.02, hi = 0.98) {
+  const hist = new Uint32Array(256);
+  for (let i = 0; i < L.length; i++) hist[Math.min(255, (L[i] * 255) | 0)]++;
+  let acc = 0, a = 0, b = 255;
+  for (let i = 0; i < 256; i++) { acc += hist[i]; if (acc >= L.length * lo) { a = i; break; } }
+  acc = 0;
+  for (let i = 255; i >= 0; i--) { acc += hist[i]; if (acc >= L.length * (1 - hi)) { b = i; break; } }
+  const out = new Float32Array(L.length), lo0 = a / 255, span = Math.max(0.08, (b - a) / 255);
+  for (let i = 0; i < L.length; i++) out[i] = clamp((L[i] - lo0) / span);
+  return out;
+}
+export function stretchedL(cache) { return cache.Ls || (cache.Ls = stretch(cache.L)); }
+
+// Slopes of a height map by central differences, scaled by k: (sx, sy) so the surface normal is (sx, sy, 1) normalised.
+export function slopes(h, W, H, k) {
+  const sx = new Float32Array(W * H), sy = new Float32Array(W * H);
+  for (let y = 0; y < H; y++) {
+    const ym = Math.max(0, y - 1) * W, yp = Math.min(H - 1, y + 1) * W, yc = y * W;
+    for (let x = 0; x < W; x++) {
+      const xm = Math.max(0, x - 1), xp = Math.min(W - 1, x + 1), i = yc + x;
+      sx[i] = -(h[yc + xp] - h[yc + xm]) * 0.5 * k;
+      sy[i] = -(h[yp + x] - h[ym + x]) * 0.5 * k;
+    }
+  }
+  return { sx, sy };
+}
+
+// Nearest-cell noise on a jittered grid of spacing s: returns [distance to nearest site, distance to second nearest, nearest id]
+// and the nearest site's x and y, written into `out`. Cheap Voronoi, used for leather grain, foil facets and glass pieces.
+export function cellular(x, y, s, seed, out) {
+  const gx = Math.floor(x / s), gy = Math.floor(y / s);
+  let d1 = 1e9, d2 = 1e9, id = 0, sx = 0, sy = 0;
+  for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) {
+    const cx = gx + i, cy = gy + j;
+    const px = (cx + hash2(cx, cy, seed)) * s, py = (cy + hash2(cx, cy, seed + 101)) * s;
+    const d = (x - px) * (x - px) + (y - py) * (y - py);
+    if (d < d1) { d2 = d1; d1 = d; id = cx * 7919 + cy * 104729; sx = px; sy = py; } else if (d < d2) d2 = d;
+  }
+  out[0] = Math.sqrt(d1); out[1] = Math.sqrt(d2); out[2] = id; out[3] = sx; out[4] = sy;
+  return out;
 }
 
 // Blurred copy of the luminance map, cached by radius.
@@ -160,4 +203,136 @@ export function rrPath(ctx, x, y, w, h, r) {
   ctx.arcTo(x, y + h, x, y, r);
   ctx.arcTo(x, y, x + w, y, r);
   ctx.closePath();
+}
+
+// The R, G and B channels of an ImageData as three float arrays, each blurred `passes` times with a box blur of radius r.
+export function blurRGB(d, W, H, r, passes = 2) {
+  const N = W * H, out = [];
+  for (let c = 0; c < 3; c++) {
+    let a = new Float32Array(N);
+    for (let i = 0; i < N; i++) a[i] = d[i * 4 + c];
+    for (let k = 0; k < passes; k++) a = boxBlur(a, W, H, r);
+    out.push(a);
+  }
+  return out;
+}
+
+// Bilinear sample of ImageData data at (x, y), written into out = [r, g, b].
+export function bilinearRGB(d, W, H, x, y, out) {
+  x = clamp(x, 0, W - 1); y = clamp(y, 0, H - 1);
+  const x0 = x | 0, y0 = y | 0, x1 = Math.min(W - 1, x0 + 1), y1 = Math.min(H - 1, y0 + 1), fx = x - x0, fy = y - y0;
+  const a = (y0 * W + x0) * 4, b = (y0 * W + x1) * 4, c = (y1 * W + x0) * 4, e = (y1 * W + x1) * 4;
+  for (let k = 0; k < 3; k++) out[k] = (d[a + k] * (1 - fx) + d[b + k] * fx) * (1 - fy) + (d[c + k] * (1 - fx) + d[e + k] * fx) * fy;
+  return out;
+}
+
+// Fractal noise: `oct` layers of smooth value noise, each at twice the frequency and half the weight. Returns 0..1.
+export function fbm(x, y, seed = 0, oct = 4) {
+  let a = 0.5, f = 1, sum = 0, norm = 0;
+  for (let i = 0; i < oct; i++) { sum += a * vnoise(x * f, y * f, seed + i * 17); norm += a; a *= 0.5; f *= 2; }
+  return sum / norm;
+}
+
+// Which of the sites (sx[i], sy[i]) is nearest to each pixel: the jump flooding algorithm, which is approximate but fast.
+// Returns an Int32Array of site indices.
+export function voronoiLabels(sx, sy, W, H) {
+  const N = W * H;
+  let src = new Int32Array(N).fill(-1), dst = new Int32Array(N);
+  for (let i = 0; i < sx.length; i++) {
+    const x = clamp(Math.round(sx[i]), 0, W - 1), y = clamp(Math.round(sy[i]), 0, H - 1);
+    src[y * W + x] = i;
+  }
+  let step = 1;
+  while (step * 2 < Math.max(W, H)) step *= 2;
+  const passes = [];
+  for (let s = step; s >= 1; s >>= 1) passes.push(s);
+  passes.push(2, 1);
+  for (const s of passes) {
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const i = y * W + x;
+      let best = src[i], bd = best >= 0 ? (x - sx[best]) * (x - sx[best]) + (y - sy[best]) * (y - sy[best]) : 1e18;
+      for (let j = -1; j <= 1; j++) {
+        const yy = y + j * s; if (yy < 0 || yy >= H) continue;
+        for (let k = -1; k <= 1; k++) {
+          const xx = x + k * s; if (xx < 0 || xx >= W) continue;
+          const l = src[yy * W + xx]; if (l < 0) continue;
+          const dd = (x - sx[l]) * (x - sx[l]) + (y - sy[l]) * (y - sy[l]);
+          if (dd < bd) { bd = dd; best = l; }
+        }
+      }
+      dst[i] = best;
+    }
+    const t = src; src = dst; dst = t;
+  }
+  return src;
+}
+
+// Marching squares: the line segments where the field F crosses `level`, on a grid of `step` pixels.
+// Returns a flat array [x0, y0, x1, y1, ...]. Points on a shared cell edge come out identical, so segments can be chained.
+export function marching(F, W, H, level, step = 2) {
+  const segs = [], cw = Math.floor((W - 1) / step), ch = Math.floor((H - 1) / step);
+  const t = (p, q) => (level - p) / (q - p);
+  for (let j = 0; j < ch; j++) for (let i = 0; i < cw; i++) {
+    const x0 = i * step, y0 = j * step, x1 = x0 + step, y1 = y0 + step;
+    const a = F[y0 * W + x0], b = F[y0 * W + x1], c = F[y1 * W + x1], d = F[y1 * W + x0];
+    const idx = (a > level ? 8 : 0) | (b > level ? 4 : 0) | (c > level ? 2 : 0) | (d > level ? 1 : 0);
+    if (idx === 0 || idx === 15) continue;
+    const T = [x0 + step * t(a, b), y0], R = [x1, y0 + step * t(b, c)], B = [x0 + step * t(d, c), y1], L = [x0, y0 + step * t(a, d)];
+    const add = (p, q) => segs.push(p[0], p[1], q[0], q[1]);
+    switch (idx) {
+      case 1: case 14: add(L, B); break;
+      case 2: case 13: add(B, R); break;
+      case 3: case 12: add(L, R); break;
+      case 4: case 11: add(T, R); break;
+      case 6: case 9: add(T, B); break;
+      case 7: case 8: add(T, L); break;
+      case 5: if ((a + b + c + d) / 4 > level) { add(T, L); add(B, R); } else { add(T, R); add(L, B); } break;
+      case 10: if ((a + b + c + d) / 4 > level) { add(T, R); add(L, B); } else { add(T, L); add(B, R); } break;
+      default: break;
+    }
+  }
+  return segs;
+}
+
+// Joins marching-squares segments end to end into polylines (arrays of [x, y]).
+export function chainSegments(segs) {
+  const key = (x, y) => x.toFixed(3) + '|' + y.toFixed(3), n = segs.length / 4, ends = new Map(), used = new Uint8Array(n);
+  const put = (k, i) => { const l = ends.get(k); if (l) l.push(i); else ends.set(k, [i]); };
+  for (let i = 0; i < n; i++) { put(key(segs[i * 4], segs[i * 4 + 1]), i); put(key(segs[i * 4 + 2], segs[i * 4 + 3]), i); }
+  const lines = [];
+  const next = (k) => { const l = ends.get(k); if (!l) return -1; while (l.length) { const i = l.pop(); if (!used[i]) return i; } return -1; };
+  for (let i = 0; i < n; i++) {
+    if (used[i]) continue;
+    used[i] = 1;
+    const line = [[segs[i * 4], segs[i * 4 + 1]], [segs[i * 4 + 2], segs[i * 4 + 3]]];
+    for (const dir of [1, 0]) {
+      for (;;) {
+        const e = dir ? line[line.length - 1] : line[0], j = next(key(e[0], e[1]));
+        if (j < 0) break;
+        used[j] = 1;
+        const p = [segs[j * 4], segs[j * 4 + 1]], q = [segs[j * 4 + 2], segs[j * 4 + 3]];
+        const far = key(p[0], p[1]) === key(e[0], e[1]) ? q : p;
+        if (dir) line.push(far); else line.unshift(far);
+      }
+    }
+    lines.push(line);
+  }
+  return lines;
+}
+
+// Smoothed colour and tone lookups around a point: `rgb(x, y)` returns [r, g, b] (a shared array, copy it if you keep it)
+// and `tone(x, y)` the stretched luminance 0..1. Only the most recent radius is kept in `cache`.
+export function sampler(cache, d, W, H, r) {
+  r = Math.max(1, Math.round(r));
+  const key = r + '|' + W;
+  if (cache.smpKey === key) return cache.smp;
+  const ch = blurRGB(d, W, H, r, 2), Lb = boxBlur(boxBlur(stretchedL(cache), W, H, r), W, H, r), out = [0, 0, 0];
+  const idx = (x, y) => (y < 0 ? 0 : y >= H ? H - 1 : y | 0) * W + (x < 0 ? 0 : x >= W ? W - 1 : x | 0);
+  cache.smp = {
+    ch, L: Lb,
+    rgb(x, y) { const i = idx(x, y); out[0] = ch[0][i]; out[1] = ch[1][i]; out[2] = ch[2][i]; return out; },
+    tone(x, y) { return Lb[idx(x, y)]; },
+  };
+  cache.smpKey = key;
+  return cache.smp;
 }

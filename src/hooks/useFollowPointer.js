@@ -1,3 +1,4 @@
+// src/hooks/useFollowPointer.js
 import { useEffect } from 'react';
 
 // Eases an element toward the mouse. Moves it with transform only.

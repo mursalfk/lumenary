@@ -6,5 +6,5 @@ import Studio from '../components/studio/Studio.jsx';
 // Route -> style lookup -> document title -> workspace.
 export default compose(
   withStyleRoute,
-  withDocumentTitle(({ style }) => `${style.name} — Lumenary`)
+  withDocumentTitle(({ style }) => `${style.name} | Lumenary`)
 )(Studio);

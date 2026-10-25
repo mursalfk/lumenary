@@ -9,7 +9,7 @@ export default function Footer() {
       <Credit name={AUTHOR.name} href={AUTHOR.site} />
       <div className="row">
         <NavLinks items={NAV_ITEMS} />
-        <small>Lumenary. Your pictures stay on your device.</small>
+        <small>Lumenary. Your pictures never leave your device.</small>
       </div>
     </footer>
   );

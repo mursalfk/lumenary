@@ -2,5 +2,5 @@
 export const NAV_ITEMS = [
   { to: '/', hash: 'index', label: 'Index' },
   { to: '/theory', label: 'Theory' },
-  { to: '/', hash: 'about', label: 'About' },
+  { to: '/about', label: 'About' },
 ];

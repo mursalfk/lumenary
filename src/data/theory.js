@@ -2,13 +2,26 @@
 // src/engine does; if you change an algorithm, change its entry too.
 import { THEORY_DESIGN } from './theory-design.js';
 import { THEORY_DIGITAL } from './theory-digital.js';
+import { THEORY_TYPE } from './theory-type.js';
+import { THEORY_LIGHT } from './theory-light.js';
+import { THEORY_PHYSICAL } from './theory-physical.js';
+import { THEORY_CRAFT } from './theory-craft.js';
+import { THEORY_PAINTERLY } from './theory-painterly.js';
+import { THEORY_OPTICAL } from './theory-optical.js';
+import { THEORY_GENERATIVE } from './theory-generative.js';
+import { THEORY_MOTION } from './theory-motion.js';
+import { THEORY_WORLD } from './theory-world.js';
+import { THEORY_SINDHI } from './theory-sindhi.js';
+import { THEORY_SOUTHASIA } from './theory-southasia.js';
+import { EXTRA } from './theory-extra/index.js';
 
 const T = String.raw;
 
 export const THEORY_INTRO =
-  'Lumenary does not call a filter library. Each treatment is a short program that reads the pixels of your ' +
-  'picture, does some arithmetic, and draws the result on a canvas. This page shows that arithmetic. ' +
-  'The first part covers the tools every treatment shares; the rest takes the treatments one section at a time.';
+  'There is no filter library behind Lumenary. Each treatment is a short program that reads the pixels of your ' +
+  'picture, does some arithmetic and draws the result on a canvas. These pages lay that arithmetic out in the open, ' +
+  'like notes in a lab book. The first part covers the tools every treatment shares, and the rest takes the ' +
+  'treatments one section at a time.';
 
 export const FOUNDATIONS = [
   {
@@ -303,4 +316,8 @@ const BASE_THEORY = {
 };
 
 // The first twenty treatments live above; later ones are kept in one file per section.
-export const THEORY = { ...BASE_THEORY, ...THEORY_DESIGN, ...THEORY_DIGITAL };
+const BASE = { ...BASE_THEORY, ...THEORY_DESIGN, ...THEORY_DIGITAL, ...THEORY_TYPE, ...THEORY_LIGHT, ...THEORY_PHYSICAL, ...THEORY_CRAFT, ...THEORY_PAINTERLY, ...THEORY_OPTICAL, ...THEORY_GENERATIVE, ...THEORY_MOTION, ...THEORY_WORLD, ...THEORY_SINDHI, ...THEORY_SOUTHASIA };
+
+// The mathematics (paragraphs, equations) lives in the theory-*.js files above. The fuller story of each
+// treatment (why, how, history, uses, tips, glossary, related) lives in theory-extra/ and is laid over it.
+export const THEORY = Object.fromEntries(Object.entries(BASE).map(([id, entry]) => [id, { ...entry, ...EXTRA[id] }]));

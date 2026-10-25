@@ -16,8 +16,8 @@ export default function HeroIntro() {
     >
       <h2>{capitalise(numberWords(STYLES.length))} ways to see an image.</h2>
       <p>
-        Choose a treatment, drop in a photograph and adjust a few dials.
-        Everything runs on your device, so your picture never leaves it.
+        Choose a treatment, bring a photograph and turn the dials slowly.
+        Everything is worked out on your own device, so the picture never leaves it.
       </p>
       <div className="actions">
         <MagneticButtonLink href="#index">Choose a treatment</MagneticButtonLink>

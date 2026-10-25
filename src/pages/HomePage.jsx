@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { startThumbs } from '../thumbs.js';
+import { SHOWCASE, requestThumbs } from '../thumbs.js';
 import withDocumentTitle from '../hoc/withDocumentTitle.jsx';
 import TopBar from '../components/home/TopBar.jsx';
 import Hero from '../components/home/Hero.jsx';
@@ -11,7 +11,7 @@ import Footer from '../components/home/Footer.jsx';
 import Grain from '../components/home/Grain.jsx';
 
 function HomePage() {
-  useEffect(() => { startThumbs(); }, []);
+  useEffect(() => { requestThumbs(SHOWCASE); }, []);
   return (
     <div className="home">
       <TopBar />

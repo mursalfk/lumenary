@@ -11,7 +11,7 @@ export default still({
   id: 'neo-brutalism',
   number: 20,
   name: 'Neo-brutalism',
-  blurb: 'Flat color blocks, thick black outlines and a hard offset shadow.',
+  blurb: 'Flat colour blocks, thick black outlines and a hard offset shadow.',
   maxSide: 1100,
   params: [
     { key: 'palette', label: 'Colors', type: 'select', default: 'pop', options: [['pop', 'Pop'], ['candy', 'Candy'], ['mono', 'Gray']] },

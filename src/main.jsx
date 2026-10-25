@@ -9,10 +9,15 @@ import '@fontsource/hanken-grotesk/400.css';
 import '@fontsource/hanken-grotesk/500.css';
 import '@fontsource/hanken-grotesk/600.css';
 import '@fontsource/hanken-grotesk/900.css';
+import '@fontsource/caveat/500.css';
+import '@fontsource/caveat/700.css';
+import '@fontsource/pinyon-script/400.css';
 import '@fontsource/dm-mono/400.css';
 import '@fontsource/dm-mono/500.css';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/700.css';
+import '@fontsource/noto-naskh-arabic/arabic-400.css';
+import '@fontsource/noto-naskh-arabic/arabic-700.css';
 import './styles/main.scss';
 
 import App from './App.jsx';

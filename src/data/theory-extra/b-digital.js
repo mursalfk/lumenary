@@ -1,0 +1,423 @@
+// src/data/theory-extra/b-digital.js
+// Section B, digital and technical: the fuller story of each treatment.
+export const EXTRA_DIGITAL = {
+  'ascii-art': {
+    facts: { from: 'Typewriters, line printers and early networks', era: '1960s onward', bestOn: 'High contrast portraits and logos' },
+    why: 'A character is a tiny picture, and some characters carry more ink than others. A full stop is nearly empty and an @ sign is nearly solid, so a row of characters can paint a row of grey tones. This treatment sorts a set of characters by how dark they are and lets each cell of your picture choose the one that matches its brightness.',
+    how: [
+      'Measure the width of a monospace letter, and from it work out how many rows fit, since letters are taller than they are wide.',
+      'Average the picture into one value per character cell.',
+      'Apply the contrast curve to each value.',
+      'Look up a character from a ramp ordered from empty to solid, flipping the order on a light background.',
+      'Place each character individually on the grid, so alignment stays exact even if the font changes.',
+    ],
+    history: 'Pictures made of typed symbols are older than computers, since typists made them from the 1890s. Kenneth Knowlton and Leon Harmon at Bell Labs built mosaic images from small printed symbols in 1966. The ASCII standard itself dates from 1963, and ASCII art spread through bulletin boards, email signatures and Usenet groups in the 1980s and 90s, wherever only plain text was available.',
+    uses: ['Terminal and README banners', 'Plain text emails and signatures', 'Developer themed posters and prints', 'Retro computing and hacker aesthetic posts'],
+    tips: [
+      { text: 'A small set of dots gives a delicate, newspaper-like result.', set: { charset: 'dots', detail: 160 } },
+      { text: 'Binary turns the picture into a screen of zeros and ones.', set: { charset: 'binary', detail: 90 } },
+      { text: 'Keep the original colours for a vivid, glowing text portrait.', set: { color: 'original', bold: true } },
+    ],
+    terms: [['Monospace', 'A typeface in which every character takes the same width, so columns line up.'], ['Character ramp', 'A list of characters ordered from the lightest to the heaviest.'], ['ASCII', 'A 1963 standard that assigned numbers to the letters, digits and symbols of English text.']],
+    related: ['dithering', 'matrix-rain', 'qr-barcode-art'],
+  },
+
+  'pixel-art': {
+    facts: { from: 'Early computers and game consoles', era: '1970s onward', bestOn: 'Simple subjects such as faces, objects and landscapes' },
+    why: 'Pixel art is a craft of limits. With only a few dozen pixels across and a handful of colours, every pixel matters. This treatment makes the three decisions an artist makes: how coarse the grid is, which colours to allow, and how to fake the missing shades with dithering.',
+    how: [
+      'Shrink the picture to the chosen width by repeated halving, then adjust saturation.',
+      'Choose a palette: a fixed historical one, or an adaptive one found by k-means clustering.',
+      'Add a tiny offset from a 4 × 4 Bayer pattern to each pixel.',
+      'Replace every pixel with the nearest palette colour, with green weighted a little more than red and blue.',
+      'Enlarge the small image without smoothing, so each pixel becomes a crisp square.',
+    ],
+    history: 'The term pixel art was published in 1982 by Adele Goldberg and Robert Flegal at Xerox PARC, but the craft grew from game and computer hardware: the four greens of the 1989 Game Boy, the few colours of the CGA card in 1981, and the 16 colour palettes of home computers. Today it is a deliberate style, used even when hardware limits no longer apply.',
+    uses: ['Game sprites and backgrounds', 'Avatars and emoji', 'Retro posters and stickers', 'App icons with a handmade feel'],
+    tips: [
+      { text: 'Game Boy green at low resolution is instantly recognisable.', set: { palette: 'gameboy', width: 48 } },
+      { text: 'Eight adaptive colours with strong dithering gives a classic 16 bit scene.', set: { colors: 8, dither: 70 } },
+      { text: 'Turn on the pixel grid to see each square.', set: { grid: true, width: 40 } },
+    ],
+    terms: [['Palette', 'The fixed set of colours an image is allowed to use.'], ['Ordered dithering', 'Faking in-between shades by comparing pixels with a repeating pattern of thresholds.'], ['k-means', 'A method that finds a few representative colours by repeatedly averaging groups of pixels.']],
+    related: ['dithering', 'lego-voxel', 'isometric'],
+  },
+
+  blueprint: {
+    facts: { from: 'Architecture and engineering offices', era: '1840s process, widely used 1870s to 1990s', bestOn: 'Buildings, machines and objects with clear outlines' },
+    why: 'A blueprint is a drawing meant to be read, so it is made of lines: outlines, hatching, dimensions and a title block. This treatment turns your picture into exactly that. Edges become drawn lines, shadow becomes hatching, and the page is furnished with a drafting grid and annotations, so the photograph reads like a technical study.',
+    how: [
+      'Blur the picture and find its edges, with the line weight setting how coarse the neighbourhood is.',
+      'Where the picture is darker than a threshold, draw a field of diagonal lines, and where it is darker still, cross it with a second set.',
+      'Add a drafting grid, with every fifth line stronger.',
+      'Mix paper and line colours according to the strength of lines, hatching and grid.',
+      'Draw the double border, dimension lines with arrowheads, the title block and registration crosses.',
+    ],
+    history: 'The cyanotype process, invented by Sir John Herschel in 1842, made white lines on a deep blue ground and let engineers copy drawings cheaply. Anna Atkins used it in the 1840s for her botanical books. Architects and engineers relied on blueprints from the 1870s until diazo prints and then computer drawing replaced them, and the name stuck for any detailed plan.',
+    uses: ['Product and architecture presentation visuals', 'Maker and engineering posters', 'Technical themed backgrounds', 'Mock-up sheets for portfolios'],
+    tips: [
+      { text: 'The whiteprint sheet looks like a modern drafting copy.', set: { scheme: 'whiteprint' } },
+      { text: 'High line detail with heavy hatching gives a rich study.', set: { detail: 90, hatch: 90 } },
+      { text: 'Rename the sheet to label your own drawing.', set: { title: 'STUDY NO. 7' } },
+    ],
+    terms: [['Cyanotype', 'A photographic printing process that produces a blue image, the origin of the word blueprint.'], ['Hatching', 'Parallel lines drawn to suggest shade.'], ['Title block', 'The box on a drawing that gives its name, number and author.']],
+    related: ['circuit-board', 'victorian', 'futuristic'],
+  },
+
+  'wireframe-3d': {
+    facts: { from: 'Early computer graphics and radio astronomy plots', era: '1960s onward', bestOn: 'Pictures with a bright subject on a dark ground' },
+    why: 'If brightness is read as altitude, a picture becomes a landscape, and a few hundred lines are enough to show it. This treatment builds that landscape and then does by hand what a 3D engine does: it rotates, tilts and projects it. Drawing the lines from back to front and filling under each one hides what is behind it, so ridges appear to stand in front of each other.',
+    how: [
+      'Sample the picture onto a grid and blur it lightly.',
+      'Turn every grid point into a 3D point whose height is its brightness.',
+      'Rotate it about the vertical axis, following your cursor or turning on its own, then tilt it towards the camera.',
+      'Project the points with perspective so nearer ones are drawn larger.',
+      'Draw lines from back to front, filling under each with the background colour so closer ridges hide farther ones.',
+    ],
+    history: 'Interactive 3D graphics began with Ivan Sutherland’s work in the 1960s, and the wireframe style defined early games such as Elite in 1984. The hidden-line trick used here is the painter’s algorithm, formalised in the early 1970s. Stacked ridge plots became famous through the 1979 Joy Division album Unknown Pleasures, whose cover reproduces a plot of pulsar pulses first drawn by Harold Craft in his 1970 thesis.',
+    uses: ['Terrain and data visualisation', 'Album and poster art', 'Technology and science visuals', 'Loopable backgrounds for video'],
+    tips: [
+      { text: 'Mesh mode draws both rows and columns, like a net over the picture.', set: { mode: 'mesh', lines: 56 } },
+      { text: 'Tall relief seen from a low camera makes a dramatic skyline.', set: { height: 90, tilt: 30 } },
+      { text: 'Switch off the auto turn and drag across it by hand.', set: { spin: 0 } },
+    ],
+    terms: [['Perspective projection', 'Mapping 3D points to a flat screen so that distant things look smaller.'], ['Painter’s algorithm', 'Drawing from the farthest thing to the nearest so that nearer things cover the rest.'], ['Yaw and pitch', 'Turning left or right, and tilting up or down.']],
+    related: ['oscilloscope', 'isometric', 'low-poly'],
+  },
+
+  'retro-vhs': {
+    facts: { from: 'Home video recorders', era: '1976 to the early 2000s', bestOn: 'Everyday scenes, party photos and street shots' },
+    why: 'A worn tape is a record of small mechanical failures: the picture wobbles, colours smear, a band of noise rolls up the screen and the bottom of the frame bends. Each of those flaws is simple arithmetic on lines of the picture, and together they create the feel of a memory that has been replayed too often.',
+    how: [
+      'Raise contrast by 12 percent and add a faint cool cast, as if the picture had been copied.',
+      'Shift every line sideways by the sum of two slow sine waves plus a little random jitter that changes 24 times a second.',
+      'Drift a tracking band down the screen, throwing lines far to the side inside it and adding dropout speckle.',
+      'Sample red, green and blue at slightly different horizontal positions for colour bleed.',
+      'Dim alternate rows, add static and corner shading, and stamp the PLAY overlay.',
+    ],
+    history: 'JVC introduced VHS in Japan in 1976, and it won the format battle against Sony’s Betamax in the 1980s. Rental shops and camcorders made it the way a generation recorded birthdays, holidays and television. Each copy lost a little quality, which is why smeared colour and tracking noise now stand for nostalgia.',
+    uses: ['Found footage and horror style visuals', 'Music video and lyric clip looks', 'Nostalgia posts and stories', 'Intros and transitions for retro video'],
+    tips: [
+      { text: 'Heavy tracking and noise looks like a tape found in a drawer.', set: { distortion: 90, noise: 80 } },
+      { text: 'Light distortion keeps the picture legible but unmistakably analogue.', set: { distortion: 20, scan: 30 } },
+      { text: 'Hide the PLAY overlay for a cleaner frame.', set: { osd: false } },
+    ],
+    terms: [['Tracking', 'Keeping the tape head aligned with the recorded lines. When it slips, bands of noise appear.'], ['Dropout', 'A short white speck or streak where the tape lost its signal.'], ['Colour bleed', 'Colour that spreads sideways past the edge of an object.']],
+    related: ['scanlines-crt', 'glitch', 'vaporwave'],
+  },
+
+  'scanlines-crt': {
+    facts: { from: 'Television and early computer monitors', era: '1930s to the 2000s', bestOn: 'Bright, colourful pictures and game screenshots' },
+    why: 'A cathode-ray tube draws a picture one line at a time with a beam that excites coloured phosphor dots on a curved glass face. All of that leaves a trace: the bulging shape, visible lines, a texture of colour stripes and a soft glow. Recreating them in turn makes a flat picture feel as if it is glowing from inside a box.',
+    how: [
+      'For each output pixel work out where it should come from on the flat picture using barrel distortion, which gives the curved face and dark rounded corners.',
+      'Multiply in the phosphor mask, which makes every third column favour red, green or blue.',
+      'Dim a soft band once per line pair to make the scanlines, then add static.',
+      'Add two blurred copies on top for glow.',
+      'Finish with a vignette, a glass reflection and a bezel with a rounded window.',
+    ],
+    history: 'Karl Ferdinand Braun built the first cathode-ray tube in 1897. Television sets from the 1930s used them, colour sets from the 1950s added three phosphors and a shadow mask, and CRT monitors served computers and consoles into the 2000s before flat panels replaced them. Retro games are still designed around CRT blur and scanlines.',
+    uses: ['Retro gaming screenshots and capture overlays', 'Nostalgic video and stream looks', 'Posters with a vintage screen feel', 'Sci-fi and hacker visuals'],
+    tips: [
+      { text: 'Strong curve and scanlines look like an old portable television.', set: { curve: 90, scan: 85 } },
+      { text: 'An aperture grille gives the vertical stripe look of a studio monitor.', set: { mask: 'grille' } },
+      { text: 'Switch off the bezel to fill the frame with the tube.', set: { bezel: false } },
+    ],
+    terms: [['Phosphor', 'A material that glows when struck by the electron beam.'], ['Barrel distortion', 'A bulging warp, strongest at the edges, like looking at a curved screen.'], ['Bloom', 'Light that seems to leak around bright areas.']],
+    related: ['retro-vhs', 'glitch', 'oscilloscope'],
+  },
+
+  glitch: {
+    facts: { from: 'Corrupted digital signals and files', era: '1990s onward', bestOn: 'Strong, clean subjects so the corruption stands out' },
+    why: 'A glitch is a signal that was copied wrongly, and its visual vocabulary is small: colours split apart, strips slide sideways, and blocks appear in the wrong place. This treatment keeps a copy of the picture and drops pieces of that copy back at the wrong positions, which is the same kind of mistake a faulty decoder makes.',
+    how: [
+      'Split the colour channels, taking red a few pixels from the left and blue a few from the right.',
+      'Keep a copy of the result.',
+      'Shift thin horizontal strips sideways by random distances, tinting some cyan or magenta.',
+      'Copy rectangles from one place and paste them somewhere else, some with the difference blend mode to make negatives.',
+      'Add white hairlines and speckles, using the seed for every random choice.',
+    ],
+    history: 'Glitch as a creative practice grew from musicians such as Oval in the 1990s who deliberately treated scratched discs as instruments. Visual artists followed with databending, and Rosa Menkman’s Glitch Studies Manifesto of 2010 gave the field a language. Streaming errors, broken downloads and video compression bugs are the everyday cousins of the style.',
+    uses: ['Music and event artwork', 'Title cards and transitions', 'Tech and cyber themed posters', 'Thumbnails that need tension'],
+    tips: [
+      { text: 'Maximum channel split without slices looks like a 3D print misregistered.', set: { rgb: 100, slices: 0 } },
+      { text: 'Many strips and stolen blocks give heavy corruption.', set: { slices: 55, blocks: 36 } },
+      { text: 'Turn off the tint for a more monochrome error.', set: { tint: false } },
+    ],
+    terms: [['Channel split', 'Shifting the red, green and blue layers of a picture against each other.'], ['Databending', 'Altering the data of a file on purpose to produce visual or audio errors.'], ['Difference blend', 'A way of combining layers that shows how much they differ, turning equal areas black.']],
+    related: ['datamosh', 'pixel-sorting', 'retro-vhs'],
+  },
+
+  'pixel-sorting': {
+    facts: { from: 'Generative art and creative coding', era: 'Around 2010 onward', bestOn: 'Pictures with a bright sky or large smooth areas' },
+    why: 'Sorting is the most ordinary operation in computing, and it does something strange to a picture: it keeps the colours but destroys the positions. If only the pixels inside a certain brightness range are sorted, the rest of the picture holds its structure while the chosen parts melt into long, tidy streaks.',
+    how: [
+      'Walk along a column (or row) of the picture.',
+      'Start collecting pixels when the brightness enters the chosen band.',
+      'Stop when it leaves the band or when the run reaches a random cap, the streak length.',
+      'Sort the collected pixels by the chosen key: brightness, hue, red or blue.',
+      'Write them back in sorted order, leaving every pixel outside the band untouched.',
+    ],
+    history: 'Pixel sorting was popularised around 2010 by the artist Kim Asendorf, who published a short script that sorted rows and columns of photographs. It has since become one of the signatures of glitch art. The idea was never new in mathematics, but it was a happy accident to point it at pictures.',
+    uses: ['Album and single artwork', 'Poster and cover art', 'Abstract wall prints', 'Opening frames for videos'],
+    tips: [
+      { text: 'Sort horizontally by hue for rainbow smears.', set: { dir: 'h', by: 'hue' } },
+      { text: 'Long streaks from a low threshold melt the whole sky.', set: { streak: 100, lo: 15 } },
+      { text: 'Reverse the order to flip the direction of the smear.', set: { reverse: true } },
+    ],
+    terms: [['Threshold', 'A cut-off value that decides whether a pixel is included.'], ['Sort key', 'The property pixels are ordered by, such as brightness or hue.'], ['Run', 'A stretch of consecutive pixels that is sorted together.']],
+    related: ['glitch', 'datamosh', 'surreal'],
+  },
+
+  datamosh: {
+    facts: { from: 'Video compression errors', era: '2000s onward', bestOn: 'Scenes with strong shapes and plenty of colour' },
+    why: 'Video files save space by storing most frames as instructions: this block came from over there, moved by this much. If the frame that resets the picture is deleted, the instructions keep being applied to old pixels, and colour drags along the motion. Here the picture is split into blocks, each with a motion vector, and the vectors are applied again and again.',
+    how: [
+      'Split the picture into square blocks.',
+      'Give each block a motion vector from smooth value noise, so neighbours move together in a swirl.',
+      'Run several frames, each time replacing a block by the block one vector behind it, with a little random variation.',
+      'With a probability that falls over time, refresh a block from the original so the picture is not entirely lost.',
+      'Shrink some blocks to one pixel and enlarge them for the flat, blocky patches of damaged video.',
+    ],
+    history: 'Datamoshing appeared in experimental video in the mid 2000s, with early work by artists such as Takeshi Murata, and reached a wide audience through music videos around 2009 and 2010. It exploits the structure of compressed video, in which a few full frames are followed by many frames that only describe change.',
+    uses: ['Music video and visualiser looks', 'Transitions and title sequences', 'Experimental poster art', 'Thumbnails with a motion feel'],
+    tips: [
+      { text: 'Long smears with little of the original look like pure paint dragged across the page.', set: { frames: 40, keep: 5 } },
+      { text: 'Bigger blocks make a rougher, more digital collapse.', set: { block: 40, flat: 25 } },
+      { text: 'Low motion keeps the picture readable.', set: { motion: 15, keep: 70 } },
+    ],
+    terms: [['Motion vector', 'An arrow that says how far and in which direction a block of pixels moved between frames.'], ['I-frame', 'A full frame in a compressed video, which resets the picture.'], ['Value noise', 'Smooth random variation made by blending random values placed on a grid.']],
+    related: ['glitch', 'pixel-sorting', 'retro-vhs'],
+  },
+
+  dithering: {
+    facts: { from: 'Printing and early computer graphics', era: '1970s onward', bestOn: 'Smooth gradients and portraits' },
+    why: 'When there are only a few colours to choose from, a smooth gradient has nowhere to go. Dithering fakes the missing shades by mixing the colours that exist, because your eye blends small dots into an in-between tone. The result keeps the sense of a smooth picture using nothing but black and white, or a handful of colours.',
+    how: [
+      'Shrink the picture by the pixel size and stretch it for contrast.',
+      'For small palettes, use brightness alone, and for colour palettes, find the nearest colour with a weighting that suits human vision.',
+      'In ordered dithering, compare each pixel with a fixed pattern of thresholds, a Bayer matrix, and round up or down accordingly.',
+      'In error diffusion, round the pixel and push the rounding error onto neighbours that have not been processed yet.',
+      'Enlarge the result without smoothing so the dots stay crisp.',
+    ],
+    history: 'Bryce Bayer published the ordered dither matrices in 1973, and Robert Floyd and Louis Steinberg described error diffusion in 1976. Bill Atkinson devised the variation used in the original Macintosh’s MacPaint in 1984, spreading only three quarters of the error so highlights and shadows stay clean. Dithering is still used in GIF images, e-paper and printers.',
+    uses: ['Retro computer and Macintosh style art', 'E-ink and low power display images', 'Printing and engraving with few inks', 'Stylised poster and sticker work'],
+    tips: [
+      { text: 'Atkinson in the Mac palette is the classic 1984 look.', set: { method: 'atkinson', palette: 'mac' } },
+      { text: 'Bayer 8 gives a regular woven pattern.', set: { method: 'bayer8', scale: 3 } },
+      { text: 'Amber on black is a monochrome terminal.', set: { palette: 'amber', method: 'floyd' } },
+    ],
+    terms: [['Error diffusion', 'Passing the rounding error of one pixel to its unprocessed neighbours.'], ['Bayer matrix', 'A square grid of thresholds designed so the dots spread evenly.'], ['Palette', 'The fixed set of colours that may be used.']],
+    related: ['pixel-art', 'ascii-art', 'qr-barcode-art'],
+  },
+
+  'night-vision': {
+    facts: { from: 'Military and wildlife optics', era: '1960s onward', bestOn: 'Dark scenes and silhouettes' },
+    why: 'An image intensifier collects a few photons, multiplies them electronically and shows them on a green phosphor screen. The result is bright but noisy, and its look is easy to recognise: green, grainy, with halos around lights and a round field of view. This treatment lifts the shadows, adds noise and scenery of the same kind.',
+    how: [
+      'Lift the shadows with a power curve whose exponent drops as gain rises, then multiply the result.',
+      'Add a share of a blurred copy for the glow around bright things.',
+      'Add noise and rare bright speckles.',
+      'Send the result through a four-stop ramp: near black, dark green, bright green, almost white.',
+      'Mask it with a lens (one circle, or two for binoculars), dim every third row and draw the HUD.',
+    ],
+    history: 'Infrared and image-intensifier devices were developed for the military in the 1940s and 50s, and the first generation of starlight scopes reached the field in the 1960s. Later generations were far more sensitive. The green colour is a design choice: the human eye can distinguish more shades of green than of other colours.',
+    uses: ['Thriller and found-footage styled scenes', 'Wildlife trail camera looks', 'Game and film overlays', 'Posters with a surveillance feel'],
+    tips: [
+      { text: 'Binocular view with high gain looks like a field scope.', set: { view: 'binocular', gain: 85 } },
+      { text: 'A white phosphor tube is a modern look.', set: { tint: 'white' } },
+      { text: 'Heavy grain with the HUD off feels like a raw sensor.', set: { noise: 90, hud: false } },
+    ],
+    terms: [['Image intensifier', 'A tube that amplifies faint light electronically and shows it on a phosphor screen.'], ['Gain', 'How much a signal is multiplied.'], ['Phosphor', 'A coating that glows when hit by electrons.']],
+    related: ['thermal-camera', 'scanlines-crt', 'futuristic'],
+  },
+
+  'thermal-camera': {
+    facts: { from: 'Infrared imaging', era: '1960s onward', bestOn: 'Portraits and warm subjects against cooler backgrounds' },
+    why: 'A thermal camera shows heat as false colour on a small, coarse sensor. This treatment does not measure temperature. It borrows brightness as a stand-in for heat, cuts the picture into sensor cells and sends the values through a colour ramp, so warm, bright areas glow like a body in an infrared scan.',
+    how: [
+      'Cut the picture into cells the size of the sensor pixel, and take the brightness at the centre of each.',
+      'Add a very small amount of noise to each cell.',
+      'Treat brightness as heat and stretch its contrast about the middle.',
+      'Send the heat through the chosen colour ramp.',
+      'Find the hottest spot, mark it with a crosshair and a reading, and draw the scale bar.',
+    ],
+    history: 'William Herschel discovered infrared radiation in 1800 by placing a thermometer beyond the red end of a sunlit spectrum. Thermal imaging cameras reached industry and the military in the second half of the twentieth century, and cheaper uncooled sensors in the 1990s took them into firefighting, building inspection and wildlife work. The ironbow palette is a common choice for showing heat.',
+    uses: ['Science and technology posters', 'Building and home energy illustrations', 'Sci-fi and security camera looks', 'Playful “heat vision” portraits'],
+    tips: [
+      { text: 'The rainbow palette separates tones the most clearly.', set: { palette: 'rainbow' } },
+      { text: 'A very coarse sensor reads like a cheap early camera.', set: { sensor: 12 } },
+      { text: 'Black hot flips the scale, as many cameras can.', set: { invert: true, palette: 'white' } },
+    ],
+    terms: [['False colour', 'Colour that does not come from the real scene but from a scale that maps values to colours.'], ['Infrared', 'Light just beyond red, invisible to us, emitted by warm objects.'], ['Sensor pixel', 'One cell of the camera’s detector.']],
+    related: ['night-vision', 'futuristic', 'pixel-art'],
+  },
+
+  'circuit-board': {
+    facts: { from: 'Electronics manufacturing', era: '1940s onward', bestOn: 'Portraits and pictures with clear edges and some flat areas' },
+    why: 'A circuit board is a drawing in copper: straight runs, 45 degree corners, round pads with holes. Those rules happen to turn any picture into a pattern that is both technical and graphic. Here the traces follow the picture’s own edges, snapped to four directions, while the green soldermask still contains the picture itself.',
+    how: [
+      'Tint and darken the picture to make the board surface.',
+      'In the darkest areas, add a diagonal copper hatch like a ground plane.',
+      'On a grid, measure the edge direction in each cell, turn it to run along the edge, and snap it to horizontal, vertical or either diagonal.',
+      'Where traces are crowded, add round pads with holes and small vias.',
+      'Place chips with pins on calm areas, never overlapping, and print part numbers such as R12 and C7 on empty cells.',
+    ],
+    history: 'The printed circuit was developed by Paul Eisler in the 1930s and 40s and was used widely in electronics after the Second World War. Its 45 degree routing came from the need to avoid sharp corners that were hard to etch and prone to faults. Today almost every electronic device contains one, and their patterns have become a decorative language of their own.',
+    uses: ['Technology and engineering branding', 'Posters for electronics and maker events', 'Wallpaper and backgrounds with a hardware feel', 'Game and sci-fi interface art'],
+    tips: [
+      { text: 'A black board with a dense grid looks like a modern motherboard.', set: { board: 'black', density: 80 } },
+      { text: 'Lower the edge threshold for many more traces.', set: { thresh: 5 } },
+      { text: 'Remove the chips for a pure trace drawing.', set: { chips: false } },
+    ],
+    terms: [['Soldermask', 'The coloured coating over a board that protects the copper.'], ['Via', 'A small plated hole that joins traces on different layers.'], ['Ground plane', 'A large copper area that serves as a shared return path.']],
+    related: ['blueprint', 'futuristic', 'matrix-rain'],
+  },
+
+  'qr-barcode-art': {
+    facts: { from: 'Retail and manufacturing codes', era: '1950s barcode, 1994 QR code', bestOn: 'Bold, high contrast pictures and logos' },
+    why: 'A QR code looks like noise but follows strict structure: three large squares in the corners, a smaller alignment square and alternating timing lines. This treatment copies that structure so the picture looks like a code at a glance, then fills the free cells from the photograph. It will not scan, but it keeps the visual language of a machine-readable label.',
+    how: [
+      'Lay out the three finder squares, the alignment square and the timing lines.',
+      'Measure brightness for every other module.',
+      'Add a Bayer threshold to it and make the module black when the result is below a half, which is an ordered dither.',
+      'In bar mode, stack thin bands and place bars at fixed spacing along each one.',
+      'Make each bar’s width follow the darkness of the picture, and print a row of digits beneath.',
+    ],
+    history: 'The barcode was patented by Norman Woodland and Bernard Silver in 1952, and the first product was scanned in a supermarket in 1974. The QR code was created in 1994 by Masahiro Hara at Denso Wave to track car parts in Japan, and it became everyday with smartphone cameras. Real codes use error correction, so part of the code can be damaged and still scan.',
+    uses: ['Packaging and label inspired design', 'Tech and retail aesthetic posters', 'Backgrounds with a coded look', 'Stickers and badges'],
+    tips: [
+      { text: 'High detail with round modules softens the grid.', set: { modules: 85, dots: true } },
+      { text: 'White on black is a night version.', set: { invert: true } },
+      { text: 'Switch to bars for a barcode portrait.', set: { mode: 'bars' } },
+    ],
+    terms: [['Module', 'One small square of a QR code.'], ['Finder pattern', 'The large square in a corner that lets a scanner locate and orient the code.'], ['Ordered dither', 'Turning grey into black and white dots using a repeating threshold pattern.']],
+    related: ['dithering', 'ascii-art', 'circuit-board'],
+  },
+
+  'matrix-rain': {
+    facts: { from: 'Science fiction cinema', era: '1999 onward', bestOn: 'High contrast pictures with a bright subject' },
+    why: 'The falling green characters are a visual idea about code made visible. Every column of this treatment has its own speed, trail and starting point, and the bright head of each drop leaves a fading trail. The picture appears because a drop glows brighter where the picture is brighter, and because bright regions hold a faint steady glow between drops.',
+    how: [
+      'Reduce the picture to one brightness value per character cell.',
+      'Give each column its own fall speed, trail length and offset, fixed by the seed.',
+      'Move the head of each drop down and fade the brightness along the trail behind it.',
+      'Make drops brighter where the picture is bright, and keep a faint glow in bright regions between drops.',
+      'Change characters at random, slowly in the trail and quickly at the head, and group them into ten brightness levels so painting stays fast.',
+    ],
+    history: 'The digital rain was designed for the 1999 film The Matrix by Simon Whiteley, who has said that the characters came from scans of Japanese cookbooks. It became shorthand for the idea of a hidden layer of code, and has been a screensaver, a meme and a tribute many times since.',
+    uses: ['Hacker and code themed backgrounds', 'Technology event visuals', 'Stream overlays and screensavers', 'Title cards for talks and videos'],
+    tips: [
+      { text: 'Amber kana looks like a very old terminal.', set: { tint: 'amber', glyphs: 'kana' } },
+      { text: 'Strong picture strength shows the portrait clearly.', set: { picture: 100 } },
+      { text: 'Fast, tiny glyphs make a dense downpour.', set: { size: 9, speed: 90 } },
+    ],
+    terms: [['Glyph', 'The shape of a single character.'], ['Trail', 'The fading line of characters behind the head of a drop.'], ['Hash', 'A function that turns inputs into pseudo-random but repeatable numbers.']],
+    related: ['ascii-art', 'night-vision', 'circuit-board'],
+  },
+
+  oscilloscope: {
+    facts: { from: 'Electronic test equipment', era: '1930s onward', bestOn: 'Pictures with a bright subject on a dark ground' },
+    why: 'An oscilloscope shows a signal as a glowing line on a gridded screen. Stack a few dozen such lines and let each rise with the brightness of the picture, and you get a landscape of peaks that still contains a portrait. Hiding each line behind the one in front is what makes the stack read as a surface.',
+    how: [
+      'Make one trace for each of a set of rows of the picture.',
+      'Along each trace, make its height above its baseline the brightness raised to the power 1.5, so only the brightest parts become tall peaks.',
+      'Flatten both ends to the baseline so lines meet the frame.',
+      'Draw from back to front, filling the area below each trace with the screen colour before stroking it.',
+      'Add the graticule of eight columns by ten rows and a glow made of two blurred copies.',
+    ],
+    history: 'Karl Ferdinand Braun’s cathode-ray tube of 1897 made oscilloscopes possible. In 1958 William Higinbotham at Brookhaven National Laboratory made Tennis for Two, one of the first video games, on an oscilloscope screen. Stacked waveform plots entered popular culture with Joy Division’s Unknown Pleasures in 1979, and a small scene of oscilloscope music has grown since.',
+    uses: ['Music and album artwork', 'Science and electronics posters', 'Data art and backgrounds', 'Retro lab and sci-fi graphics'],
+    tips: [
+      { text: 'Amber phosphor with many traces is a delicate engraving.', set: { phosphor: 'amber', lines: 110 } },
+      { text: 'Strong amplitude gives tall, dramatic peaks.', set: { amp: 95 } },
+      { text: 'Turn off hiding to see through every line.', set: { hidden: false } },
+    ],
+    terms: [['Graticule', 'The grid printed on an oscilloscope screen for reading values.'], ['Trace', 'The glowing line that shows the signal.'], ['Painter’s algorithm', 'Drawing the farthest things first so nearer ones cover them.']],
+    related: ['wireframe-3d', 'scanlines-crt', 'night-vision'],
+  },
+
+  'depth-parallax': {
+    facts: { from: 'Animation, games and phone cameras', era: '1930s concept, 2010s depth photos', bestOn: 'Landscapes and tables with a foreground and a background' },
+    why: 'Two things at different distances shift by different amounts when you move your head, and that difference is parallax. A flat photograph has no distances, so this treatment guesses them: brighter things are nearer, and things lower in the frame are nearer. Shifting each point by its guessed depth makes the flat picture appear to turn as the cursor moves.',
+    how: [
+      'Blend two guesses of depth: brightness, and height in the frame.',
+      'Blur the depth twice so it changes smoothly instead of with every speck of texture.',
+      'Move each point sideways in proportion to how far its depth is from the focus plane, in the direction of the camera.',
+      'Look up the depth where the pixel lands, twice, because the first guess lands on a different depth than the pixel started on.',
+      'Ease the camera towards the cursor, or let it drift in a slow figure of eight, and run the warp on a small copy for speed.',
+    ],
+    history: 'Disney’s multiplane camera, used in the 1930s, created depth in animation by moving painted glass layers at different speeds. Side-scrolling games used the same idea from the early 1980s. In the 2010s phones began to store a real depth map with photographs, which made it possible to move a still picture like a tiny 3D scene.',
+    uses: ['Living photographs and hero images on websites', 'Social posts with depth', 'Presentation backgrounds', 'Previews of depth-aware photos'],
+    tips: [
+      { text: 'Maximum depth with dark as near reverses the guess.', set: { depth: 100, near: 'dark' } },
+      { text: 'Move the focus plane closer to the front to pin the foreground.', set: { focus: 20 } },
+      { text: 'Turn off the drift to keep it still until you move.', set: { drift: false } },
+    ],
+    terms: [['Parallax', 'The apparent shift of near objects against far ones when the viewpoint moves.'], ['Depth map', 'An image whose values say how far away each pixel is.'], ['Focus plane', 'The depth that stays still while everything else moves.']],
+    related: ['isometric', 'wireframe-3d', 'low-poly'],
+  },
+
+  isometric: {
+    facts: { from: 'Technical drawing, then video games', era: '1820s theory, 1980s games', bestOn: 'Pictures with clear light and dark regions, such as cityscapes' },
+    why: 'Isometric drawing shows three faces of a cube with no vanishing point, so every block has the same size wherever it sits. That makes it a natural way to turn a picture into a city of columns, with height following brightness. Three fixed shades on the three faces suggest a light source and give the flat blocks volume.',
+    how: [
+      'Reduce the picture to a small grid.',
+      'Make each cell a block with the cell’s colour and a height from its brightness, after an auto-levels stretch.',
+      'Draw each block as three flat faces: a top, a left side and a right side with fixed brightness multipliers.',
+      'Project with the 2:1 dimetric view, so a step on a grid axis moves half a tile across and a quarter of a tile down.',
+      'Draw blocks in order of i plus j, from back to front, and scale the city to fit.',
+    ],
+    history: 'William Farish formalised isometric projection at Cambridge in 1822, and engineers used it for technical drawings. Video games adopted it in the 1980s with titles such as Zaxxon and Q*bert, and city builders like SimCity 2000 in 1993 made it familiar. The 2:1 version used here keeps lines on whole pixel steps, which is why pixel artists prefer it.',
+    uses: ['Data and city style visualisations', 'Game and pixel art backgrounds', 'Architecture and infographic art', 'Playful poster work'],
+    tips: [
+      { text: 'Tall blocks with narrow gaps feel like a dense skyline.', set: { height: 100, gap: 10 } },
+      { text: 'Greyscale blocks look like a clean architectural model.', set: { mono: true } },
+      { text: 'Make dark areas tall to invert the city.', set: { invert: true } },
+    ],
+    terms: [['Isometric', 'Greek for equal measure: a view in which all three axes are shown at equal scale.'], ['Dimetric 2:1', 'A projection where each step moves two units across for one down, loved by pixel artists.'], ['Lambert shading', 'Brightness that depends on the angle between a surface and the light.']],
+    related: ['lego-voxel', 'low-poly', 'pixel-art'],
+  },
+
+  'low-poly': {
+    facts: { from: '3D graphics and illustration', era: '1990s onward', bestOn: 'Portraits, animals and landscapes with clear forms' },
+    why: 'Low-poly style rebuilds a picture from a few hundred flat triangles. The skill lies in choosing where to put the corners: many near edges, where the picture changes quickly, and few on flat ground. The triangles are then joined by Delaunay triangulation, which avoids long thin slivers, and each is painted one flat colour.',
+    how: [
+      'Place points along the frame so the mesh covers the whole picture.',
+      'Try random points, keeping one with a probability that rises with edge strength and only if it is far enough from points already kept.',
+      'Allow a smaller minimum distance near edges, so triangles are small there.',
+      'Join the points with Delaunay triangulation by the Bowyer-Watson method.',
+      'Fill each triangle with the average of four samples of the picture plus a small random brightness change.',
+    ],
+    history: 'Boris Delaunay described his triangulation in 1934, and Adrian Bowyer and David Watson published the incremental algorithm independently in 1981. Polygon models defined 3D games in the 1990s, from Virtua Fighter to the first PlayStation titles. Later, artists adopted the faceted look on purpose for posters, wallpapers and logos.',
+    uses: ['Wallpapers and posters', 'Logos and brand patterns', 'Faceted portrait art', 'Game and app backgrounds'],
+    tips: [
+      { text: 'A few hundred points make a bold, graphic portrait.', set: { points: 250, shade: 50 } },
+      { text: 'More points that follow the edges keep fine detail.', set: { points: 1200, edges: 90 } },
+      { text: 'Draw the facet lines to show the mesh.', set: { lines: true } },
+    ],
+    terms: [['Delaunay triangulation', 'The mesh in which no point lies inside the circle through any triangle’s corners.'], ['Facet', 'One flat face of a mesh.'], ['Mesh', 'A network of connected points and the shapes between them.']],
+    related: ['vector-art', 'isometric', 'wireframe-3d'],
+  },
+
+  'lego-voxel': {
+    facts: { from: 'Toy bricks and voxel graphics', era: '1958 brick, 2010s voxel art', bestOn: 'Bold, colourful subjects and simple faces' },
+    why: 'A brick mosaic is a palette problem. Each stud can only be one of the colours that bricks come in, so the picture is rebuilt from a small, fixed set. A little ordered dithering lets a smooth gradient become a mix of two neighbouring brick colours, and the drawn studs with their shadows and shine make it feel like plastic.',
+    how: [
+      'Reduce the picture to one pixel per stud, each the average of its patch.',
+      'Add a small offset from a 4 × 4 Bayer pattern so gradients mix two brick colours.',
+      'Replace each stud with the nearest brick colour, using a weighting that favours red in bright colours and blue in dark ones.',
+      'Draw each stud as a short cylinder with a shadow, a darker side, a lighter top and a pale arc of shine.',
+      'Give each brick a light top and left edge and a dark bottom and right edge.',
+    ],
+    history: 'The LEGO brick in its modern interlocking form was patented in 1958 in Denmark. Mosaics from plates of single-colour studs became a hobby of their own, and LEGO later sold sets that build art from them. A voxel is a pixel with volume, and games such as Minecraft turned the idea of a world made of cubes into mainstream culture.',
+    uses: ['Toy and kids’ brand visuals', 'Party and gift graphics', 'Mosaic planning and portrait ideas', 'Playful avatars'],
+    tips: [
+      { text: 'Fewer studs make a chunkier, more readable mosaic.', set: { studs: 24 } },
+      { text: 'The greys palette gives a smooth sculptural portrait.', set: { palette: 'greys', studs: 60 } },
+      { text: 'Switch the shine off for matte bricks.', set: { shine: false } },
+    ],
+    terms: [['Stud', 'The round bump on top of a brick.'], ['Voxel', 'A pixel in three dimensions: a small cube in a grid.'], ['Ordered dithering', 'Mixing nearby colours in a regular pattern to suggest shades between them.']],
+    related: ['pixel-art', 'isometric', 'dithering'],
+  },
+};

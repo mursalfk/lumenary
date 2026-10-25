@@ -7,7 +7,7 @@ export default {
   kind: 'animated',
   maxSide: 900,
   thumbAt: 1.0,
-  blurb: 'The picture dissolved into a slow, soft field of its own colors.',
+  blurb: 'The picture dissolved into a slow, soft field of its own colours.',
   params: [
     { key: 'points', label: 'Color points', type: 'range', min: 3, max: 9, step: 1, default: 5 },
     { key: 'warp', label: 'Warp', type: 'range', min: 0, max: 100, step: 1, default: 55 },

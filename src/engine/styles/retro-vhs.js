@@ -9,7 +9,7 @@ export default {
   kind: 'animated',
   maxSide: 640,
   thumbAt: 2.0,
-  blurb: 'Worn tape: color bleed, tracking glitches, scanlines and a PLAY stamp.',
+  blurb: 'Worn tape: colour bleed, tracking glitches, scanlines and a PLAY stamp.',
   params: [
     { key: 'distortion', label: 'Tracking', type: 'range', min: 0, max: 100, step: 1, default: 55 },
     { key: 'noise', label: 'Tape noise', type: 'range', min: 0, max: 100, step: 1, default: 40 },

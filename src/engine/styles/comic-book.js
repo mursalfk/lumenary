@@ -4,7 +4,7 @@ export default still({
   id: 'comic-book',
   number: 12,
   name: 'Comic book',
-  blurb: 'Flat inked color, hard outlines and printed dots in the shadows.',
+  blurb: 'Flat inked colour, hard outlines and printed dots in the shadows.',
   maxSide: 1100,
   params: [
     { key: 'levels', label: 'Color steps', type: 'range', min: 2, max: 8, step: 1, default: 4 },

@@ -1,0 +1,466 @@
+// src/data/theory-extra/k-world.js
+// Section K, world cultural traditions: the fuller story of each treatment.
+// These are living crafts. The programs borrow how they look, never what they mean.
+export const EXTRA_WORLD = {
+  'ukiyo-e': {
+    facts: { from: 'Edo, now Tokyo, Japan', era: 'Seventeenth to nineteenth century', bestOn: 'Landscapes, skies and pictures with clear shapes' },
+    why: 'A woodblock print can only lay down flat colour, one block at a time, so the picture has to be reduced to a few solid areas before anything is carved. That limit is the look: a firm black key line, a handful of pigments, and a soft fade of colour called bokashi in the sky, which the printer makes by wiping the block. The slight slip between blocks and the grain of the wood remind you that it was pressed by hand.',
+    how: [
+      'Blur the picture by 0.9 times the simplify slider and raise its saturation a little.',
+      'Match every pixel to the nearest of eight pigments an Edo printer would have had: Prussian blue, vermilion, ochre, sage, pink, grey-brown, paper and sumi ink.',
+      'Run a majority filter over a 5 by 5 neighbourhood twice to remove specks that a knife could never cut.',
+      'Draw the key line from edges, add bokashi fades in the sky, and let the wood grain and paper fibre show through the ink.',
+      'Shift each colour layer slightly to imitate misregistration between blocks, and stamp an artist’s seal.',
+    ],
+    history: 'Ukiyo-e means pictures of the floating world, the pleasure districts and theatres of Edo. Suzuki Harunobu produced the first full colour prints in 1765, and Katsushika Hokusai and Utagawa Hiroshige made landscapes famous in the early nineteenth century, including Hokusai’s Great Wave. Prussian blue, imported in the 1820s, gave the skies and seas of that period their depth. The prints reached Europe in the nineteenth century and influenced artists such as Monet and Van Gogh.',
+    uses: ['Poster and book cover illustration', 'Packaging and tea or sake labels', 'Teaching printmaking and colour separation', 'Travel and landscape graphics'],
+    tips: [
+      { text: 'Strong bokashi turns a plain sky into a dawn.', set: { bokashi: 95 } },
+      { text: 'Aged paper gives the look of a collected print.', set: { paper: 'aged', wood: 80 } },
+      { text: 'High simplification shows how few colours the blocks allowed.', set: { simplify: 9, reg: 60 } },
+    ],
+    terms: [['Bokashi', 'A gradual fade of colour made by wiping ink on the block.'], ['Key block', 'The block that prints the black outlines.'], ['Registration', 'The way blocks are lined up so colours meet exactly.']],
+    related: ['linocut', 'screen-print', 'sashiko'],
+  },
+
+  'papel-picado': {
+    facts: { from: 'Mexico', era: 'Centuries old, with tissue paper from the 19th century', bestOn: 'Bright, simple pictures with warm colour' },
+    why: 'Papel picado means punched paper. Banners of tissue are strung across streets and altars for fiestas and for the Day of the Dead, and they flutter in the wind, so the light through the holes keeps moving. Holes are the whole drawing here: the more light a place in your picture has, the wider the cut, so the picture shows through the openings.',
+    how: [
+      'Draw each banner as a rectangle of width w and height 1.18 w, with a zigzag lower edge of seven teeth and a fold at the top where the string runs.',
+      'Hang rows from straight lines, shift alternate rows by half a banner and tilt each by a few hundredths of a radian.',
+      'Cut by painting in destination-out mode, so cuts remove paper and show what is behind.',
+      'Add a border of small holes and a 7 by 7 lattice in the middle, where each hole is sized by the blurred brightness of the picture at that cell.',
+      'Colour the tissue from a fiesta, pastel or marigold palette, or from the picture, with a see-through setting.',
+    ],
+    history: 'Paper cutting in Mexico has roots in the bark paper (amate) of the Aztecs and in tissue that crossed the Pacific on the Manila galleons from the sixteenth century. The banners are made today by stacking fifty or so sheets and tapping steel chisels through them with a mallet. Papel picado is a symbol of Día de Muertos, on the first and second of November, when it decorates altars for the dead.',
+    uses: ['Fiesta, wedding and Día de Muertos decoration', 'Banners and bunting designs', 'Packaging and cultural festival graphics', 'Classroom paper craft'],
+    tips: [
+      { text: 'Pastel tissue on a dusk sky looks like the evening of a festival.', set: { colour: 'pastel', backdrop: 'dusk' } },
+      { text: 'Flower-shaped holes give a floral lace.', set: { shape: 'flower', holes: 90 } },
+      { text: 'Thicker tissue hides more of the backdrop.', set: { tissue: 70 } },
+    ],
+    terms: [['Papel picado', 'Mexican banners of tissue paper cut with patterns.'], ['Amate', 'Bark paper made in Mexico since before the Spanish arrived.'], ['Día de Muertos', 'The Day of the Dead, a celebration of remembered family and friends.']],
+    related: ['chinese-paper-cut', 'paper-cut-out', 'talavera'],
+  },
+
+  'chinese-paper-cut': {
+    facts: { from: 'China', era: 'More than a thousand years old', bestOn: 'Bold silhouettes and faces' },
+    why: 'A paper-cut is made from one sheet, so every part has to stay joined to the rest. Fine detail therefore comes from slits, crescents and teeth rather than loose islands. Dark areas stay solid, midtones turn to lace and bright areas open out completely, which gives a graded picture from nothing but cuts. Red is the colour of luck.',
+    how: [
+      'Compute darkness v = 1 − L from the blurred brightness L.',
+      'Cut away the paper where v is below a lower threshold T₀.',
+      'Above it, let a cut amount k rise smoothly as the picture gets lighter, deciding how wide each slit or how big each crescent is.',
+      'Write each pattern (slits, crescents, teeth or dots) as a simple condition on the pixel position with a pattern size q.',
+      'Add a border of cuts and a shadow so the paper looks lifted from the background.',
+    ],
+    history: 'Paper was invented in China, and the oldest surviving paper-cuts, found in tombs at Turpan, date from about the sixth century. Windows are decorated with paper-cuts at the Spring Festival, and the character for double happiness is cut for weddings. Chinese paper-cut was added to UNESCO’s list of intangible cultural heritage in 2009.',
+    uses: ['Window decorations for festivals and weddings', 'Greeting cards and New Year graphics', 'Silhouette and stencil design', 'Lace-like logos and packaging'],
+    tips: [
+      { text: 'Black paper with fine crescents looks like lace.', set: { paper: 'black', pattern: 'crescent' } },
+      { text: 'Keep more paper for a bolder, simpler cut.', set: { cut: 80, size: 12 } },
+      { text: 'Gold paper with teeth gives a festive border.', set: { paper: 'gold', pattern: 'teeth', frame: 100 } },
+    ],
+    terms: [['Jianzhi', 'The Chinese art of paper cutting.'], ['Positive and negative', 'The cut-away parts and the paper that remains.'], ['Silhouette', 'A shape seen as a solid outline.']],
+    related: ['papel-picado', 'paper-cut-out', 'stained-glass'],
+  },
+
+  'aboriginal-dot-painting': {
+    facts: { from: 'The Western Desert, Australia', era: 'Acrylic painting from 1971', bestOn: 'Landscapes, which fit the contour rings' },
+    why: 'This treatment borrows only a visual technique, rows of dots in earth colours on dark ground. A real work carries what a picture cannot: the stories and law of a Country, which belong to the people and families who hold them. Dots were used in part to cover the meaning of a design from people who were not meant to read it. Please read this as a tribute and not as a copy, and look for the real paintings.',
+    how: [
+      'Blur the picture’s brightness heavily to a smooth field F.',
+      'Find the contour lines where F crosses each of n evenly spaced levels, using marching squares, and chain the pieces into curves.',
+      'Place dots of radius R along each curve every 2.3 R of arc length, with a little jitter.',
+      'Colour each ring from the ochre palette by level, in bands, or from the picture.',
+      'Fill the ground between rings with scattered small dots, on black, red or night ground.',
+    ],
+    history: 'In 1971 men of several language groups at Papunya, in the Northern Territory, began to paint on boards and canvas, with the encouragement of a schoolteacher, Geoffrey Bardon, the designs that belong to their Country and its stories. The Papunya Tula Artists company followed in 1972. Today Aboriginal artists across Australia, working through their own art centres, are among the best known painters in the world.',
+    uses: ['Learning about Aboriginal art and Country', 'Contour and elevation visualisation', 'Educational projects made with respect', 'Pointillist abstractions'],
+    tips: [
+      { text: 'Banded colours show the rings as separate layers of country.', set: { colour: 'bands', rings: 15 } },
+      { text: 'Tiny dots on a red ground give a fine, dense texture.', set: { dot: 3, ground: 'red' } },
+      { text: 'Few ground dots leave the rings clear.', set: { fill: 10 } },
+    ],
+    terms: [['Country', 'In Aboriginal English, the land, waters and stories a people belong to.'], ['Papunya', 'The community in the Northern Territory where the Western Desert art movement began.'], ['Ochre', 'An earth pigment in yellows, reds and browns.']],
+    related: ['pointillism', 'contour-lines', 'mudcloth'],
+  },
+
+  batik: {
+    facts: { from: 'Java, Indonesia', era: 'Centuries old', bestOn: 'Pictures with clear shapes and mid tones' },
+    why: 'Batik keeps dye out of cloth. Where hot wax lies, the cloth stays the colour it was, so the maker draws first, dyes next, and adds more wax between baths, working from light to dark. The look is dotted outlines, small marks that fill the shapes and a web of fine cracks where the dye crept through broken wax.',
+    how: [
+      'Match your picture to a cream (the undyed cloth) and six dyes, according to the scheme: soga browns, bright coastal colours or indigo.',
+      'Clean the regions with a majority filter.',
+      'Draw the cream outlines in two zones around every boundary: a thin continuous line and a wider zone of dots, as a canting makes them.',
+      'Fill each dye region with its own mark: dots, dashes, crosses, rings, waves or triangles.',
+      'Add crackle, a web of lines where dye reached the cloth through broken wax.',
+    ],
+    history: 'Wax-resist dyeing is found in several parts of the world, but Java developed it into a refined art. The courts of Yogyakarta and Surakarta kept strict patterns, such as parang, in soga brown and indigo, while coastal towns favoured brighter colours. The copper stamp (cap) made batik quicker in the nineteenth century. UNESCO listed Indonesian batik as intangible heritage in 2009, and Indonesia marks National Batik Day on 2 October.',
+    uses: ['Clothing, scarves and home textiles', 'Packaging and fashion graphics', 'Teaching resist techniques', 'Cultural festivals and tourism'],
+    tips: [
+      { text: 'Indigo with strong crackle looks like a worn heirloom.', set: { scheme: 'indigo', crackle: 85 } },
+      { text: 'The coastal scheme is brighter and bolder.', set: { scheme: 'pesisir', marks: 90 } },
+      { text: 'High simplification shows the wax-drawn regions clearly.', set: { simplify: 8, size: 9 } },
+    ],
+    terms: [['Canting', 'A small copper cup with a spout, used to draw lines of hot wax.'], ['Resist', 'A material that keeps dye from reaching the cloth.'], ['Soga', 'A brown dye from the bark of the soga tree.']],
+    related: ['mudcloth', 'ajrak', 'kente'],
+  },
+
+  kente: {
+    facts: { from: 'The Asante and Ewe of Ghana', era: 'Centuries old', bestOn: 'Colourful pictures with large areas of colour' },
+    why: 'Kente is woven on a narrow loom that makes a band only about a hand’s breadth wide, and many bands are sewn edge to edge into a cloth. In a warp-faced band the lengthwise threads hide the weft, so the colour you see is the warp, and where the weaver wants a pattern a block of weft is floated across the surface. The result is stripes broken by small blocks, with colours chosen from a traditional few.',
+    how: [
+      'Make each strip four cells wide, with cells 1.2 times as tall as wide, and offset odd strips by half a cell so blocks do not line up across seams.',
+      'Give every cell the nearest of seven cloth colours (gold, red, green, black, blue, white and orange) to the picture’s colour.',
+      'Inside a strip, group cells in blocks of three units in height, and float some as horizontal weft.',
+      'Show thread relief with light and shade between the threads.',
+      'Choose motif blocks with the float slider, and a new weave with the seed.',
+    ],
+    history: 'Tradition connects kente with Bonwire, where two hunters are said to have learned to weave by watching a spider. The cloth was long worn by Asante kings and other royalty, and each pattern and colour carries a meaning. Kente is now worn at weddings, graduations and festivals in Ghana and by people across the African diaspora. The word is said to come from kenten, the Asante word for basket.',
+    uses: ['Fashion, graduation stoles and home textiles', 'Branding and cultural celebrations', 'Teaching weaving structure', 'Pattern and border design'],
+    tips: [
+      { text: 'Narrow strips give a fine, busy weave.', set: { size: 20, motifs: 85 } },
+      { text: 'Wide strips show the blocks of float clearly.', set: { size: 60, thread: 90 } },
+      { text: 'Few float blocks look closer to a plain striped cloth.', set: { motifs: 10 } },
+    ],
+    terms: [['Warp', 'The lengthwise threads on a loom.'], ['Weft', 'The threads that cross the warp.'], ['Float', 'A thread passed over several others on the surface of the cloth.']],
+    related: ['tapestry-weave', 'navajo-weave', 'mudcloth'],
+  },
+
+  adinkra: {
+    facts: { from: 'The Akan peoples of Ghana and Côte d’Ivoire', era: 'Nineteenth century and earlier', bestOn: 'High contrast pictures' },
+    why: 'Adinkra symbols are visual sayings. Each one stands for a proverb or a value: the heart for patience and tolerance, the fern for endurance, the ram’s horns for strength and humility. They are stamped in dark ink in squares on cloth, so a cloth is a page of sayings, and here the symbols grow larger and heavier where your picture is dark.',
+    how: [
+      'Carry ten symbols drawn with strokes and fills: rings, heart, sankofa, horns, star, fern, twist, comb, handcuffs and tree.',
+      'Divide the cloth into squares with three-line rules made with a comb, as on the real cloth.',
+      'In each square read the shade v of the picture, its darkness on light cloth or its brightness on dark cloth, and stamp a symbol sized by v.',
+      'Add the ink’s slight uneven pressure and let the picture tint the cloth.',
+      'Choose ink from bark brown, picture colour or gold, on cream, indigo, red or ochre cloth.',
+    ],
+    history: 'Adinkra cloth was first worn at funerals, and the word is often given as meaning goodbye. Symbols are carved into pieces of calabash and stamped on cotton with a dark dye boiled from tree bark. Tradition links the name to Nana Kwadwo Agyemang Adinkra, a king of Gyaman. Symbols such as Sankofa, which says to go back and fetch what you forgot, are now used on buildings, jewellery and logos.',
+    uses: ['Textile and fashion design', 'Educational material about proverbs and values', 'Architecture and gate ironwork', 'Branding that honours the culture'],
+    tips: [
+      { text: 'Gold ink on indigo looks like a festival cloth.', set: { cloth: 'indigo', ink: 'gold' } },
+      { text: 'Strong shading makes the symbols follow the picture closely.', set: { follow: 100, size: 40 } },
+      { text: 'Fewer rules leave the symbols open.', set: { rules: 10, tint: 70 } },
+    ],
+    terms: [['Adinkra', 'A set of symbols of the Akan people, each carrying a saying.'], ['Sankofa', 'A symbol and saying about learning from the past.'], ['Calabash', 'A gourd, here carved into stamps.']],
+    related: ['mudcloth', 'kente', 'rubber-stamp'],
+  },
+
+  mudcloth: {
+    facts: { from: 'The Bamana of Mali', era: 'Centuries old', bestOn: 'Pictures with distinct light and dark regions' },
+    why: 'Bogolanfini, mud cloth, is made by painting cloth with mud that has fermented for months. The iron in the mud reacts with tannin in the cloth to make a black that does not wash out. Here each tone of the picture is given its own motif, from bare cloth through dots, zigzags and crosses to solid mud, so the picture becomes a pattern of patterns.',
+    how: [
+      'Set a level from 0 to 4 that rises with the picture’s darkness, and keep regions clean with a majority filter.',
+      'Give each level its own motif: bare cloth, dots, zigzag rows, crosses, and solid mud pricked with small holes.',
+      'Where two levels meet, clear the pattern within about 3.4 px of the boundary and draw a mud line about 1 px on either side.',
+      'Add a hand-painted wobble to every stroke.',
+      'Sew the cloth in narrow strips, with visible seams, as it is woven.',
+    ],
+    history: 'The Bamana weave cotton in narrow strips, soak it in a tea of leaves rich in tannin, paint patterns with fermented mud and then bleach the background. The designs often carry meanings of history, proverbs and protection. In the late twentieth century the Malian designer Chris Seydou brought bogolan into fashion, and it is now worn around the world.',
+    uses: ['Fashion, cushions and home textiles', 'Pattern design and surface design', 'Teaching tone and texture with limited motifs', 'Cultural heritage projects'],
+    tips: [
+      { text: 'Mud on the light parts reverses the picture.', set: { invert: true } },
+      { text: 'Larger motifs and strong outlines read like painted cloth.', set: { size: 20, outline: 95 } },
+      { text: 'Rust cloth gives a warm, earthy palette.', set: { cloth: 'rust', hand: 80 } },
+    ],
+    terms: [['Bogolanfini', 'Mud cloth, from the Bamana language of Mali.'], ['Tannin', 'A plant chemical that reacts with iron to make black.'], ['Motif', 'A repeated design element.']],
+    related: ['adinkra', 'batik', 'kente'],
+  },
+
+  azulejo: {
+    facts: { from: 'Portugal and Spain', era: 'Sixteenth century onward', bestOn: 'Pictures with large soft areas' },
+    why: 'An azulejo painter works with cobalt oxide on an unfired white glaze of tin. The cobalt sinks in as the tile is fired and cannot be corrected, so the thickness of the paint decides how dark the blue becomes. Tiles are painted one by one so that the corner of each tile holds part of a rosette, and four tiles together make a whole flower.',
+    how: [
+      'Blur the picture twice and map it to a four-stop ramp from deep cobalt through mid blue and a pale wash to white glaze, with a streak of noise standing for the brush.',
+      'Lay tiles on a grid with a thin grout line and a small bevel lit from the top left.',
+      'Paint a pattern on every tile so that the corner of one tile holds a quarter of a rosette, completed by its three neighbours.',
+      'Add brush lines and glaze crackle.',
+      'Choose a pigment: cobalt, manganese purple or copper green.',
+    ],
+    history: 'The word comes from the Arabic az-zulayj, small polished stone. Portugal and Spain took up painted tiles in the sixteenth century, and the Portuguese king Manuel I is said to have admired tiles in Seville in 1503. In the seventeenth and eighteenth centuries blue and white came to cover churches, palaces, stations and the fronts of houses, including the panels at São Bento station in Porto, painted by Jorge Colaço and completed in 1930.',
+    uses: ['Wall and floor tile design', 'Street signs and facades in Portuguese cities', 'Pattern and textile design', 'Ceramics teaching'],
+    tips: [
+      { text: 'Manganese purple makes a rarer, older look.', set: { ink: 'manganese', pattern: 80 } },
+      { text: 'Large tiles show the rosette clearly.', set: { size: 150, line: 70 } },
+      { text: 'Heavy crackle looks like old glaze.', set: { crackle: 90 } },
+    ],
+    terms: [['Azulejo', 'A painted and glazed ceramic tile from Portugal or Spain.'], ['Tin glaze', 'An opaque white glaze made with tin oxide.'], ['Cobalt oxide', 'A mineral used for blue pigment.']],
+    related: ['delft-blue', 'talavera', 'banknote-engraving'],
+  },
+
+  'delft-blue': {
+    facts: { from: 'Delft, the Netherlands', era: 'Seventeenth century onward', bestOn: 'Landscapes, buildings and still lifes' },
+    why: 'Delftware was the Dutch answer to the Chinese porcelain that ships brought to Europe. It is ordinary earthenware dressed up with white tin glaze and painted in cobalt blue. The painter’s brush follows the form of the thing, and darker passages are built up by going over them more than once, so blue builds into shadow in layers.',
+    how: [
+      'Blur the picture heavily to a smooth brightness field F.',
+      'At every point, find the direction along which F does not change, perpendicular to its gradient, and lay strokes along those lines so they curve round shapes.',
+      'Scatter seeds on a jittered grid and shuffle them.',
+      'In each layer, paint at a seed only if the brightness there is below a threshold that starts at 0.70 and falls by 0.17 for each layer, so dark places are painted over several times.',
+      'Add outlines, glaze crackle and, if chosen, a plate shape with a rim.',
+    ],
+    history: 'Dutch potters in Delft developed blue and white earthenware in the seventeenth century, in imitation of Ming porcelain imported by the Dutch East India Company. De Koninklijke Porceleyne Fles, founded in 1653, is still producing Delftware today. Windmills, tulips and landscapes remain popular subjects.',
+    uses: ['Plates, vases and tiles', 'Gift and souvenir design', 'Interior pattern and wallpaper', 'Illustration with a limited blue palette'],
+    tips: [
+      { text: 'Four layers build deep shadows.', set: { depth: 4, stroke: 1.5 } },
+      { text: 'Full-sheet mode shows the picture without the plate rim.', set: { shape: 'full' } },
+      { text: 'Long strokes follow the form like an engraver’s line.', set: { length: 55, outline: 20 } },
+    ],
+    terms: [['Delftware', 'Tin-glazed earthenware made in and around Delft.'], ['Earthenware', 'Pottery fired at a low temperature, which stays slightly porous.'], ['Gradient', 'The direction in which brightness changes fastest.']],
+    related: ['azulejo', 'cyanotype', 'ink-wash'],
+  },
+
+  talavera: {
+    facts: { from: 'Puebla, Mexico, descended from Spanish majolica', era: 'Sixteenth century onward', bestOn: 'Colourful pictures with warm and cool areas' },
+    why: 'Talavera is painted by hand, so no two tiles are quite alike: the motif sits a little off-centre, a little tilted, and the line wavers. Its palette of cobalt, yellow, green and orange is limited by what survives the kiln. Each tile here takes its ground from the light in the picture, from cobalt in the shadows to white glaze in the lights.',
+    how: [
+      'Make a tile for every cell of a grid and choose its ground by brightness, from cobalt in the shadows through green, orange and yellow to white glaze.',
+      'Paint two accent colours on each ground, chosen to contrast: yellow and white on cobalt, for example, and cobalt with orange on white.',
+      'Let the warmth of the picture at that tile (red above blue) decide which of the two accents leads.',
+      'Paint a four-way flower or star, offset and tilted slightly by a hand wobble.',
+      'Add grout lines and glaze shine.',
+    ],
+    history: 'Talavera de Puebla descends from Spanish majolica, brought to New Spain in the sixteenth century, and it also took on Indigenous and Asian influences. It has a protected designation of origin. In 2019 UNESCO added the artisanal Talavera of Puebla and Tlaxcala, together with the ceramics of Talavera de la Reina and El Puente del Arzobispo in Spain, to its list of intangible heritage.',
+    uses: ['Wall tiles, sinks and kitchen ware', 'Architecture and courtyards', 'Mexican folk-art graphics', 'Craft and restoration projects'],
+    tips: [
+      { text: 'Star motifs give a more geometric, Moorish look.', set: { motif: 'star', size: 80 } },
+      { text: 'A little hand wobble keeps tiles alive; a lot makes them playful.', set: { hand: 90 } },
+      { text: 'Wide grout makes each tile stand alone.', set: { grout: 90 } },
+    ],
+    terms: [['Majolica', 'Tin-glazed pottery painted with bright colours.'], ['Denomination of origin', 'A legal protection for products made in a particular place by tradition.'], ['Kiln', 'An oven used to fire pottery.']],
+    related: ['azulejo', 'delft-blue', 'papel-picado'],
+  },
+
+  sashiko: {
+    facts: { from: 'Rural Japan', era: 'Edo period onward', bestOn: 'Pictures with clear light and dark areas' },
+    why: 'Sashiko means little stabs. It began as a way for farming families to strengthen and mend cloth with white thread on indigo, and the stitch patterns became beautiful in their own right. In the simplest kind, hitomezashi, every row and column is stitched with running stitches, each starting either on the beat or half a beat off, and squares, crosses and diamonds appear from nothing.',
+    how: [
+      'Write r_j and c_i for the starting beat of row j and column i, each 0 or 1.',
+      'Draw the stitch on row j between points i and i + 1 if i + r_j is even, and the stitch on column i between j and j + 1 if j + c_i is even.',
+      'At any grid point exactly one of the two horizontal stitches and exactly one of the two vertical stitches meet, so the stitches join into closed loops.',
+      'Choose the starting beats at random, or from patterns that make diamonds, waves or steps.',
+      'Draw the thread thicker and brighter where the picture is light, on indigo, black or madder cloth.',
+    ],
+    history: 'Sashiko developed in rural Japan during the Edo period, when cotton was precious and clothes were patched and layered, especially in the north. Cloth mended for generations in this way is called boro. Hitomezashi patterns have also caught the interest of mathematicians in recent years, who have studied the loops and regions that they form.',
+    uses: ['Mending and visible repair', 'Bags, coasters and home textiles', 'Modern embroidery and pattern design', 'Teaching parity and patterns'],
+    tips: [
+      { text: 'Diamonds are the classic hitomezashi pattern.', set: { pattern: 'diamonds' } },
+      { text: 'Gold thread on black looks like a night festival.', set: { tint: 'gold', cloth: 'black' } },
+      { text: 'Short stitches give a fine, dense grid.', set: { size: 7, weight: 80 } },
+    ],
+    terms: [['Hitomezashi', 'One-stitch sashiko, made of running stitches on a grid.'], ['Boro', 'Cloth that has been mended and patched over many years.'], ['Parity', 'Whether a whole number is even or odd.']],
+    related: ['cross-stitch', 'embroidery', 'quilt-patchwork'],
+  },
+
+  kintsugi: {
+    facts: { from: 'Japan', era: 'Fifteenth century onward', bestOn: 'Pictures with rich glaze-like colour' },
+    why: 'Kintsugi, golden joinery, mends broken pottery with lacquer mixed with gold powder and leaves the break visible. It treats damage as part of the object’s history. The program breaks your picture the way a bowl breaks, with cracks that wander, then puts the pieces back a little out of line and traces every crack in gold.',
+    how: [
+      'Bend the coordinates with smooth noise, by up to about 0.35 of the shard size at full jaggedness.',
+      'Find the Worley cells of the bent plane. Where the distance to the nearest seed equals the distance to the second nearest, two shards meet, and that line is the crack.',
+      'Set the width of the gold where g = F₂ − F₁ is below the seam width.',
+      'Put each shard back slightly out of true, reading the picture from a point shifted by the misalignment, with a slight brightness change.',
+      'Leave a few lost pieces filled with gold, and add a bevel of light along the seams.',
+    ],
+    history: 'A story, which may be a legend, says that the shogun Ashikaga Yoshimasa sent a broken tea bowl to China in the fifteenth century and it came back mended with ugly metal staples, which led Japanese craftsmen to look for a more beautiful repair. The lacquer used is urushi, and kintsugi is often linked to the idea of wabi-sabi, finding beauty in what is imperfect. Worley cells were described by Steven Worley in 1996.',
+    uses: ['Ceramic repair and craft', 'Art about resilience and healing', 'Branding with a gold-seam motif', 'Procedural cracks in 3D art'],
+    tips: [
+      { text: 'Thick seams make the break the star of the picture.', set: { seam: 10, jag: 80 } },
+      { text: 'Little misalignment looks like a clean, careful repair.', set: { shift: 10, fill: 0 } },
+      { text: 'Lost pieces filled with gold are the boldest version.', set: { fill: 50, size: 150 } },
+    ],
+    terms: [['Urushi', 'The sap of the lacquer tree, used as a Japanese lacquer.'], ['Wabi-sabi', 'An aesthetic that finds beauty in what is simple, worn and imperfect.'], ['Worley noise', 'A pattern of cells made from the distance to the nearest random points.']],
+    related: ['voronoi-mosaic', 'gold-foil', 'stained-glass'],
+  },
+
+  'celtic-knot': {
+    facts: { from: 'Early medieval Ireland and Britain', era: 'Seventh to ninth century and later', bestOn: 'Bold shapes with strong colour' },
+    why: 'Interlace is the signature of the insular art of Ireland and Britain: ribbons that pass over and under each other without end. The simplest way to draw it is a plait, a lattice of diagonal strands in which each strand goes over the next one it meets, then under, then over. The rule is so regular that it can be drawn pixel by pixel.',
+    how: [
+      'Use two coordinates u = (x + y)/c and v = (x − y)/c that run along the two diagonals.',
+      'The strand going one way sits where u is near the middle of its unit cell, and the other where v is.',
+      'Where the two overlap, decide which is on top by the parity of ⌊u⌋ + ⌊v⌋, so it flips at every crossing and each strand alternates over and under.',
+      'Shade the ribbons with a highlight and draw outlines to separate them.',
+      'Colour each length of ribbon from the picture beneath it, and add a frame if wanted.',
+    ],
+    history: 'Interlace appears in the Lindisfarne Gospels, made around 715, in the Book of Kells, from about 800, and on stone crosses such as those at Monasterboice. It was not unique to the Celts and had earlier roots in Roman mosaics and in Anglo-Saxon and Pictish art. George Bain published methods for constructing the patterns in his book Celtic Art in 1951.',
+    uses: ['Manuscript and book decoration', 'Jewellery and tattoo design', 'Architecture and stonework', 'Logos and borders'],
+    tips: [
+      { text: 'Gold ribbons on night ground look like an illuminated page.', set: { colour: 'gold', ground: 'night' } },
+      { text: 'Small knots form a fine plait.', set: { size: 18, width: 30 } },
+      { text: 'Emerald on vellum is a gentle green.', set: { colour: 'emerald', ground: 'vellum' } },
+    ],
+    terms: [['Interlace', 'A pattern of strands that cross over and under one another.'], ['Insular art', 'The art of Ireland and Britain in the early Middle Ages.'], ['Parity', 'Whether a whole number is even or odd.']],
+    related: ['mandala', 'girih', 'cross-stitch'],
+  },
+
+  rosemaling: {
+    facts: { from: 'The valleys of Norway', era: 'Eighteenth and nineteenth century', bestOn: 'Warm pictures with bright and dark contrast' },
+    why: 'Rosemaling, rose painting, grew up in Norwegian valleys where country painters decorated chests, bowls and walls in imitation of the grander baroque and rococo styles of the towns. It is built from only a few brush strokes: the C-scroll, the S-scroll, the teardrop petal and the leaf. The painter loads the brush with two colours so every stroke has a light edge and a dark one.',
+    how: [
+      'Lay motifs on a staggered grid of spacing g.',
+      'Choose the motif from the picture’s brightness v: a flower where v is above 0.62, a pair of scrolls from 0.32 to 0.62, and a spray of three leaves below that.',
+      'Make the size follow brightness too: R = g (0.3 + 0.34 v).',
+      'Pick the nearest of six folk paints (red, ochre, green, blue, cream and brick) to the picture’s colour, or use the picture’s own colours.',
+      'Shade every stroke from a light edge to a dark edge, on a teal, black, green or cream ground.',
+    ],
+    history: 'The painted style spread across valleys such as Telemark, Hallingdal and Gudbrandsdalen, each with its own manner, and flourished from around the middle of the eighteenth century. After a decline it was revived in Norway, and Norwegian immigrants carried it to the American Midwest, where Per Lysne and others kept it alive at places such as Vesterheim in Iowa.',
+    uses: ['Furniture, boxes and plates', 'Folk art decoration and craft classes', 'Surface pattern and illustration', 'Heritage projects and museums'],
+    tips: [
+      { text: 'The classic palette on teal looks like a farmhouse chest.', set: { colour: 'classic', ground: 'teal' } },
+      { text: 'Many petals make fuller roses.', set: { petals: 9, size: 100 } },
+      { text: 'Low density leaves space and shows scrolls only.', set: { density: 30 } },
+    ],
+    terms: [['Rosemaling', 'Norwegian decorative painting with scrolls, flowers and leaves.'], ['C-scroll', 'A brush stroke shaped like the letter C.'], ['Telemark', 'A region of Norway known for a graceful style of rosemaling.']],
+    related: ['embroidery', 'tapestry-weave', 'victorian'],
+  },
+
+  mandala: {
+    facts: { from: 'Buddhist and Hindu traditions', era: 'Ancient, with sacred forms still made today', bestOn: 'Colourful pictures with many hues' },
+    why: 'In the Buddhist and Hindu traditions a mandala is a plan of a sacred world, built from the centre outward in rings. The program has no meaning of its own to give, but it builds the geometry faithfully: a centre, rings that grow outward, and a symmetry that repeats every motif a whole number of times, with the colours of every petal drawn from your picture.',
+    how: [
+      'Place the centre in the middle of the canvas, and make K rings, each of thickness Δ = R_max/(K + 0.7), reaching the corners.',
+      'Give the pattern n₀-fold rotational symmetry, so every ring repeats its motif a whole multiple of n₀ times.',
+      'Choose each ring’s count so its motifs are about as wide as the ring is thick, and turn every second ring by half a step so petals sit in the gaps of the ring before it.',
+      'Use six motifs in turn: lotus petals, beads, triangles, scallops, diamonds and more.',
+      'Colour each motif from the picture, and pick out the lines in gold with a soft glow.',
+    ],
+    history: 'The Sanskrit word means circle. Tibetan sand mandalas are made grain by grain over days and then swept away, a teaching about impermanence. Carl Jung, in the early twentieth century, drew mandalas himself and saw them as symbols of wholeness. Similar radial designs are found in many places, from Gothic rose windows to Islamic geometric patterns.',
+    uses: ['Meditation and colouring pages', 'Textile and tile pattern design', 'Logos and decorative art', 'Teaching rotational symmetry'],
+    tips: [
+      { text: 'Twenty-four-fold symmetry makes a delicate rosette.', set: { fold: 24, rings: 16 } },
+      { text: 'Mirror the colours for a calmer, balanced result.', set: { mirror: true } },
+      { text: 'Strong gold lines on maroon give a temple banner look.', set: { ground: 'maroon', line: 90 } },
+    ],
+    terms: [['Mandala', 'A circular diagram used in Buddhist and Hindu practice.'], ['Rotational symmetry', 'A shape that looks the same after turning by a certain angle.'], ['Impermanence', 'The idea that all things change and pass.']],
+    related: ['kaleidoscope', 'celtic-knot', 'girih'],
+  },
+
+  'maori-koru': {
+    facts: { from: 'Aotearoa New Zealand', era: 'Long held, painted in meeting houses for generations', bestOn: 'Landscapes with soft light' },
+    why: 'The koru is the unfurling frond of the silver fern, a young leaf curled into a spiral and about to open. It stands for new life and growth. In the painted rafter patterns of Māori meeting houses, kōwhaiwhai, spirals repeat along a beam in red, white and black. These patterns carry meaning for the people who hold them, so this treatment is a visual homage and not a substitute for the real thing.',
+    how: [
+      'Draw each koru as a ribbon that starts as a short stem arriving from the side and swells into a spiral of 1.2 turns that tapers to a small round bulb.',
+      'Use an Archimedean spiral, with the radius falling in a straight line with the angle, which is not quite the logarithmic spiral of a real frond but draws the same loop.',
+      'Set korus on a staggered grid and size them by the picture’s brightness.',
+      'In flowing mode alternate orientation by a half turn, with a slight tilt that changes from row to row, so pairs make S-shaped chains. Mirrored and ring modes arrange them in other ways.',
+      'Colour them red, white and black in traditional mode, fading to bare ground in the shade, or from the picture.',
+    ],
+    history: 'Kōwhaiwhai are painted on the rafters of wharenui, meeting houses, and each pattern has names and stories. The koru is also a modern symbol of New Zealand, appearing on the livery of its national airline. Māori artists today continue to carve, paint and weave using these forms, and ask that they be treated with respect.',
+    uses: ['Learning about kōwhaiwhai and Māori design', 'Respectful decoration and education', 'Spiral pattern design', 'Illustrations of ferns and growth'],
+    tips: [
+      { text: 'Mirrored korus face each other like a pair of unfurling fronds.', set: { turn: 'mirror' } },
+      { text: 'Traditional red on a cream ground is the most familiar look.', set: { colour: 'trad', ground: 'cream' } },
+      { text: 'Strong size following the light grows spirals where the picture is bright.', set: { follow: 100, size: 45 } },
+    ],
+    terms: [['Koru', 'A spiral shape based on the unfurling fern frond.'], ['Kōwhaiwhai', 'Painted patterns on the rafters of Māori meeting houses.'], ['Wharenui', 'A Māori meeting house.']],
+    related: ['phyllotaxis', 'celtic-knot', 'ukiyo-e'],
+  },
+
+  'navajo-weave': {
+    facts: { from: 'The Diné (Navajo) of the American Southwest', era: 'Centuries old, with rug trade from the 19th century', bestOn: 'Bold pictures with strong shapes' },
+    why: 'A Diné rug is woven on an upright loom, and every block of colour is a short run of weft pulled tight. An edge that is not square therefore has to step, so a diagonal becomes a staircase and a curve becomes a serrated line. The program does the same with a grid of yarn blocks laid over your picture, and its serrated edges are part of the look.',
+    how: [
+      'Lay a grid of cells (the yarn blocks) over the picture and give each the nearest colour of the chosen wool, or, for the natural greys, a grey chosen by brightness.',
+      'Create symmetry by folding the picture: for left-to-right mirroring the sample x becomes min(x, W − x), and for four-way symmetry y is folded as well.',
+      'Serrate edges by shifting the sample point a quarter of a cell one way on even rows and the other way on odd ones.',
+      'Frame the rug with a plain or stepped zigzag border.',
+      'Add fringe to the ends and subtle wool texture.',
+    ],
+    history: 'Diné tradition says that Spider Woman taught the people to weave. Regional styles are known by their wool and colour: the red grounds of Ganado, whose style was encouraged by trader John Lorenzo Hubbell, and the natural greys and browns of Two Grey Hills. Weavers still work today, and the best way to honour the tradition is to buy from Diné weavers directly.',
+    uses: ['Rug and blanket design', 'Southwestern interior and pattern design', 'Education about weaving and stepped geometry', 'Giving credit to and supporting Diné weavers'],
+    tips: [
+      { text: 'Two Grey Hills uses natural wool and quiet geometry.', set: { palette: 'twogrey', border: 'simple' } },
+      { text: 'Four-way symmetry makes a classic centred rug.', set: { sym: 'quad', size: 12 } },
+      { text: 'Turn serration off for a smoother, pixel-like weave.', set: { serrate: false } },
+    ],
+    terms: [['Diné', 'The name the Navajo use for themselves, meaning the People.'], ['Weft', 'The threads woven across the warp.'], ['Serration', 'A stepped, sawtooth edge formed by the weave.']],
+    related: ['kente', 'tapestry-weave', 'pixel-art'],
+  },
+
+  'aztec-glyphs': {
+    facts: { from: 'The Mexica of central Mexico', era: 'Fourteenth to sixteenth century', bestOn: 'Pictures with strong light and dark, which raise and lower the relief' },
+    why: 'The Mexica carved in stone, and the best known piece is the Sun Stone, a disc whose rings hold the twenty signs for the days of the ritual count. Twenty signs run against thirteen numbers to give the 260 days of the sacred year. Brighter places in your picture stand higher out of the stone here, and a raking light gives each glyph a shadow.',
+    how: [
+      'Make a wall of square tablets, each with a raised plate, a raised border and one of eleven glyphs: the spiral of wind, the five-dot movement sign, the stepped fret, the sun, the serpent, the flower, water, the flint, the house, the face and an eight-pointed star.',
+      'Set the height of the plate to 0.18 + 0.4 t where t is the picture’s brightness, with the border adding 0.22 and the glyph 0.42.',
+      'Paint the heights on a hidden grey canvas, blur it by about a pixel and light it as a relief, from the slope of the surface.',
+      'Choose the light direction in degrees, and the stone: basalt, sandstone or limestone.',
+      'Add traces of pigment and weathering that gather in the hollows.',
+    ],
+    history: 'The Sun Stone, often called the Aztec calendar, was found in Mexico City in 1790. The 260-day count, the tonalpohualli, combined twenty day signs with thirteen numbers. Mexica carvers decorated temples, altars and sculpture, and the glyphs are still studied by archaeologists and honoured by Nahua communities today.',
+    uses: ['Museum and education material', 'Relief and stone texture design', 'Games and illustration with Mesoamerican themes, made with care', 'Teaching calendars and numbers'],
+    tips: [
+      { text: 'A low light from the side makes the relief deepest.', set: { light: 180, relief: 95 } },
+      { text: 'Heavy pigment recalls a painted temple.', set: { paint: 95, wear: 20 } },
+      { text: 'Strong weathering gives an ancient wall.', set: { wear: 90, stone: 'sandstone' } },
+    ],
+    terms: [['Mexica', 'The people commonly called the Aztecs, who built Tenochtitlan.'], ['Tonalpohualli', 'The 260-day sacred count of Mesoamerica.'], ['Raking light', 'Light that strikes a surface at a low angle and brings out relief.']],
+    related: ['hieroglyphs', 'embossed-leather', 'clay-3d'],
+  },
+
+  hieroglyphs: {
+    facts: { from: 'Ancient Egypt', era: 'About 3200 BCE to the 4th century CE', bestOn: 'Pictures with warm and cool contrast' },
+    why: 'The Egyptians cut their writing in two ways. In raised relief the background is cut away and the signs stand out. In sunk relief the signs are cut into the surface, which lets them be read in the strong light of an outside wall, where a hollow throws a clear shadow. Both were painted, in lapis blue, red ochre, malachite green, yellow ochre and black. The signs here are chosen for how they look and do not spell a message.',
+    how: [
+      'Write in columns divided by double rules, with a horizontal band every six lines, and face signs alternately in neighbouring columns, since hieroglyphs face the start of the line.',
+      'Draw twelve signs: the ankh, the eye, water, the feather, the sun disc, the djed pillar, the was sceptre, a snake, a duck, an owl, a lotus and a basket.',
+      'Cut each in with a dark stroke on a middle-grey plate, so the lighting finds a hollow.',
+      'Make the signs fuller and the pigment stronger where the picture is bright.',
+      'Light the relief from a chosen direction and add weathering to limestone, sandstone or granite.',
+    ],
+    history: 'The Rosetta Stone, found in 1799, carried the same decree in hieroglyphs, Demotic and Greek. Jean-François Champollion announced the decipherment in 1822. Egyptian writing was used for more than three thousand years, and the last known inscription, at Philae, dates from 394 CE.',
+    uses: ['Museum and education material', 'Relief and stone texture design', 'Teaching writing systems and decipherment', 'Themed illustration made with care'],
+    tips: [
+      { text: 'Deep relief with a low light shows each sign as a shadow.', set: { relief: 95, light: 200 } },
+      { text: 'Granite gives a darker, harder stone.', set: { stone: 'granite', paint: 40 } },
+      { text: 'Strong paint recalls a freshly coloured tomb.', set: { paint: 100, wear: 10 } },
+    ],
+    terms: [['Sunk relief', 'Carving in which the design is cut into the surface.'], ['Cartouche', 'An oval that encloses a royal name.'], ['Malachite', 'A green mineral used as a pigment.']],
+    related: ['aztec-glyphs', 'embossed-leather', 'indus-seal'],
+  },
+
+  'greek-meander': {
+    facts: { from: 'Ancient Greece', era: 'From about the ninth century BCE', bestOn: 'Strong tonal pictures' },
+    why: 'The meander, or Greek key, is a line that runs round and round without ever breaking, turning back on itself at right angles. The name comes from the river Maiandros, which winds. It frames Greek pots as a band of unbroken fret, and here the paint is thicker where your picture is darker, so the picture appears in the weight of the line.',
+    how: [
+      'Draw a key unit in a band six units high: the line goes up the left side, along the top, down the right, back toward the left, up again and then a short way right, and sits on a rule at the bottom.',
+      'Repeat the unit every eight units, with alternate bands mirrored and shifted by half a period.',
+      'Read the shade v at the middle of each segment and set the paint width from it.',
+      'Offer three styles: black-figure (black slip on red-orange clay), red-figure (a black ground with the clay left showing) and white ground.',
+      'Add rule lines and tint the clay from the picture.',
+    ],
+    history: 'The key pattern runs round Greek pots from the geometric period onward, and later it was used by the Romans and revived in neoclassical architecture and fashion. Black-figure vases were painted in Corinth and Athens from the seventh century BCE, and the red-figure technique appeared in Athens around 520 BCE. The river Maiandros is now the Büyük Menderes in Turkey, and gave its name to the English word meander.',
+    uses: ['Borders for pottery, textiles and architecture', 'Logos and branding with a classical air', 'Interior and wallpaper design', 'Teaching Greek vase painting'],
+    tips: [
+      { text: 'Red-figure reverses the black and the clay.', set: { figure: 'red', follow: 95 } },
+      { text: 'White ground looks like a funeral vase.', set: { figure: 'white', weight: 50 } },
+      { text: 'Small keys form a dense frieze.', set: { size: 26, rules: false } },
+    ],
+    terms: [['Meander', 'A winding line, from the river Maiandros, or the fret pattern named after it.'], ['Black-figure', 'Vase painting in which figures are painted in black on a clay ground.'], ['Slip', 'A watery clay used for painting pottery before firing.']],
+    related: ['hieroglyphs', 'mondrian', 'byzantine-mosaic'],
+  },
+
+  'byzantine-mosaic': {
+    facts: { from: 'Ravenna and Constantinople', era: 'Fifth to fifteenth century', bestOn: 'Portraits and pictures with strong light and shadow' },
+    why: 'Mosaic setters pushed each small cube into wet plaster at a slight angle, so the surface glitters as the viewer moves, and they laid the cubes in rows that follow the shapes, a flow called andamento. Gold tesserae, made by sealing a leaf of gold between layers of glass, catch the light of candles. The program lays its rows along the contours of the picture and sets the brightest parts in gold.',
+    how: [
+      'Blur the picture to a smooth brightness F and find at each point the direction that runs along its contours, perpendicular to the gradient, easing to a gentle slant where F is nearly flat.',
+      'Try seeds in random order, first on a grid of 1.05 tessera widths and then on a finer one.',
+      'From a free seed, grow a row of tesserae both ways, along the flow, as far as there is room.',
+      'Colour each tessera from the picture matched to a palette of smalti (opaque glass), or use the picture’s colour, and set the brightest ones in gold.',
+      'Add dark outlines and slight tilts, so each cube catches the light differently.',
+    ],
+    history: 'The mosaics of Ravenna, such as those in San Vitale (consecrated in 547) with the portraits of the emperor Justinian and the empress Theodora, and the mosaics of Constantinople, are among the best known in the world. Gold tesserae became common in Christian church decoration from around the fifth century. Mosaics later spread across the Byzantine, Islamic and Western worlds.',
+    uses: ['Church, mosque and public building decoration', 'Floors, murals and pool tiles', 'Portrait and pixel-style art', 'Teaching craft and andamento'],
+    tips: [
+      { text: 'Lots of gold makes the light parts shine like a church apse.', set: { gold: 95, outline: 70 } },
+      { text: 'Small tesserae give a fine, painterly portrait.', set: { size: 4, outline: 30 } },
+      { text: 'Large tesserae show the row structure.', set: { size: 16, gold: 30 } },
+    ],
+    terms: [['Tessera', 'A small cube of glass or stone used in a mosaic.'], ['Andamento', 'The flow of the rows in a mosaic.'], ['Smalti', 'Opaque coloured glass used for mosaic cubes.']],
+    related: ['stained-glass', 'voronoi-mosaic', 'gold-foil'],
+  },
+};

@@ -10,7 +10,7 @@ export default still({
   id: 'bauhaus',
   number: 16,
   name: 'Bauhaus',
-  blurb: 'The picture reduced to circles, quarter-circles and squares in primary colors.',
+  blurb: 'The picture reduced to circles, quarter-circles and squares in primary colours.',
   maxSide: 1100,
   params: [
     { key: 'tiles', label: 'Tiles across', type: 'range', min: 8, max: 40, step: 1, default: 18 },

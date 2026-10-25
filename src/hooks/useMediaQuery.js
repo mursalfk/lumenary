@@ -1,3 +1,4 @@
+// src/hooks/useMediaQuery.js
 import { useSyncExternalStore } from 'react';
 
 export default function useMediaQuery(query) {
