@@ -1,13 +1,15 @@
 # Lumenary
 
-Twenty ways to see an image. A browser-only studio: pick one of twenty treatments, drop in a photo, adjust a few controls, save the result.
+Dozens of ways to see an image, grouped into sections. A browser-only studio: pick a treatment, drop in a photo, adjust a few controls, save the result.
+
+**Live now:** section A (Design movements and styles, 23 treatments) and section B (Digital and technical, 20 treatments), 43 in all. The other 133 treatments of the roadmap are listed in `src/data/sections.js` and switch on one section at a time (see [section 18](#18-sections-and-the-roadmap)).
 
 Nothing is uploaded. All processing happens on the visitor's device with the Canvas 2D API, so there is no server, no API key and no database.
 
 - **Stack:** Vite, React 18, React Router 6, SCSS, plus three small libraries for the interface: `motion` (springs and scroll-linked animation), `lenis` (smooth scrolling) and `katex` (typeset equations). The image engine itself has no dependencies.
-- **Routes:** `/` is the homepage. `/theory` explains the maths behind every treatment. `/style/<slug>` is one page per treatment (twenty in total).
+- **Routes:** `/` is the homepage. `/theory` explains the maths behind every treatment. `/style/<slug>` is one page per treatment.
 - **Palette:** black is primary, white is secondary, with greys in between.
-- **Treatments:** 9 are live (animated, respond to the cursor, can record a 6 second WebM clip) and 11 are stills (export a PNG at 1x to 3x).
+- **Treatments:** most are stills (export a PNG at 1x to 3x). A few are live: they animate, respond to the cursor and can record a 6 second WebM clip. The badge on each page says which.
 
 ## Contents
 
@@ -28,6 +30,7 @@ Nothing is uploaded. All processing happens on the visitor's device with the Can
 15. [Privacy](#15-privacy)
 16. [The homepage design and motion](#16-the-homepage-design-and-motion)
 17. [The theory page](#17-the-theory-page)
+18. [Sections and the roadmap](#18-sections-and-the-roadmap)
 
 ---
 
@@ -108,7 +111,7 @@ Read this first; the rest of the document zooms in on each part.
                                   useExport  useDropZone  usePasteImage …
                                         │
                               src/engine  (plain JS, no React)
-                              Canvas 2D: 20 style modules + runtime
+                              Canvas 2D: one module per treatment + runtime
 ```
 
 The flow of one visit:
@@ -119,7 +122,7 @@ The flow of one visit:
 4. **Changing a control.** A control calls `set(key, value)`. The new `params` object flows into `useRuntime`, which calls `runtime.setParams`. Stills re-render; live styles pick the values up on their next frame.
 5. **Export.** `useExport` asks the runtime for a PNG (stills are re-rendered larger, up to 4096 px) or records six seconds of WebM (live styles), then `useDownload` saves it.
 
-The uploaded picture is shared by all twenty pages: upload once, then step through the styles with the arrows.
+The uploaded picture is shared by every treatment page: upload once, then step through the styles with the arrows.
 
 ---
 
@@ -153,24 +156,27 @@ src/
     home/                  homepage sections
       TopBar, NavLinks, Hero, LitWordmark, Letters, HeroIntro, TiltPlate,
       HeroCard, FeaturedLink, Manifesto, ScrollWords, ScrollWord,
-      IndexSection, SectionHead, IndexList, IndexRow, FloatingPreview,
+      IndexSection, IndexGroup, SectionJump, SectionHead, IndexList, IndexRow, FloatingPreview,
       MethodTeaser, About, AboutColumn, Credit, Footer, Grain
     theory/                the theory page
-      TheoryHero, TheoryNav, TheoryBlock, StyleTheory
+      TheoryHero, TheoryNav, GroupTitle, TheoryBlock, StyleTheory
     studio/                the style page
-      Studio, StudioBar, BackLink, TitleBlock, StepNav, Stage, StageMeta,
+      Studio, StudioBar, BackLink, TitleBlock, SectionLinks, StepNav, Stage, StageMeta,
       Panel, ImageSection, TreatmentSection, ExportSection
   hooks/                   18 custom hooks (section 7)
   hoc/                     5 higher-order components (section 8)
   data/                    static copy: nav.js, about.js, copy.js (author, manifesto),
-                           theory.js (all theory text and LaTeX)
-  utils/                   cx, compose, format, jumpTo, scroller
+                           sections.js (the roadmap: every section and treatment name),
+                           theory.js (foundations and the first twenty treatments),
+                           theory-design.js, theory-digital.js (theory text and LaTeX, one file per section)
+  utils/                   cx, compose, format, jumpTo, scroller, words (numbers as words)
   styles/
     main.scss              the one stylesheet for the whole app
     abstracts/             _vars.scss, _mixins.scss, _index.scss
   engine/                  image processing, no React (section 11)
     runtime.js, utils.js, sample.js
-    styles/                one file per treatment + index.js
+    helpers.js             shared building blocks for treatments (pixels, ramp, nearest, kmeans, glow, ...)
+    styles/                one file per treatment + index.js (the registry)
 ```
 
 The three tiers in `components/` go from least to most specific. `ui/` knows nothing about styles or images. `controls/` knows about parameter schemas but not about any one treatment. `home/` and `studio/` know about the app. Dependencies only point down that list, so a bug in a button is fixed in one place for the whole app.
@@ -327,7 +333,7 @@ Each entry: what it does, why it exists, where it is used, how it works.
 #### `useCycle(length, ms)` → index
 
 - **What:** a number that counts `0 … length-1` and wraps, on a timer.
-- **Why:** the hero card cycles through the twenty styles. It is a small hook on top of `useInterval`, which shows how the hooks compose.
+- **Why:** the hero card cycles through the featured styles. It is a small hook on top of `useInterval`, which shows how the hooks compose.
 - **Where:** `HeroCard`.
 - **How:** `useState(0)` and `useInterval(() => setI(v => (v + 1) % length), ms)`.
 
@@ -414,7 +420,7 @@ File: `src/hoc/withThumb.jsx`
 
 - **What it does:** looks up the preview image for `props.style.id` and passes it down as a `thumb` prop.
 - **Why:** two unrelated components (`IndexRow` and `FeaturedLink`) both show a style's preview. Each should be a pure function of `{ style, thumb }`. The HOC supplies `thumb` from the preview store so neither component imports the store or calls the hook itself, and both get it identically.
-- **Where:** `IndexRow` (twenty of them on the homepage) and `FeaturedLink` (the hero card).
+- **Where:** `IndexRow` (one per treatment on the homepage) and `FeaturedLink` (the hero card).
 - **How:** calls `useThumb(props.style.id)` and renders `<Component {...props} thumb={thumb} />`. Each wrapped component subscribes to the preview store and re-reads only its own id, so a preview arriving leaves the others visually unchanged.
 
 ### 8.5 `withDocumentTitle(getTitle)(Component)` — a configurable (factory) HOC
@@ -423,7 +429,7 @@ File: `src/hoc/withDocumentTitle.jsx`
 
 - **What it does:** sets the tab title from the component's props.
 - **Why a factory:** the title differs per page and sometimes depends on props. So this HOC takes a *function* first (`props => string`) and returns the actual HOC. That is "a function that returns a function that returns a component", and it lets one HOC serve the homepage (a constant) and style pages (from the style's name).
-- **Where:** `HomePage` (`() => 'Lumenary — twenty ways to see an image'`) and `StylePage` (`({ style }) => `${style.name} — Lumenary``).
+- **Where:** `HomePage` (`() => 'Lumenary | How many ways are there to see an image?'`) and `StylePage` (`({ style }) => `${style.name} — Lumenary``).
 - **How:** the wrapper calls `useDocumentTitle(getTitle(props))`, then renders the original component untouched.
 
 ### 8.6 `withMagnetic(Component, strength)` and `withPerspective(Component, perspective)`
@@ -576,7 +582,7 @@ All animations are disabled under `prefers-reduced-motion: reduce` (at the botto
 
 `src/engine/` is plain JavaScript. It never touches the DOM directly; canvases are created through `env.makeCanvas` (`src/env.js`), which is how it was tested headless in Node before it was put in the browser. React only talks to it through `createRuntime`.
 
-- **A style** is a module with `id`, `number`, `name`, `blurb`, `params` and either:
+- **A style** is a module with `id`, `name`, `blurb`, `params` and either (the registry adds `number` and `section` itself):
   - a still style: `still({ …, render(ctx, work, p, env, W, H, cache) })`. It draws once whenever parameters or the image change;
   - an animated style: `{ kind: 'animated', create(env) }` returning an object with `setSource`, `setParams`, `draw(ctx, t, dt, pointer)` and `dispose`.
 - **`createRuntime({ canvas, env, onSize })`** runs a style on a canvas: `setStyle`, `setSource`, `setParams`, `setPointer`, `invalidate`, `start`, `dispose`, `exportBlob(scale)` and `recordWebM(seconds)`. Stills are re-rendered at the export size (capped at 4096 px); live styles export the frame on screen.
@@ -588,11 +594,12 @@ All animations are disabled under `prefers-reduced-motion: reduce` (at the botto
 
 ## 12. Add a treatment
 
-1. Copy any file in `src/engine/styles/` (a still one such as `halftone.js` is the simplest) and rename it.
-2. Give it a unique `id` (the URL slug), a `number`, a `name`, a `blurb` and a `params` list. Parameter types: `range`, `select`, `toggle`, `color`, `text`, `shuffle`.
-3. Register it in `src/engine/styles/index.js`.
+1. Copy any file in `src/engine/styles/` (a still one such as `minimalism.js` is the simplest) and rename it. Start the file with a comment giving its path.
+2. Give it a unique `id` (the URL slug), a `name`, a `blurb` and a `params` list. Parameter types: `range`, `select`, `toggle`, `color`, `text`, `shuffle`. Do not set a `number`: the registry numbers treatments in the order they appear on the site.
+3. Make sure its name is in `items` of the right section in `src/data/sections.js`, and that `slugify(name)` equals the `id` (for example "Pop Art" becomes `pop-art`). Nothing else registers it: `engine/styles/index.js` loads every file in the folder.
+4. Add an entry for it in that section's theory file (`src/data/theory-design.js`, `theory-digital.js`, or a new `theory-<section>.js` that you spread into `THEORY` in `theory.js`), keyed by the same id. A treatment with no entry would crash the Theory page, so the file `theory.js` is the checklist.
 
-The homepage index, preview thumbnail, controls, previous/next arrows and export appear automatically, because they are all generated from the `STYLES` list and each style's `params`. The word "twenty" in the copy and the `10` rows in `IndexList`'s grid are the only things to edit by hand.
+The homepage index, preview thumbnail, controls, previous and next arrows, section links and export appear automatically, because they are all generated from the section list and each style's `params`.
 
 To add a new **control type**, write `XControl.jsx` in `src/components/controls/` and add one line to the registry in `Control.jsx`.
 
@@ -678,5 +685,26 @@ Route `/theory`. It explains, for every treatment, how the picture is generated 
 - **Data:** all text and LaTeX live in `src/data/theory.js`: an intro, six `FOUNDATIONS` (brightness, smoothing and edges, interpolation, randomness, tone and colour, compositing), and a `THEORY` object keyed by the same ids as the engine's styles, each with `paragraphs` and `equations` (`tex` plus a one-line `note`).
 - **Rendering:** `TheoryPage` groups the data; `TheoryBlock` is one section; `StyleTheory` fills a block for a treatment and links to its page; `Equation` typesets LaTeX with KaTeX (`renderToString` inside `useMemo`, so each formula is computed once). The KaTeX stylesheet is imported in `Equation.jsx`.
 - **Navigation:** `TheoryNav` is a sticky contents list highlighted by `useScrollSpy`. It is hidden below 1000 px.
-- **Adding a treatment's theory:** add an entry to `THEORY` with the new style's id. Nothing else changes.
+- **Adding a treatment's theory:** add an entry, with the new style's id as its key, to the theory file of its section. `theory.js` merges the section files into one `THEORY` object.
+- **Sections:** `TheoryPage` walks the enabled sections from `sections.js`: a `GroupTitle` (letter, title, blurb) and then one block for each treatment in it. The sticky navigation lists the same groups.
 - **Safety note:** `dangerouslySetInnerHTML` is used only for KaTeX output generated from the repository's own strings, never from user input.
+
+---
+
+## 18. Sections and the roadmap
+
+`src/data/sections.js` is the master list of every treatment planned for Lumenary, 176 names in thirteen sections (A to M). It is the single place that decides what is on the site.
+
+```js
+{ id: 'design', letter: 'A', enabled: true, title: 'Design movements and styles', blurb: '…', items: ['Art Deco', 'Bauhaus', …] }
+```
+
+- **`enabled: true`** sections are live: their treatments are on the homepage (in section groups with a jump bar), in the Theory page (one group each) and as routes. **`enabled: false`** sections are only a plan; nothing from them is shown.
+- **`items`** are display names. The registry turns each into a route id with `slugify` and looks for a style module with that `id`. A name with no module is skipped, so a section can ship in parts, and a module that is in no enabled section stays hidden. That is why ten of the original twenty (particles, liquid morph, holographic, neon glow, glassmorphism, kinetic type, clay 3D, gradient mesh, split-flap and halftone) are not on the site yet: they belong to sections C to I, which are not enabled.
+- **`engine/styles/index.js`** loads every module with `import.meta.glob`, then builds `SECTION_LIST` (each enabled section with its styles, in order) and the flat `STYLES` list. Each style gets `number` (position across the whole site) and `section` (the section id). It exports `getStyle(id)` and `getSection(id)`.
+- **Components:** `IndexSection` renders the homepage list, `SectionJump` the row of letter links under the heading and `IndexGroup` one section's rows. `SectionLinks` on a treatment page lists the other treatments of the same section. `GroupTitle` opens each group on the Theory page.
+- **Counts in the copy** come from the data: `utils/words.js` writes a number in words, and `data/copy.js` builds the manifesto from the live count, so enabling a section updates them.
+
+**Enabling the next section:** write its style modules, add their theory entries, flip `enabled` to `true`. Then check the section's blurb in `sections.js` and run `npm run build`.
+
+Things the data does not update by itself: the `<title>` and `description` in `index.html` and the social image in `public/og.png`, which are written by hand.

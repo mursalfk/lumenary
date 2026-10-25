@@ -1,3 +1,4 @@
+// src/components/studio/Studio.jsx
 import { useRef, useState } from 'react';
 import { isLive } from '../../utils/format.js';
 import useStyleParams from '../../hooks/useStyleParams.js';
@@ -14,6 +15,7 @@ import Panel from './Panel.jsx';
 import ImageSection from './ImageSection.jsx';
 import TreatmentSection from './TreatmentSection.jsx';
 import ExportSection from './ExportSection.jsx';
+import SectionLinks from './SectionLinks.jsx';
 
 // One style's workspace: canvas on the left, controls on the right.
 export default function Studio({ style }) {
@@ -39,6 +41,7 @@ export default function Studio({ style }) {
         <div className="stage-col">
           <Stage canvasRef={canvasRef} label={`${style.name} preview`} dragging={dragging} drop={bind} pointer={pointer} />
           <StageMeta name={src.name} width={dim.W} height={dim.H} live={live} />
+          <SectionLinks style={style} />
         </div>
         <Panel blurb={style.blurb}>
           <ImageSection onFile={take} onReset={useSample} isSample={src.sample} error={error} />

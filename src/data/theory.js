@@ -1,11 +1,14 @@
 // The mathematics behind each treatment. Every statement here mirrors what the code in
 // src/engine does; if you change an algorithm, change its entry too.
+import { THEORY_DESIGN } from './theory-design.js';
+import { THEORY_DIGITAL } from './theory-digital.js';
+
 const T = String.raw;
 
 export const THEORY_INTRO =
   'Lumenary does not call a filter library. Each treatment is a short program that reads the pixels of your ' +
   'picture, does some arithmetic, and draws the result on a canvas. This page shows that arithmetic. ' +
-  'The first part covers the tools every treatment shares; the second takes the twenty in order.';
+  'The first part covers the tools every treatment shares; the rest takes the treatments one section at a time.';
 
 export const FOUNDATIONS = [
   {
@@ -80,7 +83,7 @@ export const FOUNDATIONS = [
   },
 ];
 
-export const THEORY = {
+const BASE_THEORY = {
   particles: {
     paragraphs: [
       'The picture is divided into a grid, and every cell becomes one particle with a home position (its “target”) near the cell centre, nudged by a random jitter of up to 0.35 of a cell so the dots do not look like a lattice. In original-colour mode each particle takes the colour of its cell, reduced to 4 bits per channel (at most 4096 colours) so that thousands of particles can be drawn in a few dozen batches instead of changing paint thousands of times. In white mode the colour is fixed and brightness is carried by the dot’s size instead.',
@@ -298,3 +301,6 @@ export const THEORY = {
     ],
   },
 };
+
+// The first twenty treatments live above; later ones are kept in one file per section.
+export const THEORY = { ...BASE_THEORY, ...THEORY_DESIGN, ...THEORY_DIGITAL };

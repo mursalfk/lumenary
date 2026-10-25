@@ -2,6 +2,49 @@
 
 Follow in order. Each step says what you should see when it worked.
 
+## Update: sections A and B (this release)
+
+You already have the repository and the live site, so you only need to put the new files over your folder and push. Nothing new to install: `package.json` has no new packages.
+
+1. **Close the dev server** if it is running (Ctrl+C in its terminal).
+2. **Unzip `lumenary.zip`** somewhere temporary. You get a folder named `lumenary`. Copy everything inside it into your project folder, replacing files when asked. Your `.git` folder, `node_modules` and `dist` are not in the zip, so they are untouched.
+   The `src`, `public`, `index.html`, `README.md` and `instructions.md` from the zip replace yours. If you changed `main.scss` by hand since the last release, copy your changes aside first, because the zip's `src/styles/main.scss` is the new one.
+3. **Run it:**
+
+```bash
+npm run dev
+```
+
+   Check: the homepage now groups the treatments under **A. Design movements and styles** and **B. Digital and technical**, with a row of A and B links under the heading. Open `/theory`: it has the same two groups. Open any treatment: below the picture there is a list of the other treatments in its section.
+
+4. **Test the production build:**
+
+```bash
+npm run build
+```
+
+   Check: it ends without errors and prints the size of `dist`.
+
+5. **Commit and push** (Vercel redeploys by itself):
+
+```bash
+git add -A
+git commit -m "Add sections A and B: 43 treatments, section groups on homepage, treatment pages and theory"
+git push
+```
+
+   Check: in about a minute https://lumenary-studio.vercel.app shows the new homepage.
+
+What you should know about this release:
+
+- Ten of the first twenty treatments (particles, liquid morph, holographic, neon glow, glassmorphism, kinetic type, clay 3D, gradient mesh, split-flap, halftone) are **hidden on purpose**: they belong to sections C to I, which are not on the site yet. Their code is still there and they come back when their section is switched on in `src/data/sections.js`.
+- Visiting `/style/particles` (a hidden one) sends you to the homepage.
+- `public/og.png` (the link preview image) still says "twenty". The page text and meta tags no longer do. Regenerate the image when you are happy with the number.
+- Your repository has a `lumenary.zip` committed in its root (from an earlier commit). It is not part of the app. Remove it with `git rm lumenary.zip` if you did not mean to keep it.
+- To switch on the next section later: see section 18 of `README.md`.
+
+---
+
 ## Before you start
 
 You need three things on your computer:

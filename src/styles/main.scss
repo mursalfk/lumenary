@@ -1,3 +1,4 @@
+// src/styles/main.scss
 @use "abstracts" as *;
 
 // ═════ base ═════
@@ -699,10 +700,84 @@ body {
   padding: 0 $gut clamp(72px, 12vh, 140px);
 }
 
+// SectionJump
+.section-jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  margin-bottom: clamp(40px, 7vh, 80px);
+  a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 15px;
+    color: $soft;
+    transition: color 0.3s;
+    &:hover {
+      color: $white;
+    }
+    .letter {
+      @include voice(16px);
+      color: $mute;
+    }
+  }
+}
+
+// IndexGroup
+.index-group {
+  scroll-margin-top: 24px;
+  & + .index-group {
+    margin-top: clamp(72px, 12vh, 140px);
+  }
+  header {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 6px 12px;
+    margin-bottom: 18px;
+    .letter {
+      @include voice(22px);
+      color: $mute;
+    }
+    h3 {
+      font-family: $display;
+      font-weight: 400;
+      font-size: clamp(28px, 3.2vw, 46px);
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+    }
+    p {
+      grid-column: 2 / -1;
+      max-width: 60ch;
+      font-size: 15px;
+      color: $mute;
+    }
+    .count {
+      grid-column: 3;
+      grid-row: 1;
+      font-size: 14px;
+      color: $mute;
+      white-space: nowrap;
+    }
+    @include below($bp-sm) {
+      grid-template-columns: 1fr auto;
+      .letter {
+        display: none;
+      }
+      .count {
+        grid-column: 2;
+      }
+      p {
+        grid-column: 1 / -1;
+      }
+    }
+  }
+}
+
 // IndexList
 .index-list {
   display: grid;
-  grid-template-rows: repeat(10, auto);
+  grid-template-rows: repeat(var(--rows, 10), auto);
   grid-auto-flow: column;
   column-gap: clamp(32px, 5vw, 80px);
   @include below($bp-lg) {
@@ -906,6 +981,51 @@ body {
   }
 }
 
+// SectionLinks
+.section-links {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid $line;
+  h2 {
+    margin-bottom: 12px;
+    font-size: 14px;
+    font-weight: 400;
+    a {
+      color: $soft;
+      transition: color 0.3s;
+      &:hover {
+        color: $white;
+      }
+    }
+    .letter {
+      @include voice(15px);
+      margin-right: 10px;
+      color: $mute;
+    }
+  }
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 20px;
+  }
+  a {
+    font-size: 14px;
+    color: $mute;
+    transition: color 0.25s;
+    &:hover {
+      color: $soft;
+    }
+    &.on {
+      color: $white;
+      text-decoration: underline;
+      text-underline-offset: 5px;
+    }
+  }
+  h2 a {
+    color: $soft;
+  }
+}
+
 // TitleBlock
 .title-block {
   text-align: center;
@@ -1102,12 +1222,27 @@ $fit: calc(100vh - 220px);
     }
   }
   .group-title {
-    margin: clamp(56px, 10vh, 112px) 0 8px;
-    @include voice(clamp(40px, 5vw, 72px));
-    color: $mute;
-    &:first-child {
-      margin-top: 0;
+    margin: clamp(72px, 12vh, 140px) 0 8px;
+    h2 {
+      @include voice(clamp(40px, 5vw, 72px));
+      color: $mute;
+      line-height: 1.05;
+      .letter {
+        margin-right: 0.45em;
+        font-size: 0.6em;
+        color: $line-2;
+      }
     }
+    p {
+      max-width: 56ch;
+      margin-top: 14px;
+      font-size: 16px;
+      color: $mute;
+    }
+  }
+  main > :first-child .group-title,
+  main > .group-title:first-child {
+    margin-top: 0;
   }
 }
 

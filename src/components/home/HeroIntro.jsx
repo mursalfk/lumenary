@@ -1,6 +1,9 @@
+// src/components/home/HeroIntro.jsx
 import { motion, useReducedMotion } from 'motion/react';
 import MagneticButtonLink from '../ui/MagneticButtonLink.jsx';
 import ButtonLink from '../ui/ButtonLink.jsx';
+import { STYLES } from '../../engine/styles/index.js';
+import { numberWords, capitalise } from '../../utils/words.js';
 
 export default function HeroIntro() {
   const reduce = useReducedMotion();
@@ -11,7 +14,7 @@ export default function HeroIntro() {
       animate={{ opacity: 1 }}
       transition={{ duration: 1.4, delay: 1.1 }}
     >
-      <h2>Twenty ways to see an image.</h2>
+      <h2>{capitalise(numberWords(STYLES.length))} ways to see an image.</h2>
       <p>
         Choose a treatment, drop in a photograph and adjust a few dials.
         Everything runs on your device, so your picture never leaves it.
