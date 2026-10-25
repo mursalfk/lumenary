@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import SmoothScroll from './components/SmoothScroll.jsx';
 import ScrollToTop from './components/ScrollToTop.jsx';
 import HomePage from './pages/HomePage.jsx';
@@ -19,6 +20,8 @@ export default function App() {
     <>
       <SmoothScroll />
       <ScrollToTop />
+      {/* Page views only, no cookies. Left out of the single-file build, which runs from disk. */}
+      {!import.meta.env.VITE_SINGLE && <Analytics />}
       <Suspense fallback={<Waiting />}>
         <Routes>
           <Route path="/" element={<HomePage />} />

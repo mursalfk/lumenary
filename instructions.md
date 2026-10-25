@@ -4,7 +4,7 @@ Follow in order. Each step says what you should see when it worked.
 
 ## Update: deeper theory for all 176 treatments, an About page, a new README and the launch checklist (this release)
 
-**No new packages.** `package.json` only gains scripts (`sitemap`, `check:theory`, and a `prebuild` that writes the sitemap) and a new description. If you skipped the last release's `npm install`, run it now anyway.
+**One new package:** `@vercel/analytics`, so run `npm install`. `package.json` also gains scripts (`sitemap`, `check:theory`, and a `prebuild` that writes the sitemap) and a new description.
 
 1. **Close the dev server** if it is running (Ctrl+C).
 2. **Unzip `lumenary.zip`** somewhere temporary. Copy everything inside the `lumenary` folder into your project folder, replacing files when asked. Your `.git`, `node_modules` and `dist` are not in the zip.
@@ -33,6 +33,7 @@ npm run build
 
 ### What is new
 
+- **Visitor analytics.** Page views are counted with Vercel Web Analytics (free, no cookies, no personal data). **Run `npm install` for this release** (new package `@vercel/analytics`). After you deploy, open the Vercel project, then **Analytics**, then **Enable**; nothing is counted until you do. The About page's colophon mentions it, and README section 15 explains how to remove it.
 - **Section pages are lists again.** Each section shows a list of names; hover one and its preview follows your cursor (on a phone, each row has a small picture). The sliding text over the pictures is gone. Retired file: `src/components/section/StyleTile.jsx` (delete it). Back again: `FloatingPreview`, `StyleRow`, and the hooks `useFollowPointer` and `useMediaQuery`.
 - **Theory, in depth.** Every one of the 176 treatments now has the story beside the maths (about fifty thousand words in all): why it looks the way it does, how it is made (with the real numbers the program uses), a short history, where it is used, things to try, a small glossary and neighbours. 528 tips (three per treatment) have a **See it** button that opens the treatment with the dials turned for you. The new text lives in `src/data/theory-extra/`, one file per section; the maths files are untouched. README section 17 explains the format.
 - **An About page** at `/about`: who made it, the projects, why the site exists, a note on the Sindhi section, the principles it was built by, live counts and where to find you. All of it is in one file, `src/data/maker.js`.
@@ -121,7 +122,7 @@ git commit -m "Remove build leftovers"
 - **A short screen recording.** A ten second clip of one live treatment (Ink in Water, Fireflies) makes a better post than a still. Lumenary can record one itself.
 - **Search.** The sitemap is already served at `/sitemap.xml`. To have Google index the site faster, add the site in Google Search Console and submit that address. Optional.
 - **Lighthouse.** Run Chrome's Lighthouse once on the live site. The big first script is the one thing it may flag; README section 20 explains why it is there and how to split it later.
-- **Visitor counts.** There is no analytics, by design (README section 15). If you ever want a count, Vercel's own Web Analytics is the lightest option, but then update the Privacy section and the line on the homepage that says nothing leaves the browser: the picture still would not, but the page view would.
+- **Visitor counts** are on (see "What is new"). Remember to enable Analytics in the Vercel dashboard.
 - **Your own domain** (Step 9 below) gives a link that is easier to say aloud.
 - **More profile links** on the About page (see item 1).
 

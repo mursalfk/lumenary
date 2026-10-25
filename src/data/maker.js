@@ -97,6 +97,7 @@ export const COLOPHON = {
     { label: 'Type', text: 'Set in Bodoni Moda, Hanken Grotesk and DM Mono. Some treatments bring their own: Noto Naskh Arabic, Caveat, Pinyon Script and JetBrains Mono.' },
     { label: 'Made with', text: 'React, Vite, Sass, motion, Lenis and KaTeX. Every treatment is a small piece of plain canvas code, with no machine learning model behind it.' },
     { label: 'Hosted on', text: 'Vercel. The pictures you open never reach it.' },
+    { label: 'Counting', text: 'Vercel Web Analytics counts page views, with no cookies and nothing that identifies you. It never sees your pictures.' },
   ],
 };
 

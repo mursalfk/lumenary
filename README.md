@@ -717,7 +717,9 @@ To add a new **control type**, write `XControl.jsx` in `src/components/controls/
 
 ## 15. Privacy
 
-There is no analytics, no backend and no network request after the page loads. Photos are read with the browser's file APIs and stay in memory.
+There is no backend and no database. Photos are read with the browser's file APIs and stay in memory; they are never sent anywhere.
+
+The one exception is page-view counting. `App.jsx` mounts Vercel Web Analytics (`@vercel/analytics`), which records which pages are opened, with no cookies and no personal data. It is switched on in the Vercel dashboard (Project, Analytics, Enable) and is free on the Hobby plan. It is left out of the single-file build. To remove it, delete the `<Analytics />` line and the import in `App.jsx`, and the "Counting" line in `data/maker.js`. Because every treatment has its own address, the dashboard's page list also shows which treatments are opened most.
 
 ---
 
