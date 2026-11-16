@@ -30,6 +30,8 @@
   <url><loc>https://lumenary-studio.vercel.app/theory/sindhi</loc><priority>0.6</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/section/southasia</loc><priority>0.8</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/theory/southasia</loc><priority>0.6</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/section/subject</loc><priority>0.8</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/theory/subject</loc><priority>0.6</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/art-deco</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/bauhaus</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/neo-brutalism</loc><priority>0.5</priority></url>
@@ -242,4 +244,6 @@
   <url><loc>https://lumenary-studio.vercel.app/style/warli</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/kolam</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/phulkari</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/type-behind</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/split-treatment</loc><priority>0.5</priority></url>
 </urlset>

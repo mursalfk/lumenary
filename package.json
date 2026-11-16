@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Lumenary: 212 ways to see an image. A browser-only studio with 212 visual treatments for pictures and short videos.",
+  "description": "Lumenary: 214 ways to see an image. A browser-only studio with 214 visual treatments for pictures and short videos.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

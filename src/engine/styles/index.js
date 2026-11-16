@@ -2,11 +2,13 @@
 // The style registry. Every file in this folder is picked up automatically; data/sections.js decides
 // which ones are shown and in what order. Adding a treatment = add a file here + its name in sections.js.
 import { SECTIONS, slugify } from '../../data/sections.js';
+import { registerStyles } from '../registry.js';
 
 const files = import.meta.glob(['./*.js', '!./index.js'], { eager: true });
 
 // Every style module that exists, enabled or not. Used by tests and the roadmap.
 export const ALL_STYLES = Object.values(files).map((m) => m.default);
+registerStyles(ALL_STYLES);
 const byId = new Map(ALL_STYLES.map((s) => [s.id, s]));
 
 let counter = 0;

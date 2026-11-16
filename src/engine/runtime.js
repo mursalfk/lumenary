@@ -53,6 +53,7 @@ export function createRuntime({ canvas, env, onSize }) {
     canvas.width = w; canvas.height = h;
     if (renderer && renderer.dispose) renderer.dispose();
     renderer = style.create(env);
+    renderer.requestRedraw = () => { dirty = true; };
     renderer.setSource(work, W, H);
     renderer.setParams(params);
     dirty = true;

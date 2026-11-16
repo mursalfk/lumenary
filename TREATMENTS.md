@@ -2,7 +2,7 @@
 
 Every treatment in Lumenary is a short program that reads the pixels of a picture, does some arithmetic and draws the result. This is the catalogue: what each one does, which ones you can open today, and which are still on the bench.
 
-**212 of 212 are open now** (176 still, 36 live). The whole roadmap is open.
+**214 of 214 are open now** (178 still, 36 live). The whole roadmap is open.
 
 | | Section | Treatments | Open now |
 |---|---|---:|---:|
@@ -19,6 +19,7 @@ Every treatment in Lumenary is a short program that reads the pixels of a pictur
 | K | [World cultural](#k-world-cultural) | 24 | 24 |
 | L | [Sindhi design](#l-sindhi-design) | 9 | 9 |
 | M | [South Asian and Islamic](#m-south-asian-and-islamic) | 8 | 8 |
+| N | [Subject aware](#n-subject-aware) | 2 | 2 |
 
 **Still** treatments are drawn once and can be saved up to three times larger. **Live** treatments move, answer your cursor and can record a six second clip.
 
@@ -350,6 +351,17 @@ Every treatment in Lumenary is a short program that reads the pixels of a pictur
 | 210 | [Warli](https://lumenary-studio.vercel.app/style/warli) | still | White rice-paste drawings on a mud wall, from Maharashtra: triangles for bodies, circles for heads, and a crowd that gathers where your picture is darkest. |
 | 211 | [Kolam](https://lumenary-studio.vercel.app/style/kolam) | still | Rice-flour floor drawing from South India. Lines loop around a grid of dots; where your picture is dark the loops thicken into diamonds and petals. |
 | 212 | [Phulkari](https://lumenary-studio.vercel.app/style/phulkari) | still | The picture embroidered in the Punjabi way: long silk stitches darned across rough hand-woven cloth, running one way in some blocks and the other in the next so the light catches them differently. A zigzag border closes it, as on a bride’s shawl. |
+
+## N. Subject aware
+
+*Treatments that first find the subject of your picture, on your own device, and then treat the subject and its surroundings differently.*
+
+2 treatments, 2 open now. [Theory of this section](https://lumenary-studio.vercel.app/theory/subject).
+
+| No. | Treatment | Kind | What it does |
+|---:|---|---|---|
+| 213 | [Type Behind](https://lumenary-studio.vercel.app/style/type-behind) | still | Giant lettering set behind the subject of your picture, so the person or object stands in front of the words. The subject is found on your own device, and nothing is uploaded. |
+| 214 | [Split Treatment](https://lumenary-studio.vercel.app/style/split-treatment) | still | Two treatments in one picture: the subject gets one, and everything behind it gets another. Keep the subject true to life and let the world around it turn into a print, a heat map or a comic. |
 
 ---
 

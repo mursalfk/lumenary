@@ -23,6 +23,7 @@ import { EXTRA_MOTION } from './j-motion.js';
 import { EXTRA_WORLD } from './k-world.js';
 import { EXTRA_SINDHI } from './l-sindhi.js';
 import { EXTRA_SOUTHASIA } from './m-southasia.js';
+import { EXTRA_SUBJECT } from './n-subject.js';
 
 export const EXTRA = {
   ...EXTRA_DESIGN,
@@ -39,4 +40,5 @@ export const EXTRA = {
   ...EXTRA_WORLD,
   ...EXTRA_SINDHI,
   ...EXTRA_SOUTHASIA,
+  ...EXTRA_SUBJECT,
 };

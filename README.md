@@ -1,6 +1,6 @@
 # Lumenary
 
-**212 ways to see an image.** A studio that runs entirely in the browser: pick a treatment, bring a photograph or a short video, turn a few dials and save the result. Every treatment also has a page of theory beside it: why it looks the way it does, how it is made, where it comes from, where it is used and what to try.
+**214 ways to see an image.** A studio that runs entirely in the browser: pick a treatment, bring a photograph or a short video, turn a few dials and save the result. Every treatment also has a page of theory beside it: why it looks the way it does, how it is made, where it comes from, where it is used and what to try.
 
 Live at **https://lumenary-studio.vercel.app**. The whole roadmap is open, and a readable catalogue of every treatment is in [`TREATMENTS.md`](TREATMENTS.md).
 
@@ -10,15 +10,15 @@ Nothing is uploaded. All processing happens on the visitor's device with the Can
 
 | | |
 | --- | --- |
-| **Treatments** | 212 in thirteen sections (A to M): 176 stills you can save up to three times larger, and 36 live ones that move, follow the cursor and record a six second clip. |
+| **Treatments** | 214 in fourteen sections (A to N): 178 stills you can save up to three times larger, and 36 live ones that move, follow the cursor and record a six second clip. |
 | **Video** | Every treatment works on a short video too. Upload a clip (the first 15 seconds are used), watch it through the treatment, then save the result as an MP4 (H.264, with its sound) or, where the browser cannot write MP4, a WebM. Everything happens in the tab, see [section 22](#22-video-upload-preview-and-export). |
 | **Dials** | About a thousand in all, every one of them a slider, a choice, a switch, a colour or a text box. |
 | **Theory** | A page for each treatment: why, how, the mathematics, history, uses, things to try (most with a "See it" link that turns the dials for you), a small glossary and neighbours. About fifty thousand words. |
-| **Pages** | Home, 13 section pages, 14 theory pages (Foundations plus one per section), 212 treatment pages and an About page. |
+| **Pages** | Home, 14 section pages, 15 theory pages (Foundations plus one per section), 214 treatment pages and an About page. |
 | **Stack** | Vite, React 18, React Router 6, SCSS. Three small libraries for the interface: `motion` (springs and scroll-linked animation), `lenis` (smooth scrolling) and `katex` (typeset equations). One more for video, `mediabunny` (reads and writes video files with WebCodecs, MPL-2.0), which is downloaded only when someone exports a video. The image engine itself has no dependencies. |
 | **Look** | Black is primary, white is secondary, with greys in between. Bodoni Moda for display, Hanken Grotesk for text, DM Mono for small figures. |
 
-**The sections.** A Design movements and styles (24), B Digital and technical (26), C Typographic (7), D Light, colour and glass (10), E Physical and 3D feel (12), F Print and craft (16), G Painterly and drawn (18), H Photographic and optical (16), I Geometric and generative (32), J Motion and live (10), K World cultural (24), L Sindhi design (9) and M South Asian and Islamic (8). The list lives in `src/data/sections.js` (see [section 18](#18-sections-and-the-roadmap)).
+**The sections.** A Design movements and styles (24), B Digital and technical (26), C Typographic (7), D Light, colour and glass (10), E Physical and 3D feel (12), F Print and craft (16), G Painterly and drawn (18), H Photographic and optical (16), I Geometric and generative (32), J Motion and live (10), K World cultural (24), L Sindhi design (9), M South Asian and Islamic (8) and N Subject aware (2). The list lives in `src/data/sections.js` (see [section 18](#18-sections-and-the-roadmap)).
 
 **The routes.**
 
@@ -85,7 +85,7 @@ Open the address it prints (normally http://localhost:5173).
 | `npm run build`        | Production build into `dist/`. This is what Vercel runs. The video library comes out as its own file.  |
 | `npm run preview`      | Serves `dist/` locally so you can test the production build.                                      |
 | `npm run build:single` | Writes one self-contained file, `dist-single/index.html`, with scripts, styles and fonts inlined. |
-| `npm run catalogue`    | Regenerates `TREATMENTS.md`, the readable list of all 212 treatments, from the data and the style files. |
+| `npm run catalogue`    | Regenerates `TREATMENTS.md`, the readable list of all 214 treatments, from the data and the style files. |
 | `npm run check:theory` | Checks every theory entry against the live treatments: shape, lengths, dial presets, links, dashes. Add letters to limit it: `npm run check:theory -- KLM`. |
 | `npm run sitemap`      | Writes `public/sitemap.xml` from the section list. It also runs by itself before every `npm run build`. |
 
@@ -166,13 +166,13 @@ vite.single.config.js      the single-file build
 vercel.json                SPA rewrite for Vercel
 public/
   favicon.svg
-  og-212.png               the share image (1200 by 630), see section 21
+  og-214.png               the share image (1200 by 630), see section 21
   robots.txt, sitemap.xml  for search engines (the sitemap is generated)
 scripts/
   catalogue.mjs            writes TREATMENTS.md from the roadmap and the style files (npm run catalogue)
   check-theory.mjs         checks the theory data against the treatments (npm run check:theory)
   sitemap.mjs              writes public/sitemap.xml (npm run sitemap, and before every build)
-TREATMENTS.md             the catalogue of all 212 treatments (generated, do not edit by hand)
+TREATMENTS.md             the catalogue of all 214 treatments (generated, do not edit by hand)
 src/
   main.jsx                 entry: fonts, stylesheet, router
   App.jsx                  the route table
@@ -226,7 +226,7 @@ src/
                            theory-generative.js, theory-motion.js, theory-world.js, theory-sindhi.js,
                            theory-southasia.js
                            (the mathematics: paragraphs and LaTeX equations, one file per section)
-    theory-extra/          the story of each treatment, one file per section (a-design.js to m-southasia.js)
+    theory-extra/          the story of each treatment, one file per section (a-design.js to n-subject.js)
                            and an index.js that gathers them (section 17)
   utils/                   cx, compose, format, jumpTo, scroller, words (numbers as words),
                            presets (dial settings carried in a link)
@@ -234,7 +234,8 @@ src/
     main.scss              the one stylesheet for the whole app
     abstracts/             _vars.scss, _mixins.scss, _index.scss
   engine/                  image processing, no React (section 11)
-    runtime.js, utils.js, sample.js
+    runtime.js, utils.js, sample.js, registry.js (a lookup of every style by id, for treatments that borrow another one)
+    subject/               the subject finder for section N: segment.js (finds the subject on the device), cutout.js (cut-out, outline, waiting note)
     videoExport.js         turns a video into the same video seen through one treatment (section 22)
     mediabunny.js          the one place the video library is imported from, so it loads on demand
     toon.js                building blocks for the cartoon, cel and drawn treatments (edge-keeping smoothing, palettes, outlines)
@@ -673,6 +674,7 @@ All animations are disabled under `prefers-reduced-motion: reduce` (at the botto
 - **Images** are capped at 3200 px on load (`source.js`) so very large photos stay fast. A video's first frame is capped at 1920 px, and while a video plays the working canvas is at most 640 px on its long side (`VIDEO_PREVIEW_SIDE`). If a treatment cannot keep up, the runtime draws the preview smaller in steps of a quarter, down to 320 px (`VIDEO_PREVIEW_MIN`): three frames in a row that take more than 120 ms trigger a step. A new treatment or a new file starts again at 640.
 - **Cartoon and pixel treatments** share `engine/toon.js` and `engine/retro.js`. `toon` has the edge-keeping smoothing (`smoothKeepEdges`), the palette tools (`paletteOf`, `flatten`, `matchPalette`, `dress`) and the line and highlight helpers (`shapeLines`, `darkLines`, `brightSpots`, `bloom`). Its `flatten` takes the `cache` and carries the previous frame's palette forward, so a video does not flicker between colour sets. `retro` has the ordered dither (`bayer`, `dither`), `pixelText` and `sprite`.
 - **Safari rule.** Do not use `ctx.filter` (Safari's canvas ignores it). Blur with `boxBlur` on arrays, or draw small and scale up. `shadowBlur` is fine. `helpers.stretch` clips and stretches a luminance map, which the lettered and printed treatments use so a flat picture still shows tone. The lit, material treatments (section E) build a height map, turn it into surface slopes with `helpers.slopes` and shade it per pixel; `helpers.cellular` is a cheap nearest-site (Voronoi) noise used for leather grain and glass pieces.
+- **Subject-aware treatments (N)** share `engine/subject/`. `segment.js` finds the main subject of a picture with a small neural network (U2-Net, the `p` size, 4.6 MB, Apache-2.0) run by ONNX Runtime Web, entirely in the browser. `subjectState(env, work, cache)` returns `{ mask, note }`: the first call starts the work and returns no mask, and when the mask is ready it asks the runtime to repaint through `cache.redraw`, so the picture is shown at once and the effect arrives a moment later. Masks are kept by a hash of the picture's pixels, so changing a dial never runs the network again. For a video the mask is refreshed about every 600 ms and reused in between. `cutout.js` turns the mask into a soft cut-out (`cutout`), a silhouette line (`outline`) and the waiting pill (`waitNote`). Type Behind and Split Treatment are written with these three calls. `engine/registry.js` lets Split Treatment look up another treatment by id without importing the style index, which would be a circular import.
 - **Cultural treatments (K, L, M)** share `engine/culture.js`: `paletteIdx` and `modeFilter` snap a picture to a handful of pigments and clean the regions; `edgeMask` draws the outlines; `clothFill`, `woodFill` and `carvedStone` give woven, wooden and carved surfaces; `rosette`, `leaf`, `starPoints` and `starRadius` draw ornaments; `ribbon` fills a tapering stroke. Draw thousands of small shapes with flat fills: a gradient or a `save`/`restore` per shape is very slow on machines without a graphics card (Byzantine Mosaic once hung for that reason).
 
 ---
@@ -745,6 +747,8 @@ To add a new **control type**, write `XControl.jsx` in `src/components/controls/
 There is no backend and no database. Photos and videos are read with the browser's file APIs and stay in memory; they are never sent anywhere. A video is decoded, drawn through the treatment and encoded again inside the tab (WebCodecs), and the file you save is built in memory and handed to the browser's download, so it never touches a server either.
 
 The one exception is page-view counting. `App.jsx` mounts Vercel Web Analytics (`@vercel/analytics`), which records which pages are opened, with no cookies and no personal data. It is switched on in the Vercel dashboard (Project, Analytics, Enable) and is free on the Hobby plan. It is left out of the single-file build. To remove it, delete the `<Analytics />` line and the import in `App.jsx`, and the "Counting" line in `data/maker.js`. Because every treatment has its own address, the dashboard's page list also shows which treatments are opened most.
+
+The second exception is the subject finder behind section N (Type Behind, Split Treatment). The network model (`public/models/u2netp.onnx`) is served from the site itself. The runtime that runs it, ONNX Runtime Web, is fetched from jsDelivr (with unpkg as a fallback) the first time one of those two treatments is opened, and nothing else is loaded until then. Only the runtime files are requested: no picture, and no data about one, leaves the device, though like any file host the CDN sees the visitor's address. If both hosts are unreachable, the treatment shows the plain picture with a note that the subject finder could not start. A file opened from disk (the single-file build) cannot fetch the model either, so section N works only on the hosted site or with `npm run dev` and `npm run preview`.
 
 ---
 
@@ -844,7 +848,7 @@ A preset is a handful of dials carried in the address: `/style/halftone?size=20&
 
 ## 18. Sections and the roadmap
 
-`src/data/sections.js` is the master list of every treatment planned for Lumenary, 212 names in thirteen sections (A to M), and all thirteen are enabled. It is the single place that decides what is on the site.
+`src/data/sections.js` is the master list of every treatment planned for Lumenary, 214 names in fourteen sections (A to N), and all fourteen are enabled. It is the single place that decides what is on the site.
 
 ```js
 { id: 'design', letter: 'A', enabled: true, title: 'Design movements and styles', blurb: '…', items: ['Art Deco', 'Bauhaus', …] }
@@ -876,7 +880,7 @@ Things the data does not update by itself: the `<title>` and `description` in `i
 
 ## 20. Loading and performance
 
-- **The first load** is the homepage and the studio: the app, the image engine with all 212 treatments, the stylesheet and the home page fonts. In a production build the main script is about 1.26 MB, or about 430 kB over the wire with gzip.
+- **The first load** is the homepage and the studio: the app, the image engine with all 214 treatments, the stylesheet and the home page fonts. In a production build the main script is about 1.33 MB, or about 460 kB over the wire with gzip.
 - **Lazy routes.** `TheoryPage`, `TheoryGroupPage` and `AboutPage` are loaded with `React.lazy` and shown inside one `Suspense`, so the 760 kB (about 275 kB gzip) of theory text and equations is fetched only when someone opens a theory page. The fallback is a quiet empty block (`route-wait`) rather than a spinner, so there is no flash.
 - **Hash links into lazy pages.** A link such as `/theory/design#bauhaus` has to wait for the page to download before there is anything to scroll to. `ScrollToTop` polls for the target for up to six seconds, jumps to it as soon as it exists, then re-aligns after 60, 250 and 700 ms and again once the fonts have loaded, because late fonts move the page. A wheel or a touch cancels the whole sequence, so it never fights the reader.
 - **The video library is lazy too.** `engine/videoExport.js` imports Mediabunny with a dynamic `import()` the first time someone presses **Export video**, so visitors who only use pictures never download its 520 kB (about 135 kB gzip). Playing and previewing a video does not need it: that is the browser's own `<video>` element.
@@ -893,12 +897,12 @@ Everything a link needs in order to look good when someone posts it, and everyth
 
 | What | Where | Notes |
 | --- | --- | --- |
-| Page title and description | `index.html` | Written by hand. The count in the description (212) should match the site. |
+| Page title and description | `index.html` | Written by hand. The count in the description (214) should match the site. |
 | Per-page titles | `withDocumentTitle` in each page | `Halftone \| Lumenary`, `Theory \| Lumenary`, `About \| Lumenary, by Mursal Furqan Kumbhar` and so on. |
-| Share image | `public/og-212.png`, 1200 by 630 | Used by `og:image` and `twitter:image`. The filename carries the number on purpose: social networks cache the picture by address, so a new image needs a new filename to show up. |
+| Share image | `public/og-214.png`, 1200 by 630 | Used by `og:image` and `twitter:image`. The filename carries the number on purpose: social networks cache the picture by address, so a new image needs a new filename to show up. |
 | Share image text | `og:image:alt` | Describes the picture for people who cannot see it. |
 | `robots.txt` | `public/robots.txt` | Allows everything and points at the sitemap. |
-| Sitemap | `public/sitemap.xml` | Generated by `scripts/sitemap.mjs` before every build: the home page, About, the theory pages, the section pages and every treatment page (242 addresses). Never edit it by hand. |
+| Sitemap | `public/sitemap.xml` | Generated by `scripts/sitemap.mjs` before every build: the home page, About, the theory pages, the section pages and every treatment page (246 addresses). Never edit it by hand. |
 | Favicon | `public/favicon.svg` | |
 
 **When a number changes** (a treatment is added, say), update these by hand: the `description`, `og:title` and `og:description` in `index.html`, the `description` in `package.json`, the home page title in `HomePage.jsx` if it quotes a number, and the share image. To remake the image, open the home page in a 1200 by 630 window, let the hero settle, take a screenshot and save it under a new name such as `og-<count>.png`; then change the two addresses in `index.html`.

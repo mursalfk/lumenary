@@ -135,6 +135,12 @@ export const SECTIONS = [
     blurb: 'Folk art and sacred geometry across South Asia and the Islamic world.',
     items: ['Truck Art', 'Mughal Jali', 'Persian Miniature', 'Girih', 'Madhubani', 'Warli', 'Kolam', 'Phulkari'],
   },
+  {
+    id: 'subject', letter: 'N', enabled: true,
+    title: 'Subject aware',
+    blurb: 'Treatments that first find the subject of your picture, on your own device, and then treat the subject and its surroundings differently.',
+    items: ['Type Behind', 'Split Treatment'],
+  },
 ];
 
 export const ENABLED_SECTIONS = SECTIONS.filter((s) => s.enabled);
