@@ -545,6 +545,175 @@ body {
     font-size: 24px;
     letter-spacing: -0.01em;
   }
+  // On a phone there is not room for all of it on one line: the name and Feedback sit on the first row, the links under them.
+  @include below($bp-sm) {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 16px 12px;
+    padding: 22px $gut;
+    .top-nav {
+      display: contents;
+    }
+    .nav-links {
+      grid-row: 2;
+      grid-column: 1 / -1;
+    }
+    .feedback-link {
+      grid-row: 1;
+      grid-column: 2;
+    }
+  }
+}
+
+// TopNav and FeedbackLink
+.top-nav {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  @include below($bp-sm) {
+    gap: 14px;
+  }
+}
+.feedback-link {
+  @include label(14px);
+  padding: 8px 18px;
+  border: 1px solid $line-2;
+  border-radius: 999px;
+  color: $paper;
+  white-space: nowrap;
+  transition:
+    background 0.3s,
+    color 0.3s,
+    border-color 0.3s;
+  &:hover {
+    background: $paper;
+    border-color: $paper;
+    color: $ink;
+  }
+  &:focus-visible {
+    outline: 2px solid $paper;
+    outline-offset: 3px;
+  }
+  .icon {
+    display: none;
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+  }
+  &.in-bar {
+    padding: 9px 20px;
+  }
+  @include below($bp-sm) {
+    padding: 6px 14px;
+    font-size: 13px;
+    // In the studio bar there is room for a round icon only, like the arrows beside it.
+    &.in-bar {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      .word {
+        display: none;
+      }
+      .icon {
+        display: block;
+      }
+    }
+  }
+}
+
+// FeedbackDialog
+.feedback-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: $gut;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(6px);
+  animation: feedback-fade 0.35s $ease both;
+}
+.feedback-prompt {
+  width: 100%;
+  max-width: 460px;
+  max-height: 100%;
+  overflow-y: auto;
+  padding: clamp(26px, 5vw, 40px);
+  border: 1px solid $line-2;
+  background: $ink-2;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  animation: feedback-rise 0.45s $ease both;
+  h2 {
+    font-family: $display;
+    font-size: clamp(26px, 5vw, 32px);
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+  }
+  .text {
+    margin-top: 16px;
+    color: $soft;
+    line-height: 1.6;
+  }
+  .news {
+    margin-top: 20px;
+    padding: 16px 0 2px;
+    border-top: 1px solid $line-2;
+    h3 {
+      font-size: 14px;
+      font-weight: 500;
+      color: $paper;
+    }
+    ul {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+      padding-left: 18px;
+      list-style: disc;
+    }
+    li {
+      color: $soft;
+      font-size: 14.5px;
+      line-height: 1.5;
+      &::marker {
+        color: $mute;
+      }
+    }
+  }
+  .note {
+    margin-top: 14px;
+    color: $mute;
+    font-size: 14px;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 14px;
+    margin-top: 28px;
+    .button-link.solid,
+    .button {
+      padding: 12px 24px;
+      font-size: 14px;
+    }
+  }
+}
+@keyframes feedback-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes feedback-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
 }
 
 // Hero
@@ -1292,6 +1461,7 @@ body {
   backdrop-filter: blur(10px);
   @include below($bp-sm) {
     grid-template-columns: auto 1fr auto;
+    gap: 10px;
   }
 }
 

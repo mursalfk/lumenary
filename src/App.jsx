@@ -6,6 +6,7 @@ import ScrollToTop from './components/ScrollToTop.jsx';
 import HomePage from './pages/HomePage.jsx';
 import StylePage from './pages/StylePage.jsx';
 import SectionPage from './pages/SectionPage.jsx';
+import FeedbackPrompt from './components/feedback/FeedbackPrompt.jsx';
 
 // The reading pages carry a lot of text and mathematics, so they load when someone visits them.
 const TheoryPage = lazy(() => import('./pages/TheoryPage.jsx'));
@@ -33,6 +34,7 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
+      <FeedbackPrompt />
     </>
   );
 }

@@ -5,6 +5,7 @@ import BackLink from './BackLink.jsx';
 import TitleBlock from './TitleBlock.jsx';
 import StepNav from './StepNav.jsx';
 import TheoryLink from './TheoryLink.jsx';
+import FeedbackLink from '../feedback/FeedbackLink.jsx';
 
 export default function StudioBar({ style }) {
   const { prev, next } = useNeighbors(style);
@@ -14,6 +15,7 @@ export default function StudioBar({ style }) {
       <BackLink to={`/section/${style.section}`}>{section.title}</BackLink>
       <TitleBlock style={style} total={STYLES.length} />
       <div className="bar-actions">
+        <FeedbackLink className="in-bar" />
         <TheoryLink style={style} className="in-bar" />
         <StepNav prev={prev} next={next} />
       </div>

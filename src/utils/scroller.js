@@ -22,3 +22,16 @@ export function scrollToId(id, { immediate = false } = {}) {
   else el.scrollIntoView({ behavior: 'smooth' });
   return true;
 }
+
+// A pop-up that covers the page stops it scrolling behind: the smooth scroller pauses and the page is clipped.
+let held = 0;
+export function lockScroll() {
+  if (held++) return;
+  if (lenis) lenis.stop();
+  document.documentElement.style.overflow = 'hidden';
+}
+export function unlockScroll() {
+  if (!held || --held) return;
+  document.documentElement.style.overflow = '';
+  if (lenis) lenis.start();
+}

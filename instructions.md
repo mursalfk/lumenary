@@ -2,7 +2,102 @@
 
 Follow in order. Each step says what you should see when it worked.
 
-## Update: 12 more treatments (212 in all) (this release)
+## Shrink your local .git (the 587 MiB you saw)
+
+GitHub is clean: its copy of the project is 423 files and about 3 MiB, and `lumenary-output/` and `image.jpg` are gone from it. The 587 MiB is only on your computer. `git count-objects -vH` showed `packs: 0`, so it was counting the old test pictures as loose objects that the amend left behind. My earlier "size-pack should be a few MiB" check was wrong for that state. Git has not cleaned them up yet. From your project folder:
+
+```bash
+git ls-files | grep -c -E "^(lumenary-output/|image.jpg)"
+git reflog expire --expire=now --all
+git gc --prune=now --aggressive
+git count-objects -vH
+```
+
+   - The first command must print `0`. If it prints a number, those files are still tracked: run `git rm -r --cached lumenary-output image.jpg`, commit, and start again from the top of this list.
+   - The reflog line drops git's safety net for the old commit `072817b`. That is intended, since it is the commit that held the pictures.
+   - Afterwards `count` should be near 0 and `size-pack` a few MiB.
+   - Your picture files stay on disk the whole time.
+
+---
+
+## Update: feedback form (this release)
+
+A Tally form at `https://tally.so/r/2jAE1M` now collects reviews, and the site asks for them in two ways:
+
+- **A pop-up** about one second after Lumenary opens, on any page. **Open the feedback form** opens Tally in a new tab and the pop-up never comes back for that person. **Not now** (or Escape, or a click outside) hides it for 7 days.
+- **A Feedback link** in the top bar, always there: on the home page, and in the studio bar (the word on a computer, a speech-bubble icon on a phone).
+- **A "What is new" list** inside the pop-up: 12 new treatments, and short video with MP4 export. The wording lives in `src/data/feedback.js` (`title`, `text`, `news`). Replace the lines in `news` when the next update ships, or set `news: []` to hide the list.
+- **Two new images** for the form's header, in `public/`: `feedback-cover.jpg` (one still life seen through four treatments) and `lumenary-logo.png` (the ring mark from the favicon). Tally can only show them once they are on the live site, so this release has a second step, below.
+
+**No new packages.** Nothing was pushed from here; you commit and push, as before.
+
+1. **Close the dev server** if it is running (Ctrl+C).
+2. **Unzip `lumenary.zip`** somewhere temporary and copy everything inside the `lumenary` folder into your project folder, replacing files when asked. The zip's `.gitignore` has the same lines you added, so replacing it is safe.
+3. **Run it:**
+
+```bash
+npm run dev
+```
+
+   Check, in this order:
+   - About a second after the page opens, a dark dialog says **Help me make Lumenary better**. The focus ring is on **Open the feedback form**, and the page behind it does not scroll.
+   - Press **Not now**, then reload: no pop-up. The **Feedback** link is still in the top bar.
+   - Open any treatment (for example `/style/cctv`). The studio bar has the Feedback link too.
+   - Click **Feedback**. The form opens in a new tab.
+   - Make the window phone-narrow (about 400 px wide). The home bar shows the name and Feedback on the first line and the links under them; the studio bar shows a round speech-bubble button.
+   - To see the pop-up again, open the browser console and run `localStorage.clear(); sessionStorage.clear(); location.reload()`, or use a private window.
+4. **Check the size before you commit** (this keeps the 581 MiB problem from coming back):
+
+```bash
+git status
+git count-objects -vH
+```
+
+   `git status` should list only the files below, and no pictures or videos. `size-pack` should stay a few MiB.
+5. **Commit and push:**
+
+```bash
+npm run build
+git add -A
+git commit -m "Add a feedback form: a pop-up on first visit and a Feedback link in the top bars"
+git push
+```
+
+6. **Verify the live site** about a minute later: open `https://lumenary-studio.vercel.app` in a private window and see the pop-up with its **What is new** list. Then open these two addresses; each must show a picture:
+   - `https://lumenary-studio.vercel.app/feedback-cover.jpg`
+   - `https://lumenary-studio.vercel.app/lumenary-logo.png`
+7. **Tell me when both open.** I will then put them on the Tally form as its cover and logo and publish it. (Done from here, because Tally needs a public address for each picture and they only exist once the site is deployed.)
+
+### Changing it later
+
+Everything is in `src/data/feedback.js`:
+
+- `url`: the form address. **Leave it empty to switch the pop-up and the link off**, for example while you edit the form.
+- `delay`: milliseconds before the pop-up appears (900 now).
+- `snoozeDays`: how long **Not now** keeps it away (7 now).
+- `title`, `text`, `note`, `open`, `later`, `label`: the words.
+
+### The Tally form (already live)
+
+Rewritten in a lighter voice (title: "So... how did Lumenary treat you?"). **Every question is now required**, name and email included, so nobody can send a half-empty answer. The old redirect to the site after sending is gone, so people now see a thank-you page with a **Back to Lumenary** link.
+
+### Reading the answers
+
+In Tally, open the form and go to **Submissions** (there is a summary tab too). You can also ask me to read and summarise them.
+
+### What is new in the project
+
+- `src/data/feedback.js`: the address, the words, the news list and the timings.
+- `src/components/feedback/FeedbackDialog.jsx`, `FeedbackPrompt.jsx`, `FeedbackLink.jsx`, `NewsList.jsx`: the dialog, the thing that decides when to show it, the always-there link, and the news list.
+- `public/feedback-cover.jpg`, `public/lumenary-logo.png`: the form's cover and logo.
+- `src/hooks/useFeedbackPrompt.js`, `src/hooks/useModal.js`: the timing, and the focus trap, Escape and scroll lock.
+- `src/utils/feedbackState.js`, `src/utils/safeStorage.js`: remembers "not now" and "done" in the browser, and keeps working when storage is blocked.
+- `src/utils/scroller.js`: two small functions that pause smooth scrolling while the dialog is open.
+- Changed: `src/App.jsx`, `src/components/home/TopBar.jsx`, `src/components/studio/StudioBar.jsx`, `src/styles/main.scss`, `.gitignore`.
+
+---
+
+## Earlier update: 12 more treatments (212 in all)
 
 **No new packages.** `npm install` is still worth running; it changes nothing.
 
