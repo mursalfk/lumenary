@@ -48,6 +48,8 @@ export default {
     return {
       animated: true,
       setSource(w, ww, hh) { work = w; W = ww; H = hh; key = ''; },
+      // A new video frame of the same size: read the brightness again. The prices are seeded, so they scroll on unchanged.
+      setFrame(w) { work = w; key = ''; },
       setParams(np) { p = np; },
       draw(ctx, t) {
         const k = p.rows + '|' + p.seed + '|' + p.text + '|' + W + '|' + H;

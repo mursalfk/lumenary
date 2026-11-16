@@ -114,4 +114,92 @@ export const THEORY_PAINTERLY = {
       { tex: T`\tilde{\mathbf q}_i=\mathbf q_i+2A\,\big(\boldsymbol\nu(0.0045\,i)-\tfrac12\big)+0.35\,A\,\big(\mathbf u-\tfrac12\big)`, note: 'The hand drifts: ν is smooth noise along the line, u random numbers in [0, 1], A = 14 px × the drift slider.' },
     ],
   },
+  'anime-cel': {
+    paragraphs: [
+      'A cel is painted in flat areas, so the first job is to remove everything that is not an area. The picture is smoothed with a filter that keeps edges: each pixel becomes the average of the neighbours in its row, then its column, weighted by how close they are to it in colour. Similar neighbours count fully and different ones hardly at all, so skin evens out while the outline of a face stays put. A palette is then found by k-means. Distances are measured on brightness plus two colour differences, with the colour differences weighted up, which keeps a pale skin tone apart from a grey wall of the same brightness.',
+      'Each paint gets a second, shadow tone: darker and mixed a little toward violet, as cel painters mix it. The shadow is one hard step, taken where the picture is darker than its wider surroundings. Lines come from three sources and the strongest wins: places where the smoothed picture is darker than its own blur (the dark side of every edge), boundaries between two paints that differ a lot, and small dark features such as eyes taken from the unsmoothed picture. Shine is white, placed only where a spot is both very bright and brighter than its surroundings. A soft glow is the frame shrunk, enlarged and screened over itself.',
+    ],
+    equations: [
+      { tex: T`p'_i=\frac{\sum_j w_{ij}\,p_j}{\sum_j w_{ij}},\qquad w_{ij}=\exp\!\Big(-\frac{\lVert p_i-p_j\rVert_1^{2}}{2\,\sigma^{2}}\Big),\quad\sigma=76.5`, note: 'Edge-keeping smoothing over the pixels j within the reach of pixel i, along one row or column at a time.' },
+      { tex: T`\mathbf f=\big(Y,\ 1.7\,(B-Y),\ 1.7\,(R-Y)\big),\qquad Y=0.299R+0.587G+0.114B`, note: 'The space in which paints are found and matched.' },
+      { tex: T`s=S_{\tau,\,\tau+0.014}\big(L_{16}-L_{2}\big),\qquad \tau=\operatorname{lerp}(0.12,\ 0.02,\ \text{shadow})`, note: 'The cel shadow: L with a wide blur minus L with a narrow one, cut to a hard step.' },
+    ],
+  },
+  'retro-anime': {
+    paragraphs: [
+      'The flat paint is made the same way as in the cel treatment, with heavier outlines. What changes is the age of the materials. Old cel paint photographed on film does not reach black or white, so each paint’s darkest tones are lifted toward navy and its lightest warmed toward cream, both in proportion to the fade slider, and saturation is trimmed. Outlines were photocopied onto the cel, and the copy breaks up where the toner ran thin, so line opacity is multiplied by a thresholded noise.',
+      'Three faults of the camera and the tape are then added. Light spreads inside film around anything bright: the highlights are isolated, blurred widely and added back in a warm tone, which is the halo. Colour bleed reads the red channel a few pixels to the left and the blue a few pixels to the right, and mixes every pixel with its horizontal neighbours. Grain is a hash plus a smoother noise, and the corners darken. Star glints are drawn on the brightest spots that are far enough apart: four thin kites each, the upright pair longer than the level pair, over a small round bloom.',
+    ],
+    equations: [
+      { tex: T`C\leftarrow C+(C_{\text{navy}}-C)\cdot0.5f\,\big(1-S_{0,\,0.5}(l)\big),\qquad C\leftarrow C+(C_{\text{cream}}-C)\cdot0.4f\,S_{0.6,\,1}(l)`, note: 'Ageing of a paint of lightness l; f is the fade slider.' },
+      { tex: T`R'(x)=R(x-b),\qquad G'(x)=G(x),\qquad B'(x)=B(x+b),\qquad b=\operatorname{round}(3\cdot\text{bleed})`, note: 'Colour bleed along each row.' },
+      { tex: T`C\leftarrow C+(C_{\text{halo}}-C)\cdot0.75\,k\cdot B_{9}^{2}\,S_{0.72,\,0.95}(Y)`, note: 'The halo: bright parts, blurred twice with a box of radius 9, blended toward a warm white; k is the halo slider.' },
+    ],
+  },
+  'crayon-cartoon': {
+    paragraphs: [
+      'The picture is reduced to a few simple shapes, and each shape’s colour is swapped for the nearest crayon in a box of sixteen after being made more vivid. Two shapes that land on the same crayon are treated as one, with no outline between them. Nothing drawn by a small hand is straight, so every shape is pushed about before drawing: each pixel looks up its shape at a position shifted by slow value noise. Outlines are the boundaries of the shifted shapes, thickened.',
+      'Crayon is wax dragged over rough paper. Each colour is given one stroke direction, and the pixel’s coordinates are rotated into it. A noise stretched about nineteen times longer along the stroke than across it gives the streaks. A second, fine noise is the tooth of the paper. Wax lands where the sum of the two clears a threshold that the pressure slider lowers, so light pressure leaves paper showing in the hollows. Close to an outline the coverage is cut by about half, because a child lifts the crayon before reaching the line.',
+    ],
+    equations: [
+      { tex: T`u=x\cos a+y\sin a,\qquad v=-x\sin a+y\cos a,\qquad a=\pi\cdot\operatorname{hash}(\text{colour})`, note: 'Coordinates along (u) and across (v) the stroke direction of one colour.' },
+      { tex: T`\text{cover}=S_{0.82-0.75w,\ 1.05-0.55w}\big(0.62\,N(0.42v,\ 0.022u)+0.5\,\text{tooth}\big)`, note: 'How much wax lands: N is value noise, w the pressure slider (0.1 to 1).' },
+      { tex: T`\text{shape}(x,y)=\text{shape}_0\big(x+A\,(2N_1-1),\ y+A\,(2N_2-1)\big),\qquad A=7\cdot\text{wobble}`, note: 'The wobble: shapes are read at a position displaced by up to A pixels.' },
+    ],
+  },
+  'glow-sketch': {
+    paragraphs: [
+      'Outlines are found with the blur-then-Sobel pipeline, but they are not drawn where they are. The edge map is looked up three times at each pixel, each time at a position nudged by a different slow noise, and the strongest of the three is kept. One true outline therefore appears as three lines that wander apart and together, like a pen going over the same contour again. Each pass is also faded in small patches by a hash, so the lines skip.',
+      'Shadows are hatched. The pixel’s position along a diagonal, divided by the spacing of the strokes, tells how far it is from the nearest stroke centre; it is inked if it is close enough and the picture there is dark enough. A second set of strokes on the other diagonal is added only in the deepest shadows. The finished line layer is drawn with additive blending, then again from copies shrunk to a quarter and a tenth of the size. Enlarging a small copy smears each line outward, and the sum is a hard core inside a soft halo. The rainbow pen takes its hue from the position on the page.',
+    ],
+    equations: [
+      { tex: T`a=\max_{j=1,2,3}\ S_{\theta,\,2.3\theta}\Big(E\big(\mathbf x+A\,\mathbf n_j(\mathbf x)\big)\Big),\qquad \theta=\operatorname{lerp}(0.17,\ 0.035,\ \text{detail})`, note: 'Line opacity: the edge map E read at three noisy offsets n_j of size A = 1.5 + 9 × wobble pixels.' },
+      { tex: T`s=\Big\lvert\operatorname{frac}\frac{x+y+\delta}{p}-\tfrac12\Big\rvert,\qquad \text{hatch}=\big(1-S_{0.05,\,0.11}(s)\big)\cdot S_{0.5,\,0.62}(1-L)`, note: 'First hatching direction: strokes every p = 11 px, drawn where the picture is dark. δ is a slow sway.' },
+      { tex: T`C=E+g\,\big(\operatorname{up}(E_{1/4})+\operatorname{up}(E_{1/10})\big)+0.28\,E`, note: 'The glow: the line layer E plus enlarged small copies, all added; g grows with the glow slider.' },
+    ],
+  },
+  chalkboard: {
+    paragraphs: [
+      'A board is never clean. Its colour is multiplied by slow noise, and a second noise, stretched sideways and bent by a third, marks the broad sweeps an eraser leaves; inside those sweeps the board is blended a little toward chalk white. Chalk itself only catches on the high points of the surface, so everything drawn is gated by a tooth map made of fine value noise and a per-pixel hash. That gate is what breaks every line into grains.',
+      'Chalk draws light, so the picture is used the other way round from a pencil sketch. Outlines come from the Sobel operator, read at two slightly displaced positions so the line doubles in places. Shading goes where the picture is bright: a target amount is computed from the blurred brightness and from a noise stretched along one slanted direction, which stands for strokes made with the side of the stick, and chalk lands where the tooth exceeds a threshold that falls as the target rises. With coloured sticks, each pixel takes the stick whose hue is nearest to the picture’s there, as long as the picture is colourful enough.',
+    ],
+    equations: [
+      { tex: T`C_{\text{board}}=C_0\,(0.8+0.34\,m)+(C_{\text{chalk}}-C_0)\,(0.05+0.2\,\text{wipe})\cdot\text{dust}`, note: 'The slate: m is mottling noise, wipe the eraser sweeps, dust the smears slider.' },
+      { tex: T`q=S_{0.42,\,0.95}(L)\cdot s\cdot(0.55+0.6\,\text{stroke}),\qquad \alpha=0.82\,S_{0.95-0.9q,\ 1.25-0.75q}(\text{tooth}+0.35)`, note: 'Side-of-chalk shading: q is how much chalk is wanted, s the shading slider.' },
+      { tex: T`\alpha_{\text{line}}=S_{\theta,\,2.2\theta}(E)\cdot S_{0.18,\,0.5}(\text{tooth}+0.25),\qquad\theta=\operatorname{lerp}(0.16,\ 0.05,\ \text{lines})`, note: 'Outlines, broken by the tooth of the board.' },
+    ],
+  },
+  whiteboard: {
+    paragraphs: [
+      'The board is almost white: slightly grey toward the corners, crossed by a soft band of glare shaped like a bell curve, and tinted in places by smears of ink that were never quite wiped off. Those ghost marks are two fractal noises, each stretched hard in one direction and cut at a threshold. Outlines are found on a copy of the picture blurred twice, because a marker cannot draw hair, only shapes. The edge strength is cut at a threshold divided by the tip size, so a broader tip simply accepts weaker edges and the line fattens.',
+      'Shading is done in strokes. The position of a pixel across the stroke direction, divided by the stroke spacing, says whether it lies in a stroke or in the gap between two. A stroke is drawn only where the picture is dark enough, and a slow noise along its length makes it run dry and stop. The darkest areas get a second set of strokes across the first. Colour is chosen per pixel from the smoothed picture: black when the colour is dull or very dark, otherwise red, green or blue by hue. A colour has to be clearly a colour to earn a coloured marker.',
+    ],
+    equations: [
+      { tex: T`\text{glare}=0.035\,\exp\!\Big(-\Big(\frac{0.8u+0.6v-0.62}{0.14}\Big)^{2}\Big)`, note: 'The band of light across the board; u and v are the position from 0 to 1.' },
+      { tex: T`\alpha_{\text{line}}=S_{\theta/\tau,\ 1.5\theta/\tau}(E),\qquad \tau=\operatorname{lerp}(0.9,\ 2.6,\ \text{tip})`, note: 'Outline from the edge strength E of the blurred picture; τ is the tip size.' },
+      { tex: T`\text{marker}=\begin{cases}\text{black}&\max(R,G,B)-\min(R,G,B)<62\ \text{or}\ D>0.86\\ \text{red, green or blue}&\text{by hue otherwise}\end{cases}`, note: 'Choice of marker from the smoothed colour; D is the darkness of the picture.' },
+    ],
+  },
+  rotoscope: {
+    paragraphs: [
+      'The fill is a posterisation of a blurred copy of the frame. With brightness l from 0 to 1, after a blur of about 2.2 pixels at 640 wide, the band is chosen from l\' = l + 0.14 b (nu - 1/2), where nu is value noise that changes with the drawing number and b is the boil slider. The tones are n bands of width 1/n; the pixel keeps its own colour, scaled so that its brightness becomes the middle of its band, q/l, then pushed away from grey by a saturation factor of 0.75 to 1.65 and mixed with the blurred original by the wash slider.',
+      'The ink is the Sobel gradient magnitude of the brightness passed through a smoothstep from a to 1.7a, where a falls from 0.34 to 0.09 as the line slider rises; above half strength the line is thickened with a blur and a second threshold. Two smooth random fields, each value noise on a grid of 8 pixels and read back bilinearly, are renewed for every drawing and say how far to shift each pixel: one, up to 2.4 px times the boil, for the ink, and a different one, up to 5.5 px times the slip, for the colour. Because they differ, the fill and the line drift against each other. A new drawing is made every 1/24 s times 1, 2 or 3; in between, the last drawing is shown unchanged, which is the twos of animation.',
+    ],
+    equations: [
+      { tex: T`\ell'=\ell+0.14\,b\,(\nu-\tfrac12),\qquad q=\frac{\lfloor n\,\ell'\rfloor+\tfrac12}{n},\qquad \mathbf C=\frac{q}{\ell}\,\mathbf C_0`, note: 'Posterising: l is the brightness, n the number of tones, b the boil slider and nu value noise renewed for every drawing.' },
+      { tex: T`m=\operatorname{smoothstep}(a,\ 1.7a,\ |\nabla\ell|),\qquad a=0.34-0.25\,L`, note: 'The ink line: the gradient is a Sobel filter and L is the line slider (0 to 1).' },
+      { tex: T`\mathbf C_{\text{out}}=(1-m)\,\mathbf C(\mathbf p+\mathbf d_C)+m\,\mathbf C_{\text{ink}},\qquad m=m(\mathbf p+\mathbf d_L)`, note: 'The colour and the ink are read at different shifts, so they never agree exactly.' },
+    ],
+  },
+  manga: {
+    paragraphs: [
+      'The picture is first given a local contrast boost, T = l + 0.9 (l - l_bar), where l_bar is a heavy blur about W/28 pixels wide, so that faces and folds keep their shape in only a few tones. T is then cut into bands. Below a black threshold s (0.07 to 0.3 from the solid-black slider) it is solid ink; above that come cross-hatching, hatching, coarse dots (a quarter of the cell inked, 0.34), fine dots (0.13) and bare paper, with the band edges at about 0.33, 0.48, 0.63 and 0.8.',
+      'A dot screen lies on a lattice turned by 45 degrees. With u = (x + y)/(sqrt(2) p) and v = (x - y)/(sqrt(2) p) for a dot spacing p, the distance from the nearest lattice point is d = sqrt(du^2 + dv^2), and a dot covering a share delta of its cell has radius r = sqrt(delta/pi); the coverage is clamp((r - d) p + 1/2), an anti-aliased edge one pixel wide. Hatching is the same idea in one dimension. Speed lines are drawn in 132 sectors around the centre, each with its own width and jitter, or as horizontal bands for rushing sideways, and are allowed only where the picture is both light (T above 0.58) and flat (its blurred gradient below 0.06), so they pass behind a face instead of across it.',
+    ],
+    equations: [
+      { tex: T`T=\ell+0.9\,(\ell-\bar\ell)`, note: 'Local contrast: l is the brightness and its bar a wide blur.' },
+      { tex: T`u=\frac{x+y}{\sqrt2\,p},\quad v=\frac{x-y}{\sqrt2\,p},\qquad c=\operatorname{clamp}\Big(\big(\sqrt{\delta/\pi}-\sqrt{\Delta u^{2}+\Delta v^{2}}\big)\,p+\tfrac12\Big)`, note: 'A screentone dot: du and dv are the offsets from the nearest lattice point, and delta the share of the cell that is inked.' },
+      { tex: T`\text{ink}=\max\Big(\text{tone},\ \text{rays}\cdot S_{0.58,0.72}(T)\big(1-S_{0.018,0.06}(\overline{|\nabla T|})\big),\ \text{line}\Big)`, note: 'Speed lines fill only light, flat places; the outline is drawn over everything. S is smoothstep.' },
+    ],
+  },
 };

@@ -53,6 +53,7 @@
   <url><loc>https://lumenary-studio.vercel.app/style/comic-book</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/vector-art</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/collage-art</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/mono-essay</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/ascii-art</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/pixel-art</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/blueprint</loc><priority>0.5</priority></url>
@@ -73,6 +74,12 @@
   <url><loc>https://lumenary-studio.vercel.app/style/isometric</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/low-poly</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/lego-voxel</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/retro-console</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/pixel-platformer</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/hologram-hud</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/data-bars</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/x-ray</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/cctv</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/kinetic-type</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/split-flap</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/handwritten</loc><priority>0.5</priority></url>
@@ -97,6 +104,11 @@
   <url><loc>https://lumenary-studio.vercel.app/style/fabric-folds</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/rubber-stamp</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/origami-folds</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/soft-3d</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/sticker</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/marble-museum</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/felt-story</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/pin-art</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/halftone</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/risograph</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/linocut</loc><priority>0.5</priority></url>
@@ -111,6 +123,8 @@
   <url><loc>https://lumenary-studio.vercel.app/style/tapestry-weave</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/paper-cut-out</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/stained-glass</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/wool-crochet</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/parchment</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/watercolour</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/oil-impasto</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/charcoal-sketch</loc><priority>0.5</priority></url>
@@ -121,6 +135,14 @@
   <url><loc>https://lumenary-studio.vercel.app/style/ink-wash</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/pastel-chalk</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/blind-contour</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/anime-cel</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/retro-anime</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/crayon-cartoon</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/glow-sketch</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/chalkboard</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/whiteboard</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/rotoscope</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/manga</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/lomography</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/film-grain</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/infrared</loc><priority>0.5</priority></url>
@@ -133,6 +155,10 @@
   <url><loc>https://lumenary-studio.vercel.app/style/daguerreotype</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/chromatic-aberration</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/lenticular</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/cinematic</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/chronophotograph</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/slit-scan</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/tiny-planet</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/particles</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/truchet-tiles</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/op-art-moire</loc><priority>0.5</priority></url>
@@ -163,11 +189,18 @@
   <url><loc>https://lumenary-studio.vercel.app/style/space-colonization</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/boids</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/domain-warp</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/ridgeline</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/photomosaic</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/rain-on-glass</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/heat-haze</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/fireflies</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/ink-in-water</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/snowfall</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/night-sky</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/underwater</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/flying-cards</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/pixel-dissolve</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/dust-snap</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/ukiyo-e</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/papel-picado</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/chinese-paper-cut</loc><priority>0.5</priority></url>
@@ -190,6 +223,8 @@
   <url><loc>https://lumenary-studio.vercel.app/style/hieroglyphs</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/greek-meander</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/byzantine-mosaic</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/shadow-puppet</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/greek-vase</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/ajrak</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/hala-blue-pottery</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/ralli-patchwork</loc><priority>0.5</priority></url>
@@ -206,4 +241,5 @@
   <url><loc>https://lumenary-studio.vercel.app/style/madhubani</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/warli</loc><priority>0.5</priority></url>
   <url><loc>https://lumenary-studio.vercel.app/style/kolam</loc><priority>0.5</priority></url>
+  <url><loc>https://lumenary-studio.vercel.app/style/phulkari</loc><priority>0.5</priority></url>
 </urlset>

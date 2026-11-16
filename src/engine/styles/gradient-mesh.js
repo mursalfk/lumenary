@@ -38,6 +38,8 @@ export default {
         for (let i = 0; i < 160 * 160; i++) { const v = 128 + (r() - 0.5) * 180; img.data[i * 4] = v; img.data[i * 4 + 1] = v; img.data[i * 4 + 2] = v; img.data[i * 4 + 3] = 255; }
         nx.putImageData(img, 0, 0);
       },
+      // A new video frame of the same size: sample the colour points again.
+      setFrame(w) { work = w; key = ''; },
       setParams(np) { p = np; },
       draw(ctx, t) {
         const k = p.points + '|' + p.vivid;

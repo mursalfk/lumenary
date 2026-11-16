@@ -39,6 +39,8 @@ export default {
     return {
       animated: true,
       setSource(w, ww, hh) { work = w; W = ww; H = hh; key = ''; },
+      // A new video frame of the same size: read the brightness again. The rain is seeded, so it falls on unchanged.
+      setFrame(w) { work = w; key = ''; },
       setParams(np) { p = np; },
       draw(ctx, t) {
         const k = p.size + '|' + p.seed + '|' + W;

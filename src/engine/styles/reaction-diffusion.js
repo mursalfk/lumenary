@@ -25,18 +25,25 @@ export default {
   create(env) {
     let W = 0, H = 0, work = null, p = {}, gw = 0, gh = 0, U, V, U2, V2, F, K, img, tone, built = '', small = null, sctx = null, sdata = null, wasDown = false;
 
+    // What is read from the picture: its colours at grid size, its tone, and the feed and kill rates the tone steers.
+    function read() {
+      const c = env.makeCanvas(gw, gh), cx = c.getContext('2d'); cx.imageSmoothingQuality = 'high'; cx.drawImage(work, 0, 0, gw, gh);
+      img = cx.getImageData(0, 0, gw, gh).data;
+      const n = gw * gh; let lo = 1, hi = 0;
+      if (!tone || tone.length !== n) { tone = new Float32Array(n); F = new Float32Array(n); K = new Float32Array(n); }
+      for (let i = 0; i < n; i++) { const l = (0.2126 * img[i * 4] + 0.7152 * img[i * 4 + 1] + 0.0722 * img[i * 4 + 2]) / 255; tone[i] = l; if (l < lo) lo = l; if (l > hi) hi = l; }
+      for (let i = 0; i < n; i++) tone[i] = (tone[i] - lo) / (hi - lo + 1e-6);
+      const [f0, k0] = PRESETS[p.preset] || PRESETS.coral, s = p.steer / 100;
+      for (let i = 0; i < n; i++) { F[i] = clamp(f0 + s * (tone[i] - 0.5) * 0.02, 0.012, 0.09); K[i] = clamp(k0 + s * (tone[i] - 0.5) * 0.005, 0.045, 0.07); }
+    }
+
     function build() {
       const key = [p.preset, p.steer, p.seed, W].join('|');
       if (key === built) return;
       gw = clamp(Math.round(W / 2.8), 80, 240); gh = Math.round((gw * H) / W);
-      const c = env.makeCanvas(gw, gh), cx = c.getContext('2d'); cx.imageSmoothingQuality = 'high'; cx.drawImage(work, 0, 0, gw, gh);
-      img = cx.getImageData(0, 0, gw, gh).data;
-      const n = gw * gh; tone = new Float32Array(n); U = new Float32Array(n).fill(1); V = new Float32Array(n); U2 = new Float32Array(n); V2 = new Float32Array(n); F = new Float32Array(n); K = new Float32Array(n);
-      let lo = 1, hi = 0;
-      for (let i = 0; i < n; i++) { const l = (0.2126 * img[i * 4] + 0.7152 * img[i * 4 + 1] + 0.0722 * img[i * 4 + 2]) / 255; tone[i] = l; if (l < lo) lo = l; if (l > hi) hi = l; }
-      for (let i = 0; i < n; i++) tone[i] = (tone[i] - lo) / (hi - lo + 1e-6);
-      const [f0, k0] = PRESETS[p.preset] || PRESETS.coral, s = p.steer / 100, r = rng(p.seed * 31 + 7);
-      for (let i = 0; i < n; i++) { F[i] = clamp(f0 + s * (tone[i] - 0.5) * 0.02, 0.012, 0.09); K[i] = clamp(k0 + s * (tone[i] - 0.5) * 0.005, 0.045, 0.07); }
+      const n = gw * gh; U = new Float32Array(n).fill(1); V = new Float32Array(n); U2 = new Float32Array(n); V2 = new Float32Array(n);
+      read();
+      const r = rng(p.seed * 31 + 7);
       for (let m = 0; m < n * 0.02; m++) {
         const x = (r() * gw) | 0, y = (r() * gh) | 0;
         for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) { const xx = x + i, yy = y + j; if (xx >= 0 && yy >= 0 && xx < gw && yy < gh) { U[yy * gw + xx] = 0.5; V[yy * gw + xx] = 0.25 + r() * 0.05; } }
@@ -65,6 +72,8 @@ export default {
     return {
       animated: true,
       setSource(w, ww, hh) { work = w; W = ww; H = hh; built = ''; },
+      // A new video frame of the same size: steer by the new frame, keep the pattern growing.
+      setFrame(w) { work = w; if (built) read(); },
       setParams(np) { p = np; },
       step(dt, ptr) {
         build();

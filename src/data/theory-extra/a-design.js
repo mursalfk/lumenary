@@ -483,4 +483,24 @@ export const EXTRA_DESIGN = {
     terms: [['Papier collé', 'French for pasted paper, the Cubists’ name for their paper collages.'], ['Photomontage', 'A picture made by combining and cropping several photographs.'], ['Seed', 'A starting number for a random generator, so that a result can be repeated.']],
     related: ['surreal', 'maximalism', 'pop-art'],
   },
+  'mono-essay': {
+    facts: { from: 'Online video essays and minimalist editorial design', era: '2010s onward', bestOn: 'One clear subject against a plain background' },
+    why: 'A quiet essay video asks you to listen, so its pictures step back. Colour goes, the blacks deepen until most of the frame is dark, and grain makes a still image feel like film. Over that, a few thin white lines do the pointing: a contour around the forms, a circle, a rule, one short sentence. The picture becomes a diagram of an idea.',
+    how: [
+      'Reduce the picture to brightness and stretch it to the full range.',
+      'Sink it: a smoothstep sends everything below a limit to black, and a vignette darkens the corners.',
+      'Blur a copy heavily and draw thin white lines along its levels of equal brightness, one pixel wide whatever the slope.',
+      'Find the centre of everything that stands out from the mean tone, and draw a circle and a ticked rule from it.',
+      'Add grain, a few scratches and dust, then set the sentence small with wide letter spacing.',
+    ],
+    history: 'The essay film is older than the internet: Hans Richter described the form in 1940, and Chris Marker’s Sans Soleil (1983) is its best-known example. On video platforms in the 2010s the video essay became a genre of its own, often one voice over spare black-and-white visuals. The thin white diagram lines borrow from technical drawing and from the conceptual art of the 1960s, where a line and a caption could be the whole work.',
+    uses: ['Title cards for video essays', 'Quote posts and newsletter headers', 'Book and podcast cover art', 'Slides that carry one idea each'],
+    tips: [
+      { text: 'One contour and deep blacks leave almost nothing but the line.', set: { lines: 1, contrast: 90 } },
+      { text: 'A warm tone and heavy grain look like an old print.', set: { tone: 'warm', grain: 85 } },
+      { text: 'Turn the circle off and keep three contours for a map of the picture.', set: { figure: false, lines: 3 } },
+    ],
+    terms: [['Contour', 'A line that joins points of equal value, here equal brightness.'], ['Vignette', 'A gradual darkening toward the corners of a picture.'], ['Letter spacing', 'Extra room set between the letters of a word.']],
+    related: ['minimalism', 'editorial', 'contour-lines'],
+  },
 };

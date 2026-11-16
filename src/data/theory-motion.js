@@ -59,4 +59,59 @@ export const THEORY_MOTION = {
       { tex: T`\omega\leftarrow\omega+(\omega^{*}-\omega)\,\min(1,\,2\,\Delta t),\qquad \omega^{*}=0.7\,w+200\,\big(p_x-\tfrac12\big)`, note: 'The wind eases toward its target (w the wind slider, p the pointer position, in pixels per second at 720 px wide).' },
     ],
   },
+  'night-sky': {
+    paragraphs: [
+      'Stars are placed by rejection sampling. A random position is proposed and kept with a probability that rises steeply with the picture’s brightness there; if it is refused, another is proposed, up to 24 times. Bright areas therefore end up crowded and dark ones nearly empty. Each star has a size drawn so that most are small and a few are large, and its brightness is read from the picture under it. Twinkle is a sine wave with its own period and phase for every star, taking away up to three quarters of its light.',
+      'Constellations follow the outlines. The frame is divided into a coarse grid, the pixel with the strongest edge in each cell becomes an anchor star, and each anchor is joined to its two nearest neighbours if they are close enough. Behind everything lies the picture itself, shrunk to under a hundred pixels and recoloured to deep blue, with a band of fractal noise for the Milky Way. With a video, the stars stay where they are and only their brightness is read again from each frame. The cursor adds light to stars near it, and a meteor crosses on a path fixed by the seed every few seconds.',
+    ],
+    equations: [
+      { tex: T`P(\text{keep}\mid\mathbf x)=0.07+L(\mathbf x)^{1.7}`, note: 'Chance that a proposed star position is kept.' },
+      { tex: T`b_i(t)=b_i\,\Big(1-0.75\,\tau\,\big(\tfrac12+\tfrac12\sin(2\pi t/T_i+\varphi_i)\big)\Big),\qquad b_i=L^{1.05}\,(0.7+0.5\,z_i)+0.03`, note: 'Brightness of star i: z is its size (0 to 1), τ the twinkle slider, T between 1.2 and 4.8 seconds.' },
+      { tex: T`\text{link }(i,j)\iff j\in\text{two nearest anchors of }i\ \text{and}\ \lvert\mathbf a_i-\mathbf a_j\rvert<1.9\,c`, note: 'Constellation lines; c is the size of a grid cell.' },
+    ],
+  },
+  underwater: {
+    paragraphs: [
+      'Three things happen to light in water, and each is one line of arithmetic per pixel. First, the picture sways. Every output pixel reads the source at a position pushed sideways and up and down by two slow sine waves whose phases are bent by other sines, and blends the four nearest source pixels so straight edges bend smoothly. Second, colour is absorbed. Water takes red first and blue last, so each channel is multiplied by a factor that falls with depth, fastest for red, and the result is fogged toward the water’s own colour. Depth grows toward the bottom of the frame.',
+      'Third, caustics. Ripples on the surface act as lenses and gather sunlight into bright lines. Three sets of bent ripples are added together, and light is placed wherever the sum passes through zero; a fourth power thins those crossings into the net seen on the floor of a pool. It is stronger near the top and on bright surfaces. The frame is computed at half size and the sines come from a table of 1024 values, which keeps it at video rate. Sun rays are slanted shafts drawn with additive blending, bubbles are small simulated circles that rise and wobble, and the drifting specks are placed by a formula of time.',
+    ],
+    equations: [
+      { tex: T`x'=x+A\sin\!\big(9v+1.3t+1.2\sin(5u+0.7t)\big),\qquad y'=y+0.6A\cos\!\big(8u-1.1t+1.1\sin(6v+0.5t)\big)`, note: 'The swell: where pixel (x, y) is read from. A is the swell slider times 2.2% of the width.' },
+      { tex: T`C_c\leftarrow C_c\,(1-k_c\,D),\qquad D=d\,(0.4+0.6v),\qquad \mathbf k=(0.92,\ 0.30,\ 0.10)`, note: 'Absorption per channel in tropical water: red is lost about nine times faster than blue. d is the depth slider.' },
+      { tex: T`n=\max\!\big(0,\ 1-1.15\,\lvert f_1+f_2+f_3\rvert\big),\qquad \text{light}\propto n^{4}`, note: 'Caustics: f are three bent sine ripples; the net is where their sum is near zero.' },
+    ],
+  },
+  'flying-cards': {
+    paragraphs: [
+      'The picture is cut into a grid of cards, each showing its own part. On the deal, the cards are given a shuffled order and start one after another over a second and a half. Each flies from below the frame to its place along an ease-out cubic, turning as it goes. After that, nothing is simulated: every card’s pose is a formula of time with its own phase and speed, so the cards never fall into step.',
+      'A card is a flat rectangle turned about its vertical and horizontal axes and seen from straight ahead. Seen that way a rotation by an angle simply narrows the card by the cosine of the angle, so each card is drawn with two scale factors, and when the cosine about the vertical axis goes negative the back is drawn. The more a card is turned from the light the darker it gets. Its height above the table is another sine; the shadow is drawn further from the card and fainter as it rises. Near the cursor a flip value eases toward one and adds half a turn to the angle, then eases back more slowly.',
+    ],
+    equations: [
+      { tex: T`k=1-(1-e)^{3},\qquad e=\operatorname{clamp}\!\Big(\frac{t-t_i}{0.75}\Big)`, note: 'The deal: card i starts at time t_i and settles over three quarters of a second.' },
+      { tex: T`s_x=\cos\theta_y,\qquad \theta_y=0.75\,T\sin(0.8\,\omega_i t+1.7\varphi_i)+\pi\,f_i`, note: 'Width of a card as it turns about its vertical axis: T is the tilt slider, f the flip value (0 to 1).' },
+      { tex: T`f_i\leftarrow f_i+(f^{*}-f_i)\,\min(1,\ r\,\Delta t),\qquad r=7\ \text{toward }1,\ 2.2\ \text{toward }0`, note: 'The flip eases quickly over when the cursor is near and slowly back.' },
+    ],
+  },
+  'pixel-dissolve': {
+    paragraphs: [
+      'Nothing here is simulated; where each block is depends only on the time, so the animation can be scrubbed, looped and applied to a video without ever losing step. One cycle holds the picture, sweeps it away, lets it drift, sweeps it back and holds again. Each block has an order number between 0 and 1, mostly its position along the wind with some random disorder, and two smoothsteps of the cycle phase, offset by that order, say how far the block has gone and how far it has come back. The smaller of the two is its distance from home, between 0 and 1.',
+      'That distance is eased and turned into a flight: a way along the wind, different for every block, plus a sideways drift read from value noise that changes slowly with time. As a block travels it shrinks to under half its size and fades. Blocks at home are not drawn one by one: the picture at one colour per block is drawn in a single operation, and only the blocks that are away are painted out and redrawn where they have got to. The cursor adds to the distance of nearby blocks and pushes them outward.',
+    ],
+    equations: [
+      { tex: T`a=\min\!\Big(S_{0.72o,\ 0.72o+0.28}\Big(\frac{\phi-0.16}{0.3}\Big),\ 1-S_{0.72(1-o),\ 0.72(1-o)+0.28}\Big(\frac{\phi-0.6}{0.3}\Big)\Big)`, note: 'How far a block is from home: φ is the phase of the cycle (0 to 1), o the block’s order.' },
+      { tex: T`\Delta\mathbf x=\mathbf w\,F\,(0.35+0.65\,\eta)\,e+\mathbf w^{\perp}\,\tfrac12F\,\big(N-\tfrac12\big)\,e,\qquad e=3a^{2}-2a^{3}`, note: 'Flight: w is the wind direction, F the scatter distance, η a per-block hash and N value noise.' },
+      { tex: T`\text{size}=s\,(1-0.55\,e),\qquad \text{opacity}=1-0.92\,e^{2}`, note: 'A block in flight shrinks and fades.' },
+    ],
+  },
+  'dust-snap': {
+    paragraphs: [
+      'Like Pixel Dissolve, the effect depends only on the time, so it can be scrubbed, looped and applied to a video. A cycle of 0.9 s holding, a snap of S seconds, 0.7 s resting and a return of 0.75 S gives a progress value p: 0 while the picture is whole, rising evenly to 1 during the snap, 1 while it is gone, and falling evenly back during the return, so the dust flies home along the paths it left by. S is 5.2 seconds at the slowest setting and 1.7 at the fastest. The picture is cut into square grains of side g = 3 px times width/640 at the default size. Grain i has a release time tau_i between 0 and 0.5, from its place along the sweep (left, right, top, bottom, or distance from the middle or the cursor) plus a slow value noise that bends the front and a little hash noise.',
+      'A grain is whole while p is at most tau_i. After that its flight parameter is s = clamp((p - tau_i) / 0.5), and it is drawn at its home plus v_i D s^1.25, where v_i is its own velocity, mostly the wind direction scaled by 0.35 to 1 and varied by a hash, with a slight lift, and D is 0.55 W times the drift slider. A swirl term 0.035 W s sin(7 s + phi_i), at right angles to the velocity, makes the paths curl. The grain shrinks to half its size, fades with opacity 1 - smoothstep(0.55, 1, s) and carries the colour of the picture at its home. Whole grains are copied from the picture first, and the flying ones are painted over them.',
+    ],
+    equations: [
+      { tex: T`p=\frac{t-0.9}{S}\ \text{(snap)},\qquad p=1-\frac{t-t_r}{0.75\,S}\ \text{(return)}`, note: 'The progress of the snap: S is the snap time (5.2 s down to 1.7 s) and t_r the moment the return starts.' },
+      { tex: T`s=\operatorname{clamp}\!\Big(\frac{p-\tau_i}{0.5}\Big),\qquad \mathbf x=\mathbf x_i+\mathbf v_i\,D\,s^{1.25}+0.035\,W\,s\,\sin(7s+\varphi_i)\,\mathbf v_i^{\perp}`, note: 'Where a grain is in flight: v_i is its own velocity, D the drift distance, and the last term makes the path curl.' },
+      { tex: T`\text{size}=g\,(1-0.5\,s),\qquad \alpha=0.96\,\big(1-\operatorname{smoothstep}(0.55,\,1,\,s)\big)`, note: 'A grain shrinks and fades as it goes.' },
+    ],
+  },
 };

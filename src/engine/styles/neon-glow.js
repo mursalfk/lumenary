@@ -59,6 +59,8 @@ export default {
     return {
       animated: true,
       setSource(w, ww, hh) { work = w; W = ww; H = hh; L = null; key = ''; },
+      // A new video frame of the same size: find the edges again.
+      setFrame(w) { work = w; L = null; key = ''; },
       setParams(np) { p = np; },
       draw(ctx, t) {
         const k = [p.detail, p.mode, p.c1, p.c2].join('|');

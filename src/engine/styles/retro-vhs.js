@@ -29,6 +29,8 @@ export default {
           src[i] = (d[i] - 128) * 1.12 + 132; src[i + 1] = (d[i + 1] - 128) * 1.12 + 134; src[i + 2] = (d[i + 2] - 128) * 1.12 + 140; src[i + 3] = 255;
         }
       },
+      // A new video frame of the same size: read the pixels again.
+      setFrame(work) { this.setSource(work, W, H); },
       setParams(np) { p = np; },
       draw(ctx, t) {
         if (!out) out = ctx.createImageData(W, H);

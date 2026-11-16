@@ -1,23 +1,24 @@
 # Lumenary
 
-**176 ways to see an image.** A studio that runs entirely in the browser: pick a treatment, bring a photograph, turn a few dials and save the result. Every treatment also has a page of theory beside it: why it looks the way it does, how it is made, where it comes from, where it is used and what to try.
+**212 ways to see an image.** A studio that runs entirely in the browser: pick a treatment, bring a photograph or a short video, turn a few dials and save the result. Every treatment also has a page of theory beside it: why it looks the way it does, how it is made, where it comes from, where it is used and what to try.
 
 Live at **https://lumenary-studio.vercel.app**. The whole roadmap is open, and a readable catalogue of every treatment is in [`TREATMENTS.md`](TREATMENTS.md).
 
-Nothing is uploaded. All processing happens on the visitor's device with the Canvas 2D API, so there is no server, no API key and no database.
+Nothing is uploaded. All processing happens on the visitor's device with the Canvas 2D API (and WebCodecs, for video), so there is no server, no API key and no database.
 
 ## At a glance
 
 | | |
 | --- | --- |
-| **Treatments** | 176 in thirteen sections (A to M): 151 stills you can save up to three times larger, and 25 live ones that move, follow the cursor and record a six second clip. |
+| **Treatments** | 212 in thirteen sections (A to M): 176 stills you can save up to three times larger, and 36 live ones that move, follow the cursor and record a six second clip. |
+| **Video** | Every treatment works on a short video too. Upload a clip (the first 15 seconds are used), watch it through the treatment, then save the result as an MP4 (H.264, with its sound) or, where the browser cannot write MP4, a WebM. Everything happens in the tab, see [section 22](#22-video-upload-preview-and-export). |
 | **Dials** | About a thousand in all, every one of them a slider, a choice, a switch, a colour or a text box. |
 | **Theory** | A page for each treatment: why, how, the mathematics, history, uses, things to try (most with a "See it" link that turns the dials for you), a small glossary and neighbours. About fifty thousand words. |
-| **Pages** | Home, 13 section pages, 14 theory pages (Foundations plus one per section), 176 treatment pages and an About page. |
-| **Stack** | Vite, React 18, React Router 6, SCSS. Three small libraries for the interface: `motion` (springs and scroll-linked animation), `lenis` (smooth scrolling) and `katex` (typeset equations). The image engine itself has no dependencies. |
+| **Pages** | Home, 13 section pages, 14 theory pages (Foundations plus one per section), 212 treatment pages and an About page. |
+| **Stack** | Vite, React 18, React Router 6, SCSS. Three small libraries for the interface: `motion` (springs and scroll-linked animation), `lenis` (smooth scrolling) and `katex` (typeset equations). One more for video, `mediabunny` (reads and writes video files with WebCodecs, MPL-2.0), which is downloaded only when someone exports a video. The image engine itself has no dependencies. |
 | **Look** | Black is primary, white is secondary, with greys in between. Bodoni Moda for display, Hanken Grotesk for text, DM Mono for small figures. |
 
-**The sections.** A Design movements and styles (23), B Digital and technical (20), C Typographic (7), D Light, colour and glass (10), E Physical and 3D feel (7), F Print and craft (14), G Painterly and drawn (10), H Photographic and optical (12), I Geometric and generative (30), J Motion and live (5), K World cultural (22), L Sindhi design (9) and M South Asian and Islamic (7). The list lives in `src/data/sections.js` (see [section 18](#18-sections-and-the-roadmap)).
+**The sections.** A Design movements and styles (24), B Digital and technical (26), C Typographic (7), D Light, colour and glass (10), E Physical and 3D feel (12), F Print and craft (16), G Painterly and drawn (18), H Photographic and optical (16), I Geometric and generative (32), J Motion and live (10), K World cultural (24), L Sindhi design (9) and M South Asian and Islamic (8). The list lives in `src/data/sections.js` (see [section 18](#18-sections-and-the-roadmap)).
 
 **The routes.**
 
@@ -53,8 +54,9 @@ Nothing is uploaded. All processing happens on the visitor's device with the Can
 19. [The About page](#19-the-about-page)
 20. [Loading and performance](#20-loading-and-performance)
 21. [Sharing the site](#21-sharing-the-site)
+22. [Video: upload, preview and export](#22-video-upload-preview-and-export)
 
-**Short on time?** Section 1 gets it running. Section 12 shows how to add a treatment. Section 17 shows how to write its theory. Sections 4 and 5 are the map of the code.
+**Short on time?** Section 1 gets it running. Section 12 shows how to add a treatment. Section 17 shows how to write its theory. Section 22 explains the video feature. Sections 4 and 5 are the map of the code.
 
 ---
 
@@ -80,10 +82,10 @@ Open the address it prints (normally http://localhost:5173).
 | Command                | What it does                                                                                      |
 | ---------------------- | ------------------------------------------------------------------------------------------------- |
 | `npm run dev`          | Dev server with hot reload.                                                                       |
-| `npm run build`        | Production build into `dist/`. This is what Vercel runs.                                          |
+| `npm run build`        | Production build into `dist/`. This is what Vercel runs. The video library comes out as its own file.  |
 | `npm run preview`      | Serves `dist/` locally so you can test the production build.                                      |
 | `npm run build:single` | Writes one self-contained file, `dist-single/index.html`, with scripts, styles and fonts inlined. |
-| `npm run catalogue`    | Regenerates `TREATMENTS.md`, the readable list of all 176 treatments, from the data and the style files. |
+| `npm run catalogue`    | Regenerates `TREATMENTS.md`, the readable list of all 212 treatments, from the data and the style files. |
 | `npm run check:theory` | Checks every theory entry against the live treatments: shape, lengths, dial presets, links, dashes. Add letters to limit it: `npm run check:theory -- KLM`. |
 | `npm run sitemap`      | Writes `public/sitemap.xml` from the section list. It also runs by itself before every `npm run build`. |
 
@@ -135,7 +137,7 @@ HomePage  SectionPage     TheoryPage  TheoryGroupPage  AboutPage        StylePag
  section    one section's   theory        theory blocks  the maker,     withStyleRoute →
  portals    treatments      portals       of one group   the projects   withDocumentTitle → Studio
  (IndexSection) (StyleIndex) (PortalList)  (StyleTheory)  (data/maker.js)     │
-                                                                       useStyleParams  useImageInput
+                                                                       useStyleParams  useMediaInput
    lazy: TheoryPage, TheoryGroupPage and AboutPage load on demand       useRuntime  useExport …
                                                                               │
                                                                    src/engine  (plain JS, no React)
@@ -147,11 +149,11 @@ The flow of one visit:
 1. **Homepage.** `HomePage` calls `startThumbs()`. That renders every style once, from a built-in sample picture, into a small JPEG, one per idle moment (the first four of each section first, so the section rows fill quickly). The hero card and the section rows read those previews as they appear.
 2. **Choosing a section, then a style.** The homepage shows sections only, as portals. A click goes to `/section/<id>`, where `SectionPage` lists that section's treatments; a click there goes to `/style/<slug>`. `withStyleRoute` looks the slug up and hands `Studio` the style object. The Theory side mirrors this: `/theory` lists groups, `/theory/<id>` shows one.
    Crossing over: the Theory button on a treatment goes to `/theory/<section>#<style-id>`, and each theory block has an Open button back to its treatment. A "See it" link in a theory block goes the other way with some dials already turned (`/style/<id>?size=20&ink=black`, section 17).
-3. **Studio.** Creates a canvas runtime for that style (`useRuntime`), keeps the control values in state (`useStyleParams`, which starts from the treatment's defaults plus any dials named in the link), and listens for an uploaded image (`useImageInput`, `useDropZone`, `usePasteImage`).
+3. **Studio.** Creates a canvas runtime for that style (`useRuntime`), keeps the control values in state (`useStyleParams`, which starts from the treatment's defaults plus any dials named in the link), and listens for an uploaded picture or video (`useMediaInput`, `useDropZone`, `usePasteFile`). For a video it also shows a transport bar (`useVideoTransport`).
 4. **Changing a control.** A control calls `set(key, value)`. The new `params` object flows into `useRuntime`, which calls `runtime.setParams`. Stills re-render; live styles pick the values up on their next frame.
-5. **Export.** `useExport` asks the runtime for a PNG (stills are re-rendered larger, up to 4096 px) or records six seconds of WebM (live styles), then `useDownload` saves it.
+5. **Export.** `useExport` asks the runtime for a PNG (stills are re-rendered larger, up to 4096 px), records six seconds of WebM (live styles), or, for a video, renders every frame through the treatment into a new MP4 or WebM (`engine/videoExport.js`, section 22). `useDownload` saves the result.
 
-The uploaded picture is shared by every treatment page: upload once, then step through the styles with the arrows.
+The uploaded picture or video is shared by every treatment page: upload once, then step through the styles with the arrows.
 
 ---
 
@@ -164,18 +166,18 @@ vite.single.config.js      the single-file build
 vercel.json                SPA rewrite for Vercel
 public/
   favicon.svg
-  og-176.png               the share image (1200 by 630), see section 21
+  og-212.png               the share image (1200 by 630), see section 21
   robots.txt, sitemap.xml  for search engines (the sitemap is generated)
 scripts/
   catalogue.mjs            writes TREATMENTS.md from the roadmap and the style files (npm run catalogue)
   check-theory.mjs         checks the theory data against the treatments (npm run check:theory)
   sitemap.mjs              writes public/sitemap.xml (npm run sitemap, and before every build)
-TREATMENTS.md             the catalogue of all 176 treatments (generated, do not edit by hand)
+TREATMENTS.md             the catalogue of all 212 treatments (generated, do not edit by hand)
 src/
   main.jsx                 entry: fonts, stylesheet, router
   App.jsx                  the route table
   env.js                   canvas factory and font loading (the only DOM the engine ever sees)
-  source.js                shared uploaded image (external store)
+  source.js                the shared uploaded picture or video (external store)
   thumbs.js                homepage previews (external store)
   pages/
     HomePage.jsx           route level only
@@ -189,7 +191,7 @@ src/
     SmoothScroll.jsx       starts Lenis once for the whole app
     ui/                    generic building blocks, no knowledge of this app
       Button, ButtonLink, MagneticButtonLink, LinkButton, Equation, Field, Slider, Switch, TextInput, SelectInput,
-      ColorInput, Segmented, FilePicker, Section, Hint, Eyebrow, Plate, KindBadge
+      ColorInput, Segmented, FilePicker, Section, Hint, Eyebrow, Plate, KindBadge, ProgressBar
     controls/              turn a style's parameter schema into UI
       Control (registry), ControlList, RangeControl, SelectControl,
       ToggleControl, ColorControl, TextControl, ShuffleControl
@@ -210,8 +212,9 @@ src/
       AboutHero, MakerBlock, Prose, FactList, ProjectList, ProjectRow, PullQuote, Figures, Principles, FindMe
     studio/                the style page
       Studio, StudioBar, BackLink, TheoryLink, TitleBlock, SectionLinks, StepNav, Stage, StageMeta,
-      Panel, ImageSection, TreatmentSection, ExportSection
-  hooks/                   19 custom hooks (section 7)
+      Panel, SourceSection (choose a picture or video), Transport (play, scrub, sound), TreatmentSection,
+      ExportSection, VideoExport (the video part of Export)
+  hooks/                   20 custom hooks (section 7)
   hoc/                     6 higher-order components (section 8)
   data/                    static copy: nav.js, about.js (the short homepage About), copy.js (author, manifesto),
                            maker.js (everything on the /about page: story, projects, links),
@@ -232,7 +235,12 @@ src/
     abstracts/             _vars.scss, _mixins.scss, _index.scss
   engine/                  image processing, no React (section 11)
     runtime.js, utils.js, sample.js
+    videoExport.js         turns a video into the same video seen through one treatment (section 22)
+    mediabunny.js          the one place the video library is imported from, so it loads on demand
+    toon.js                building blocks for the cartoon, cel and drawn treatments (edge-keeping smoothing, palettes, outlines)
+    retro.js               building blocks for the pixel and console treatments (ordered dither, pixel text, sprites)
     helpers.js             shared building blocks for treatments (pixels, ramp, nearest, kmeans, glow, slopes, cellular, ...)
+    history.js             a ring of recent frames, for the live treatments that look back in time (Chronophotograph, Slit-scan)
     culture.js             building blocks for sections K, L and M (palette snapping, region clean-up, cloth and stone surfaces, ornaments)
     styles/                one file per treatment + index.js (the registry)
 ```
@@ -270,10 +278,10 @@ Rules every hook here follows:
 
 | Built-in hook          | Used for                                                                                 | Where                                                                                                                                                          |
 | ---------------------- | ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `useState`             | Values the screen depends on                                                             | `useStyleParams`, `useDropZone`, `useExport`, `useImageInput`, `useCycle`, `useRuntime` (canvas size), `Studio` (export scale), `IndexSection` (hovered style) |
-| `useEffect`            | Talking to things outside React: listeners, timers, the canvas runtime, `document.title` | `useInterval`, `usePasteImage`, `useRuntime`, `useDocumentTitle`, `ScrollToTop`, `HomePage`                                                |
-| `useRef`               | Holding something that must survive renders without causing one                          | `useRuntime` (`rtRef`), `useInterval` (saved callback), `FilePicker` (hidden input), `Studio` (`canvasRef`)                       |
-| `useCallback`          | Giving a function a stable identity                                                      | `useStyleParams`, `useImageInput`, `useExport`, `useDownload`                                                                                                  |
+| `useState`             | Values the screen depends on                                                             | `useStyleParams`, `useDropZone`, `useExport`, `useMediaInput`, `useVideoTransport`, `useCycle`, `useRuntime` (canvas size), `Studio` (export scale), `IndexSection` (hovered style) |
+| `useEffect`            | Talking to things outside React: listeners, timers, the canvas runtime, `document.title` | `useInterval`, `usePasteFile`, `useVideoTransport`, `useRuntime`, `useDocumentTitle`, `ScrollToTop`, `HomePage`                                                |
+| `useRef`               | Holding something that must survive renders without causing one                          | `useRuntime` (`rtRef`), `useInterval` (saved callback), `useExport` (the abort controller), `FilePicker` (hidden input), `Studio` (`canvasRef`)                       |
+| `useCallback`          | Giving a function a stable identity                                                      | `useStyleParams`, `useMediaInput`, `useExport`, `useVideoTransport`, `useDownload`                                                                                                  |
 | `useMemo`              | Giving an object a stable identity                                                       | `useDropZone` (the `bind` handlers), `usePointerBridge` (the pointer handlers)                                                                                 |
 | `useId`                | Unique ids that match a label to its input                                               | every control in `controls/`                                                                                                                                   |
 | `useSyncExternalStore` | Reading data that lives outside React                                                    | `useSource` (in `source.js`), `useThumb` / `useThumbCount` (in `thumbs.js`)                                                                   |
@@ -281,19 +289,19 @@ Rules every hook here follows:
 **Not used, on purpose:**
 
 - `useReducer`: no state here has transitions complicated enough to need one. `useStyleParams` is "set one key" and "reset", which a functional `setState` expresses directly.
-- `useContext`: nothing is passed through more than three component levels, and the two things that are genuinely global (the uploaded image, the previews) are already in external stores. Adding a context would only add a provider to maintain.
+- `useContext`: nothing is passed through more than three component levels, and the two things that are genuinely global (the uploaded picture or video, the previews) are already in external stores. Adding a context would only add a provider to maintain.
 
 ### 7.3 Why `useCallback` and `useMemo` appear where they do
 
 They are not sprinkled everywhere. Each use has a concrete reason: the value ends up in a dependency array of an effect, or is handed to a listener that is added and removed.
 
-- `usePasteImage(onFile)` adds a `paste` listener in an effect that depends on `onFile`. If `onFile` changed every render, the listener would be removed and re-added every render. `useImageInput` wraps `take` in `useCallback` so it is stable, and `useDropZone` builds its handlers with `useMemo` keyed on that same callback.
+- `usePasteFile(onFile)` adds a `paste` listener in an effect that depends on `onFile`. If `onFile` changed every render, the listener would be removed and re-added every render. `useMediaInput` wraps `take` in `useCallback` so it is stable, and `useDropZone` builds its handlers with `useMemo` keyed on that same callback.
 - `usePointerBridge` returns five handlers. They are memoised so the canvas element does not receive new props on every render, and so they only change if the canvas ref or runtime ref changes (they never do).
-- `useExport` returns `savePng` and `record`; both are `useCallback`s because they depend on `scale`, `style` and the runtime ref, and callers pass them to buttons.
+- `useExport` returns `savePng`, `record`, `saveVideo` and `cancel`; they are `useCallback`s because they depend on `scale`, `style`, `params` and the runtime ref, and callers pass them to buttons.
 
-### 7.4 The nineteen custom hooks
+### 7.4 The twenty custom hooks
 
-The last four (`useSpotlight`, `useTilt`, `useMagnetic`, `useScrollSpy`) were added with the redesigned homepage and are described after `useDocumentTitle`.
+The last four (`useSpotlight`, `useTilt`, `useMagnetic`, `useScrollSpy`) were added with the redesigned homepage and are described after `useDocumentTitle`. `useVideoTransport` is described after `useDownload`.
 
 Each entry: what it does, why it exists, where it is used, how it works.
 
@@ -304,12 +312,12 @@ Each entry: what it does, why it exists, where it is used, how it works.
 - **Where:** `Studio`.
 - **How:** `useState(() => defaultsOf(style))` (a lazy initialiser, so defaults are computed once). `set` uses the functional form `setParams(p => ({ ...p, [key]: value }))`, which means it never needs `params` in its dependencies, so it keeps one identity for the life of the page. `reset` rebuilds from defaults. Every change produces a **new object**; that is what lets `useRuntime` detect a change with a simple `===` comparison.
 
-#### `useImageInput()` → `{ src, take, error, reset }`
+#### `useMediaInput()` → `{ src, take, error, loading, reset }`
 
-- **What:** the shared uploaded picture, plus a safe way to load a new one.
-- **Why:** loading a file can fail (not an image, unreadable, too large). The error text belongs next to the upload button, not in a `try/catch` inside every component that accepts files.
-- **Where:** `Studio` (passes `take` to the file picker, the drop zone and the paste listener; passes `error` to `ImageSection`).
-- **How:** `src` comes from `useSource()`, which subscribes to the store in `source.js`. `take(file)` clears the error, awaits `loadImageFile`, and stores the message on failure. It ignores a missing file (cancelled picker). `reset` is `resetToSample`.
+- **What:** the shared uploaded picture or video, plus a safe way to load a new one.
+- **Why:** loading a file can fail (not an image or video, unreadable, a video this browser cannot play) and a video takes a moment to open. The error text and the "Opening the file…" state belong next to the upload button, not in a `try/catch` inside every component that accepts files.
+- **Where:** `Studio` (passes `take` to the file picker, the drop zone and the paste listener; passes `error` and `loading` to `SourceSection`).
+- **How:** `src` comes from `useSource()`, which subscribes to the store in `source.js`. `take(file)` clears the error, sets `loading`, awaits `loadFile` (which picks `loadImageFile` or `loadVideoFile` by the file's type), and stores the message on failure. It ignores a missing file (cancelled picker). `reset` is `resetToSample`.
 
 #### `useRuntime(style, canvasRef, params, source)` → `{ rtRef, dim }`
 
@@ -336,22 +344,22 @@ Each entry: what it does, why it exists, where it is used, how it works.
 
 - **What:** makes any element a drag-and-drop target.
 - **Why:** drag-and-drop needs four event handlers and a "currently dragging" flag, and `preventDefault` on `dragover` or the browser simply opens the file. That is easy to get subtly wrong, so it is written once.
-- **Where:** `Studio` → `Stage` (`dragging` shows the "Drop to use this image" overlay and highlights the border; `bind` is spread on the stage `div`).
+- **Where:** `Studio` → `Stage` (`dragging` shows the "Drop to use this picture or video" overlay and highlights the border; `bind` is spread on the stage `div`).
 - **How:** `dragenter` and `dragover` set `dragging` and prevent the default; `dragleave` clears it; `drop` clears it and passes the first file to `onFile`.
 
-#### `usePasteImage(onFile)`
+#### `usePasteFile(onFile)`
 
-- **What:** lets people paste an image from the clipboard anywhere on the page.
+- **What:** lets people paste an image or a video from the clipboard anywhere on the page.
 - **Why:** it is the fastest way to use a screenshot. It is a separate hook (not part of the drop zone) because it listens on `document`, not on one element.
 - **Where:** `Studio`.
-- **How:** a `paste` listener on `document` scans `clipboardData.items` for the first `image/*` entry and calls `onFile`. Removed in the effect cleanup.
+- **How:** a `paste` listener on `document` scans `clipboardData.items` for the first `image/*` or `video/*` file and calls `onFile`. Removed in the effect cleanup.
 
-#### `useExport(rtRef, style, animated, scale)` → `{ busy, note, savePng, record }`
+#### `useExport(rtRef, style, animated, scale, params, src)` → `{ busy, note, progress, savePng, record, saveVideo, cancel }`
 
-- **What:** saving a PNG, and recording a 6 second WebM for live styles, with a busy flag and a status message.
-- **Why:** both actions are asynchronous, can fail, and need the same bookkeeping (set busy, try, report the error, clear busy). A shared internal `run(kind, work)` does that so the two actions only describe what is different.
-- **Where:** `Studio` → `ExportSection` (`busy` disables the buttons and switches the label to "Recording…"; `note` is the status line).
-- **How:** `savePng` asks `rt.exportBlob(animated ? 1 : scale)`; `record` asks `rt.recordWebM(6)`. Both hand the blob to `useDownload` with a filename like `lumenary-halftone.png`.
+- **What:** saving a PNG, recording a 6 second WebM for live styles, and exporting a whole video through the treatment, with a busy flag, a progress number and a status message.
+- **Why:** all three actions are asynchronous, can fail, and need the same bookkeeping (set busy, try, report the error, clear busy). A shared internal `run(kind, work)` does that so the actions only describe what is different.
+- **Where:** `Studio` → `ExportSection` and `VideoExport` (`busy` disables the buttons; `note` is the status line; `progress` fills the bar; `cancel` is the Stop button).
+- **How:** `savePng` asks `rt.exportBlob(animated ? 1 : scale)` (for a video source that is the frame on screen); `record` asks `rt.recordWebM(6)`. `saveVideo(side)` stops the preview so the export gets the whole tab, runs `exportVideo` from `engine/videoExport.js` with an `AbortController`, feeds `progress` and a time-left estimate into `note`, then restarts the preview. `cancel` aborts it, and so does leaving the page (an effect cleanup). All three hand the blob to `useDownload` with a filename like `lumenary-halftone.png` or `lumenary-halftone.mp4`.
 
 #### `useDownload()` → `(blob, name) => void`
 
@@ -359,6 +367,13 @@ Each entry: what it does, why it exists, where it is used, how it works.
 - **Why:** the "make an object URL, click a hidden link, clean up" routine is boilerplate that does not belong in export logic.
 - **Where:** `useExport` only (it is its own hook so another export path can reuse it).
 - **How:** `URL.createObjectURL`, a temporary `<a download>` appended, clicked and removed, and the URL revoked after five seconds. `useCallback` with no dependencies.
+
+#### `useVideoTransport(src)` → `{ playing, time, muted, limit, toggle, seek, mute }`
+
+- **What:** play state, position and sound of the video being previewed, with the actions a transport bar needs.
+- **Why:** the `<video>` element lives in the `source.js` store, not in React. This hook is the one place that turns its events into state and its state into actions, so `Transport` is only markup.
+- **Where:** `Transport`.
+- **How:** an effect listens to `play`, `pause`, `seeked` and `volumechange` and also reads the position once per animation frame while mounted, so the scrubber moves smoothly; it only sets state when something changed. `toggle` calls `holdVideo(...)` so that a video the viewer paused stays paused when the runtime restarts, `seek` clamps to the 15 second limit, and `mute` flips `muted`. A video starts muted because browsers refuse to autoplay with sound.
 
 #### `useNeighborsIn(list, id)` → `{ prev, next }`
 
@@ -433,9 +448,10 @@ Subscribes to a CSS media query with `useSyncExternalStore`. `FloatingPreview` u
 
 These are not hooks, but they feed three of them and the pattern deserves a note.
 
-- **Why not state or context?** The uploaded image and the homepage previews are needed on different pages that never mount at the same time. They must survive navigation (upload once, switch style, still there) and they hold large objects (canvases, data URLs). A module-level variable plus a subscription is the lightest way to do that.
+- **Why not state or context?** The uploaded picture or video and the homepage previews are needed on different pages that never mount at the same time. They must survive navigation (upload once, switch style, still there) and they hold large objects (canvases, data URLs). A module-level variable plus a subscription is the lightest way to do that.
 - **How:** each store keeps its data in a module variable, a `Set` of listeners, and exposes `subscribe` and a getter. `useSyncExternalStore(subscribe, getSnapshot)` connects a component to it; React re-renders when the snapshot changes and handles concurrent rendering correctly.
 - **One rule:** the snapshot must be referentially stable between changes, or React loops. That is why `getSource()` returns one cached default object instead of building a new one on each call.
+- **Video in the store.** A video source carries its `<video>` element, the original `File` (the exporter reads it again from disk, at full quality), its duration and a `limit` of at most 15 seconds. When a source is replaced, the old element is paused, emptied and its object URL revoked, so a long session does not pile up memory.
 - `useThumb(id)` and `useThumbCount()` read the preview cache. `useThumbCount` exists only to make `HeroCard` re-render as previews arrive.
 
 ---
@@ -559,7 +575,7 @@ Editing copy or adding a style never means editing markup.
 
 ### 9.3 Composition through `children`
 
-`Section`, `Panel` and `Field` take `children` and own only the frame around them. `Panel` shows the blurb and wraps whichever sections it is given; `Section` is a titled block with an optional action slot (`action` prop, used for the "Reset" link); `Field` is a label plus a control slot. The three style-page sections (`ImageSection`, `TreatmentSection`, `ExportSection`) are all built from them, which is why they look identical without sharing any style code.
+`Section`, `Panel` and `Field` take `children` and own only the frame around them. `Panel` shows the blurb and wraps whichever sections it is given; `Section` is a titled block with an optional action slot (`action` prop, used for the "Reset" link); `Field` is a label plus a control slot. The three style-page sections (`SourceSection`, `TreatmentSection`, `ExportSection`) are all built from them, which is why they look identical without sharing any style code.
 
 ### 9.4 Small primitives with prop spreading
 
@@ -650,10 +666,12 @@ All animations are disabled under `prefers-reduced-motion: reduce` (at the botto
 - **A style** is a module with `id`, `name`, `blurb`, `params` and either (the registry adds `number` and `section` itself):
   - a still style: `still({ …, render(ctx, work, p, env, W, H, cache) })`. It draws once whenever parameters or the image change;
   - an animated style: `{ kind: 'animated', create(env) }` returning an object with `setSource`, `setParams`, `draw(ctx, t, dt, pointer)` and `dispose`.
-- **`createRuntime({ canvas, env, onSize })`** runs a style on a canvas: `setStyle`, `setSource`, `setParams`, `setPointer`, `invalidate`, `start`, `dispose`, `exportBlob(scale)` and `recordWebM(seconds)`. Stills are re-rendered at the export size (capped at 4096 px); live styles export the frame on screen.
+- **`createRuntime({ canvas, env, onSize })`** runs a style on a canvas: `setStyle`, `setSource`, `setParams`, `setPointer`, `invalidate`, `start`, `stop`, `dispose`, `exportBlob(scale)` and `recordWebM(seconds)`. Stills are re-rendered at the export size (capped at 4096 px); live styles export the frame on screen. A source is `{ canvas }` for a picture, or `{ canvas, video, limit, ... }` for a video: the runtime then pulls each new frame from the `<video>` into its working canvas and repaints (section 22).
+- **Live styles and video.** A live style that keeps state (particles, a simulation, a fluid) should also offer `setFrame(canvas)`, which swaps the picture without starting over. The runtime calls it for every new video frame through `feedFrame`; a style without it is simply started again with `setSource`. Still styles get `setFrame` from the `still()` wrapper in `utils.js`.
 - **Resolution independence.** Parameters are counts or fractions of the width, never pixels, so a still looks the same at preview size and at 3× export.
 - **`renderThumb`** renders one frame of any style at small size; `thumbs.js` uses it for the homepage previews.
-- **Images** are capped at 3200 px on load (`source.js`) so very large photos stay fast.
+- **Images** are capped at 3200 px on load (`source.js`) so very large photos stay fast. A video's first frame is capped at 1920 px, and while a video plays the working canvas is at most 640 px on its long side (`VIDEO_PREVIEW_SIDE`). If a treatment cannot keep up, the runtime draws the preview smaller in steps of a quarter, down to 320 px (`VIDEO_PREVIEW_MIN`): three frames in a row that take more than 120 ms trigger a step. A new treatment or a new file starts again at 640.
+- **Cartoon and pixel treatments** share `engine/toon.js` and `engine/retro.js`. `toon` has the edge-keeping smoothing (`smoothKeepEdges`), the palette tools (`paletteOf`, `flatten`, `matchPalette`, `dress`) and the line and highlight helpers (`shapeLines`, `darkLines`, `brightSpots`, `bloom`). Its `flatten` takes the `cache` and carries the previous frame's palette forward, so a video does not flicker between colour sets. `retro` has the ordered dither (`bayer`, `dither`), `pixelText` and `sprite`.
 - **Safari rule.** Do not use `ctx.filter` (Safari's canvas ignores it). Blur with `boxBlur` on arrays, or draw small and scale up. `shadowBlur` is fine. `helpers.stretch` clips and stretches a luminance map, which the lettered and printed treatments use so a flat picture still shows tone. The lit, material treatments (section E) build a height map, turn it into surface slopes with `helpers.slopes` and shade it per pixel; `helpers.cellular` is a cheap nearest-site (Voronoi) noise used for leather grain and glass pieces.
 - **Cultural treatments (K, L, M)** share `engine/culture.js`: `paletteIdx` and `modeFilter` snap a picture to a handful of pigments and clean the regions; `edgeMask` draws the outlines; `clothFill`, `woodFill` and `carvedStone` give woven, wooden and carved surfaces; `rosette`, `leaf`, `starPoints` and `starRadius` draw ornaments; `ribbon` fills a tapering stroke. Draw thousands of small shapes with flat fills: a gradient or a `save`/`restore` per shape is very slow on machines without a graphics card (Byzantine Mosaic once hung for that reason).
 
@@ -690,7 +708,12 @@ To add a new **control type**, write `XControl.jsx` in `src/components/controls/
 | 404 when refreshing `/style/...`       | `vercel.json` must be in the repo root and committed.                                                             |
 | Fonts look different in a saved PNG    | Wait a second after the page loads before saving; fonts load once.                                                |
 | Huge photo is slow                     | Images are capped at 3200 px on load. Try the 1x export size.                                                     |
-| "Record 6 s clip" does nothing         | Needs a browser with `MediaRecorder` (current Chrome, Edge, Firefox, Safari 14.1+).                               |
+| "This browser can't play that video"   | The browser cannot decode that file (some phone and camera formats). Try an MP4 (H.264) or WebM; Chrome, Edge, Safari and Firefox read most. |
+| Video previews small or slowly         | By design: a heavy treatment (felt, soft 3D, the cel looks) is previewed at a smaller size, down to 320 px, so it keeps moving. The size shows under the picture. The export is not affected: it renders every frame at the size you chose. Pause the preview and scrub to judge a frame. |
+| "Export video" is greyed out           | The browser has no WebCodecs (`VideoEncoder`). Use current Chrome, Edge, Safari or Firefox.                        |
+| The exported video has no sound        | The browser could not encode AAC or the clip has no audio track. The status line says so. WebM exports keep the original sound track when the container allows. |
+| A long video stops at 15 seconds       | By design (`VIDEO_LIMIT` in `engine/runtime.js`). The preview and the export both use the first 15 seconds.        |
+| "Record 6 s clip" does nothing         | Needs a browser with `MediaRecorder` (current Chrome, Edge, Firefox, Safari 14.1+). With a video loaded the button is hidden: use **Export video**. |
 | Single-file preview shows a URL error  | Rebuild with `npm run build:single`; the router must be `MemoryRouter` (set in `main.jsx` through `VITE_SINGLE`). |
 | A slider does nothing                  | Check the browser console. A style's `render` throwing stops that style only; the others still work.              |
 | A style behaves oddly after editing it | Stills cache work between renders in `cache`; keep the cache key in sync with the parameters it depends on.       |
@@ -704,7 +727,9 @@ To add a new **control type**, write `XControl.jsx` in `src/components/controls/
 | Symptom                                   | Start in                                                                    |
 | ----------------------------------------- | --------------------------------------------------------------------------- |
 | Canvas blank or not updating              | `hooks/useRuntime.js`, then the style's file in `engine/styles/`            |
-| Upload, drop or paste ignored             | `hooks/useImageInput.js`, `useDropZone.js`, `usePasteImage.js`, `source.js` |
+| Upload, drop or paste ignored             | `hooks/useMediaInput.js`, `useDropZone.js`, `usePasteFile.js`, `source.js` |
+| Video will not play, or plays wrong       | `source.js` (`loadVideoFile`), `engine/runtime.js` (`pull`), `hooks/useVideoTransport.js` |
+| Video export fails, stalls or looks off   | `engine/videoExport.js`, `hooks/useExport.js`, then the style's `setFrame` |
 | Wrong or missing homepage preview         | `thumbs.js`, `hoc/withThumb.jsx`                                            |
 | Page shows wrong style, or redirects home | `hoc/withStyleRoute.jsx`, `engine/styles/index.js`                          |
 | Save or record fails                      | `hooks/useExport.js`, `engine/runtime.js`                                   |
@@ -717,7 +742,7 @@ To add a new **control type**, write `XControl.jsx` in `src/components/controls/
 
 ## 15. Privacy
 
-There is no backend and no database. Photos are read with the browser's file APIs and stay in memory; they are never sent anywhere.
+There is no backend and no database. Photos and videos are read with the browser's file APIs and stay in memory; they are never sent anywhere. A video is decoded, drawn through the treatment and encoded again inside the tab (WebCodecs), and the file you save is built in memory and handed to the browser's download, so it never touches a server either.
 
 The one exception is page-view counting. `App.jsx` mounts Vercel Web Analytics (`@vercel/analytics`), which records which pages are opened, with no cookies and no personal data. It is switched on in the Vercel dashboard (Project, Analytics, Enable) and is free on the Hobby plan. It is left out of the single-file build. To remove it, delete the `<Analytics />` line and the import in `App.jsx`, and the "Counting" line in `data/maker.js`. Because every treatment has its own address, the dashboard's page list also shows which treatments are opened most.
 
@@ -819,7 +844,7 @@ A preset is a handful of dials carried in the address: `/style/halftone?size=20&
 
 ## 18. Sections and the roadmap
 
-`src/data/sections.js` is the master list of every treatment planned for Lumenary, 176 names in thirteen sections (A to M), and all thirteen are enabled. It is the single place that decides what is on the site.
+`src/data/sections.js` is the master list of every treatment planned for Lumenary, 212 names in thirteen sections (A to M), and all thirteen are enabled. It is the single place that decides what is on the site.
 
 ```js
 { id: 'design', letter: 'A', enabled: true, title: 'Design movements and styles', blurb: '…', items: ['Art Deco', 'Bauhaus', …] }
@@ -851,13 +876,14 @@ Things the data does not update by itself: the `<title>` and `description` in `i
 
 ## 20. Loading and performance
 
-- **The first load** is the homepage and the studio: the app, the image engine with all 176 treatments, the stylesheet and the home page fonts. In a production build the main script is about 1.15 MB, or about 390 kB over the wire with gzip.
-- **Lazy routes.** `TheoryPage`, `TheoryGroupPage` and `AboutPage` are loaded with `React.lazy` and shown inside one `Suspense`, so the 670 kB (about 245 kB gzip) of theory text and equations is fetched only when someone opens a theory page. The fallback is a quiet empty block (`route-wait`) rather than a spinner, so there is no flash.
+- **The first load** is the homepage and the studio: the app, the image engine with all 212 treatments, the stylesheet and the home page fonts. In a production build the main script is about 1.26 MB, or about 430 kB over the wire with gzip.
+- **Lazy routes.** `TheoryPage`, `TheoryGroupPage` and `AboutPage` are loaded with `React.lazy` and shown inside one `Suspense`, so the 760 kB (about 275 kB gzip) of theory text and equations is fetched only when someone opens a theory page. The fallback is a quiet empty block (`route-wait`) rather than a spinner, so there is no flash.
 - **Hash links into lazy pages.** A link such as `/theory/design#bauhaus` has to wait for the page to download before there is anything to scroll to. `ScrollToTop` polls for the target for up to six seconds, jumps to it as soon as it exists, then re-aligns after 60, 250 and 700 ms and again once the fonts have loaded, because late fonts move the page. A wheel or a touch cancels the whole sequence, so it never fights the reader.
+- **The video library is lazy too.** `engine/videoExport.js` imports Mediabunny with a dynamic `import()` the first time someone presses **Export video**, so visitors who only use pictures never download its 520 kB (about 135 kB gzip). Playing and previewing a video does not need it: that is the browser's own `<video>` element.
 - **Thumbnails.** The homepage renders its section previews one per idle moment, so they never block a click (`thumbs.js`).
-- **Big pictures.** Uploaded images are capped at 3200 px on load, and stills are exported at up to 4096 px.
+- **Big pictures.** Uploaded images are capped at 3200 px on load, and stills are exported at up to 4096 px. Videos are previewed at 640 px on the long side at most, and exported at 480, 720 or 1080 px (never larger than the original).
 - **The build warning.** Vite warns that the main chunk is over 900 kB. That is expected: the engine for every treatment is in it on purpose, so any treatment opens instantly. If it ever matters, the next step is to split the engine by section with a dynamic `import()`.
-- **The single-file build** (`npm run build:single`) inlines the lazy chunks, because a file opened from disk cannot fetch them.
+- **The single-file build** (`npm run build:single`) inlines the lazy chunks, the video library included, because a file opened from disk cannot fetch them. It is about 6.6 MB.
 
 ---
 
@@ -867,14 +893,79 @@ Everything a link needs in order to look good when someone posts it, and everyth
 
 | What | Where | Notes |
 | --- | --- | --- |
-| Page title and description | `index.html` | Written by hand. The count in the description (176) should match the site. |
+| Page title and description | `index.html` | Written by hand. The count in the description (212) should match the site. |
 | Per-page titles | `withDocumentTitle` in each page | `Halftone \| Lumenary`, `Theory \| Lumenary`, `About \| Lumenary, by Mursal Furqan Kumbhar` and so on. |
-| Share image | `public/og-176.png`, 1200 by 630 | Used by `og:image` and `twitter:image`. The filename carries the number on purpose: social networks cache the picture by address, so a new image needs a new filename to show up. |
+| Share image | `public/og-212.png`, 1200 by 630 | Used by `og:image` and `twitter:image`. The filename carries the number on purpose: social networks cache the picture by address, so a new image needs a new filename to show up. |
 | Share image text | `og:image:alt` | Describes the picture for people who cannot see it. |
 | `robots.txt` | `public/robots.txt` | Allows everything and points at the sitemap. |
-| Sitemap | `public/sitemap.xml` | Generated by `scripts/sitemap.mjs` before every build: the home page, About, the theory pages, the section pages and every treatment page (about 200 addresses). Never edit it by hand. |
+| Sitemap | `public/sitemap.xml` | Generated by `scripts/sitemap.mjs` before every build: the home page, About, the theory pages, the section pages and every treatment page (242 addresses). Never edit it by hand. |
 | Favicon | `public/favicon.svg` | |
 
 **When a number changes** (a treatment is added, say), update these by hand: the `description`, `og:title` and `og:description` in `index.html`, the `description` in `package.json`, the home page title in `HomePage.jsx` if it quotes a number, and the share image. To remake the image, open the home page in a 1200 by 630 window, let the hero settle, take a screenshot and save it under a new name such as `og-<count>.png`; then change the two addresses in `index.html`.
 
 **Checking a link preview.** After deploying, paste the address into a chat app or a social post composer and look at the card. If it still shows an old picture, the network has cached it: use that network's own "refresh preview" tool, or change the image filename.
+
+---
+
+## 22. Video: upload, preview and export
+
+Every treatment works on a short video as well as on a picture. This is how it is put together, and what to know when you touch it.
+
+### What a visitor sees
+
+1. **Choose a file** (or drag one onto the preview, or paste one) and pick a video. The studio opens it in a muted, looping `<video>` element. A clip longer than 15 seconds is accepted but only its first 15 seconds are used, and the panel says so.
+2. **Preview.** The treatment is drawn over the video as it plays. A **transport bar** under the picture has Play or Pause, a scrubber, the time (`0:07 / 0:12`) and **Sound on**. Every dial still works while the video plays.
+3. **Export video.** The Export block offers a longest side (480, 720 or 1080 px), a line saying the size and length of the file, and **Export video**. A progress bar with a time-left estimate runs, **Stop** cancels, and the finished file downloads as `lumenary-<treatment>.mp4` (H.264 video, AAC sound) or, where the browser cannot encode H.264, `.webm`.
+4. **Save this frame** saves the frame on screen as a PNG, at the chosen frame size, so a video can also give a still.
+5. The six second **Record clip** button is hidden for a video, because Export video does the same job properly.
+
+### The 15 second cap
+
+`VIDEO_LIMIT` in `engine/runtime.js`. It limits the preview loop, the transport bar and the export together: `source.limit` is `min(duration, 15)`, and the exporter passes `trim: { start: 0, end: 15 }` to the converter when the clip is longer. Change that one number to change the cap everywhere; the texts read it too.
+
+### The pieces
+
+| File | Job |
+| --- | --- |
+| `source.js` | `loadVideoFile` opens the file in a `<video>` (muted, looping, `playsInline`, with a 12 second give-up timer), waits for the first frame and stores `{ canvas (first frame), video, file, duration, limit, trimmed, paused() }`. `isVideoFile` decides by MIME type, then by extension when the type is empty (some systems give `.mov` no type). Replacing a source releases the old video. |
+| `engine/runtime.js` | `createRuntime` pulls a new frame from the video whenever the video's `currentTime` has moved, draws it into the working canvas and hands it to the treatment through `feedFrame`. After a slow frame it rests for about a third of that frame's time, so the page stays responsive. |
+| `engine/videoExport.js` | `exportVideo({ file, style, params, env, side, signal, onProgress })`. Reads the original file again (not the 640 px preview), decodes every frame, draws it through a fresh renderer of the treatment, and encodes the result. Not real time: a slow treatment takes longer and no frame is dropped. |
+| `engine/mediabunny.js` | The one file that re-exports the parts of the Mediabunny library the exporter uses, so the library stays a separate, lazily loaded chunk. |
+| `hooks/useMediaInput.js`, `usePasteFile.js`, `useVideoTransport.js`, `useExport.js` | Loading, paste, the transport bar, and the export with progress and cancel (section 7). |
+| `components/studio/SourceSection.jsx`, `Transport.jsx`, `VideoExport.jsx`, `ui/ProgressBar.jsx` | The panels and the bar. |
+
+### How a frame travels
+
+Preview: `<video>` to the working canvas (at most 640 px, smaller for a heavy treatment) to the treatment's `setFrame` or `setSource` to the visible canvas.
+
+Export: Mediabunny reads the file with WebCodecs (`VideoDecoder`), gives each decoded frame to a `process` callback, which draws it into a canvas of the output size, runs the treatment on it and returns the canvas; Mediabunny encodes the returned canvas (`VideoEncoder`, H.264 first, then VP9 and friends for WebM) and writes the file into memory. Sound is carried over by Mediabunny in the same pass: AAC for an MP4 where the browser can encode it, otherwise the original track when the container allows. `forceTranscode` is on, so each frame really goes through the treatment even when the output size equals the input size. The frame rate is kept, capped at 30 for sources faster than 31 fps.
+
+### Why a live treatment is stepped by the video's clock
+
+A live treatment (particles, rain, a simulation) normally moves by wall-clock time. During export the wall clock means nothing, because a frame may take 30 ms or 3 seconds to render. The exporter therefore passes the difference between video timestamps as the time step, so a snowfall moves at the same speed in the file however long the export took, and it is the same each time you run it.
+
+### Keeping a treatment steady from frame to frame
+
+Two things make a treatment flicker on video, and both are solved in the engine rather than in each file:
+
+- **State.** A live treatment that was started again for every frame would lose its particles or simulation. `setFrame(canvas)` swaps the picture and keeps the state. All 36 live treatments have it. Still treatments get it from `still()` in `engine/utils.js`, which also resets the treatment's cache, keeping only a palette that was marked to carry over.
+- **Looking back.** A few live treatments need the past as well as the present: Chronophotograph keeps a trail of earlier exposures, Slit-scan keeps a strip of slits or a stack of frames, and CCTV compares a frame with the one before to find what moved. They keep a ring of recent frames (`engine/history.js`, `makeRing`), take a copy at a steady rate of their own (by the time step, so an export is the same as the preview) and fall back to a gentler motion of the still picture when no video frame has arrived, so they are never blank on a photograph.
+- **Palette.** Cartoon, cel, felt and crochet looks pick a handful of colours from the picture. Picked afresh on every frame, a slight change in the picture swaps two colours and the whole frame flickers. `toon.flatten(..., cache)` starts each frame from the previous frame's palette (`cache.keep` then `cache.last`) and moves it only a little, so colours stay put. If you write a treatment that clusters colours, do the same.
+
+### Browser support and limits
+
+- **Preview** uses only the `<video>` element and the canvas, so it works anywhere the browser can play the file. Phones need a tap to start sound, and some phones hold back the first frame until playback starts (the loader starts and pauses it).
+- **Export** needs WebCodecs (`VideoEncoder` and `VideoDecoder`): current Chrome, Edge, Safari and Firefox have them. Without it the button is disabled and says why.
+- **Formats in:** whatever the browser can decode, normally MP4 (H.264), MOV, WebM and Matroska. **Formats out:** MP4 (H.264 and AAC) or WebM.
+- **Speed.** The preview adapts: a treatment that takes more than about 120 ms a frame is drawn smaller (down to 320 px) until it moves smoothly. Export time is about the number of frames times the treatment's cost. In testing, a 6 second clip at 480 px took 3 to 5 seconds through a fast live treatment and 17 to 30 seconds through a heavy one such as Anime Cel, Felt Story or Soft 3D; a 15 second clip at 1080 px through a heavy treatment can take several minutes. The tab has to stay open and in the foreground in some browsers.
+- **Memory.** The finished file is held in memory before it downloads, which is fine for 15 seconds at these sizes.
+
+### Adding video support to a new treatment
+
+- **A still treatment:** nothing to do. Draw any randomness from the seeded `rng` in `engine/utils.js`, as the others do, so each frame of a video grains and scatters the same way instead of shimmering.
+- **A live treatment:** add `setFrame(w)` that stores the new picture and rebuilds only what reads it (a luminance map, a flow field), and leave particles and simulations alone. Look at `fireflies.js` or `snowfall.js`. Run the frame-swap check in your head: after `setFrame`, would a viewer see the picture change but the motion carry on?
+- **If it clusters colours:** pass `cache` through `toon.flatten` as above.
+
+### Licence
+
+Mediabunny is MPL-2.0 (a file-level licence). Lumenary uses it unmodified through `npm`, so nothing about the repository's own licence changes; if you ever edit Mediabunny's own files, the MPL asks you to share those edits.

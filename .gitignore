@@ -7,3 +7,12 @@ dist
 *.log
 dist-single
 lumenary.zip
+
+lumenary-output/
+image.jpg
+*.mp4
+*.mov
+*.webm
+*.mkv
+*.zip
+.vite

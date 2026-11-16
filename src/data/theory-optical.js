@@ -136,4 +136,49 @@ export const THEORY_OPTICAL = {
       { tex: T`x_{\text{src}}=x\mp\theta\,\delta,\quad \delta=1.4\,P\,w;\qquad k=1+S\Big(0.3\,e^{-(u-h)^{2}/0.018}-0.12\,\operatorname{smoothstep}(0.62,\,1,\,\lvert 2u-1\rvert)\Big)`, note: 'Parallax shift (minus for A, plus for B; P the parallax slider) and the shine multiplier; h = ½ + 0.38 θ is where the glint sits in each lens, S the shine slider.' },
     ],
   },
+  cinematic: {
+    paragraphs: [
+      'A film grade moves colour by tone. Saturation is set first, by scaling each channel’s distance from the pixel’s brightness. Then comes split toning: one tint is added to the shadows and another to the highlights, with weights that are the squares of darkness and of brightness, so mid tones are barely touched. In the default grade the shadows gain blue and green and the highlights gain red, which sets skin, which is orange, against everything else. An S-shaped curve about mid grey adds contrast.',
+      'Lenses and film add the rest. Bloom isolates the bright parts, blurs them widely and blends them back in a warm tone. Streaks use a stricter mask of only the brightest lights and blur it along the rows alone, three times, which approximates a wide Gaussian in one direction; the result is added in blue, as a cylindrical anamorphic lens smears a point of light into a horizontal line. Corners are darkened, and grain is made strongest in the mid tones. The bars bring the frame toward the chosen shape, but each stops at one eighth of the height so an upright picture is not reduced to a strip.',
+    ],
+    equations: [
+      { tex: T`C\leftarrow C+2k\,\big((1-l)^{2}\,\mathbf s+l^{2}\,\mathbf h\big)`, note: 'Split toning: s and h are the shadow and highlight tints, l the brightness, k the grade strength.' },
+      { tex: T`v\leftarrow v+1.6\,c\,\big(3v^{2}-2v^{3}-v\big)`, note: 'Contrast: a blend toward the smoothstep curve; c is the grade’s contrast times k.' },
+      { tex: T`\text{bar}=\min\!\Big(\frac{H-W/\rho}{2},\ \frac{H}{8}\Big)`, note: 'Height of each black bar for a frame of ratio ρ, when the picture is taller than that ratio.' },
+    ],
+  },
+  chronophotograph: {
+    paragraphs: [
+      'The plate is a running maximum. Every exposure is a copy of the picture with its background crushed, E = l^0.92 smoothstep(a, a + 0.4, l) tinted silver or sepia, where l is the brightness and a is the black point (0 to 0.55). The newest exposure has weight 1 and one that is j exposures old has weight (1 - j/K)^x, with K the number of exposures and x between 0.35 and 3.2 from the fade slider. The plate is P = max over j of w_j E_j, taken for each colour channel, which is exactly what a second flash does to a film that already holds an image: it can only add light.',
+      'A new exposure is stored every g milliseconds from the latest video frame, so the exposures are g apart. A still picture has no past to store, so it is shrunk to half size, given a soft oval edge, and moved on a path x(t) = 0.29 W sin(1.3 t) with a small bounce 0.03 H sin(2.6 t + 0.8); the exposures are the same picture at earlier points on that path. In the mode that keeps only what moves, the still background is found as the per-pixel median of the newest frame, one from the middle of the trail and the oldest; each exposure is mixed in where it differs from that background by more than 22 levels, and the background itself is dimmed by half.',
+    ],
+    equations: [
+      { tex: T`E=\ell^{0.92}\,\operatorname{smoothstep}(a,\ a+0.4,\ \ell),\qquad w_j=\Big(1-\frac{j}{K}\Big)^{x}`, note: 'An exposure with its background crushed, and the weight of an exposure that is j steps old.' },
+      { tex: T`P=\max_{j}\ \big(w_j\,E_j\big)`, note: 'The plate keeps the brightest value that any exposure gave, in each colour channel.' },
+      { tex: T`\mathbf x(t)=\big(0.29\,W\sin 1.3t,\ \ 0.03\,H\sin(2.6t+0.8)\big)`, note: 'The path a still picture is swung along, so that there is motion to record.' },
+    ],
+  },
+  'slit-scan': {
+    paragraphs: [
+      'Finish line. The output is a strip with one line per output column (or row), kept in a ring. Each step of dt seconds adds n = floor(r dt) lines, the remainder carried to the next step, where r runs from 60 to 520 lines per second as the speed slider rises, scaled to the picture’s size. A new line is the picture’s colours along the slit at position s, read as a linear mix of the two nearest columns. On a video the slit stays where the slider put it, so every line of a step comes from the newest frame.',
+      'With no motion in a still picture, the slit itself is moved, so that the scroll has something to turn into an image: s(t) = c + A asin(0.92 sin(w (t - t0) + 1.3)) / asin(0.92), a triangle wave with rounded ends in which A is 0.46 of the picture and w is set so that the slit crosses at 0.8 of the scroll speed. If the slit and the scroll moved at the same speed the strip would reproduce the picture exactly; a slower slit stretches it, a faster one squeezes it, and one moving the other way mirrors it.',
+      'Time warp. A ring of K = 18 frames is filled at intervals of T/18, with T from 0.3 to 2.6 seconds. For each pixel a lag f between 0 and 1 comes from its position: y/H from the top, x/W from the left, the distance from the middle over the half diagonal for the tunnel, or 0.5 + 0.5 sin(pi (1.6 x/W + 2.2 y/H) - 1.6 tau) for the rolling ripple, which also moves with time. The pixel is read from the frames at lag f (K - 1) and the next one, mixed by the fractional part. For a still picture the frames are the same picture shifted along a path by up to 0.1 W, which turns the lag into a wave of shear.',
+    ],
+    equations: [
+      { tex: T`s(t)=c+A\,\frac{\arcsin\!\big(0.92\,\sin(\omega(t-t_0)+1.3)\big)}{\arcsin 0.92}`, note: 'The slit swept across a still picture: a triangle wave with rounded ends, where A is 0.46 of the picture.' },
+      { tex: T`\Delta u=\frac{v}{r}`, note: 'Picture pixels per strip line: v is the slit’s speed across the picture and r the scroll rate. Below 1 the picture is stretched, above 1 squeezed, and with a negative sign mirrored.' },
+      { tex: T`C(x,y)=(1-\phi)\,F_{a}(x,y)+\phi\,F_{a+1}(x,y),\qquad a+\phi=f(x,y)\,(K-1)`, note: 'The time warp: F_a is the frame a steps back and f the lag, from 0 to 1.' },
+    ],
+  },
+  'tiny-planet': {
+    paragraphs: [
+      'For an output pixel at offset (dx, dy) from the centre, the angle is theta = atan2(dy, dx) plus the turn, and the radius is r. The picture’s column is u = theta / 2 pi times the number of times round, and its row comes from the radius through the inverse of a curve g. With s running from 0 at the bottom row to 1 at the top row, g(s) = (1 - k) s + k tan(s phi / 2) / tan(phi / 2), where k is the curve slider and phi = 2.45 radians is the width of the projected view. At k = 0 this is the plain polar map, with the radius growing evenly with the row; at k = 1 it is the stereographic projection of a sphere, which crowds the lower rows into the middle. A pixel at radius r reads the row s = g^-1 (r / R), where R is the planet’s radius, found by a binary search in a table of 1024 values of g.',
+      'Near the centre one output pixel spans many picture pixels, because a whole row is squeezed into a short circle of radius r. The sampler therefore averages up to 12 samples round the circle, and up to 3 along the radius, which removes the moire of stripes that a single sample would give. The two sides are joined either by mirroring or by cross-fading the last 14% of the width into the first with a smoothstep weight. Beyond the top row the sky is a strip made from the average colour of the top 5% of each column, blurred sideways round the loop, and faded towards its overall average as the radius approaches the far pole of the sphere, at s = pi / phi.',
+    ],
+    equations: [
+      { tex: T`g(s)=(1-k)\,s+k\,\frac{\tan(s\varphi/2)}{\tan(\varphi/2)},\qquad \varphi=2.45`, note: 'How far from the centre row s lands: k is the curve slider, and s runs from 0 at the bottom to 1 at the top.' },
+      { tex: T`\theta=\operatorname{atan2}(\Delta y,\Delta x)+\tau,\qquad u=\frac{n\,\theta}{2\pi},\qquad s=g^{-1}\!\big(r/R\big)`, note: 'The picture is read at column u and row s: n is the number of times round and tau the turn.' },
+      { tex: T`N_\theta=\Big\lceil \frac{0.86\,n\,W}{2\pi r}\Big\rceil\quad(\le 12)`, note: 'How many samples are averaged round a circle of radius r, so that the centre stays smooth.' },
+    ],
+  },
 };

@@ -68,7 +68,7 @@ export const WHY = {
   title: 'Why this exists',
   paragraphs: [
     'Most photo editors keep their workings out of sight. I wanted the opposite: a place where each effect is built from scratch, in plain sight, and where the equation on the theory page is the one the code actually runs.',
-    'It started with twenty treatments. Then a list of ideas arrived and would not leave, and the weekend stretched. Everything runs in your browser, so your pictures never leave your device, and there are no accounts to make.',
+    'It started with twenty treatments. Then a list of ideas arrived and would not leave, and the weekend stretched. Everything runs in your browser, so your pictures and videos never leave your device, and there are no accounts to make.',
   ],
   quote: 'A photograph is a grid of numbers. This is a place to read them in as many ways as I could think of.',
 };
@@ -84,10 +84,10 @@ export const SINDH = {
 
 // Principles shown as short columns.
 export const PRINCIPLES = [
-  { title: 'Private', text: 'Your picture is drawn and processed right here in the browser. Nothing is uploaded, and there is no account to make.' },
+  { title: 'Private', text: 'Your picture or video is drawn and processed right here in the browser. Nothing is uploaded, and there is no account to make.' },
   { title: 'Open about the maths', text: 'Each treatment has a theory page with the equations the code runs, a short history, and where it is used.' },
   { title: 'Careful with traditions', text: 'The crafts of other cultures are living, not decoration. Each page says where a tradition comes from, borrows only how it looks, and points to the people who still make it.' },
-  { title: 'Yours to keep', text: 'Save any result as a PNG. Live treatments can also record a short WebM clip to take with you.' },
+  { title: 'Yours to keep', text: 'Save any result as a PNG. Bring a short video and it comes back as a video in the same treatment. Live treatments can also record a short clip.' },
 ];
 
 // What it is made of.
@@ -97,7 +97,8 @@ export const COLOPHON = {
     { label: 'Type', text: 'Set in Bodoni Moda, Hanken Grotesk and DM Mono. Some treatments bring their own: Noto Naskh Arabic, Caveat, Pinyon Script and JetBrains Mono.' },
     { label: 'Made with', text: 'React, Vite, Sass, motion, Lenis and KaTeX. Every treatment is a small piece of plain canvas code, with no machine learning model behind it.' },
     { label: 'Hosted on', text: 'Vercel. The pictures you open never reach it.' },
-    { label: 'Counting', text: 'Vercel Web Analytics counts page views, with no cookies and nothing that identifies you. It never sees your pictures.' },
+    { label: 'Counting', text: 'Vercel Web Analytics counts page views, with no cookies and nothing that identifies you. It never sees your pictures or videos.' },
+    { label: 'Video', text: 'Videos are read, drawn and written again inside the browser, through its WebCodecs interface and the open-source Mediabunny library.' },
   ],
 };
 

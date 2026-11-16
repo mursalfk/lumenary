@@ -250,4 +250,26 @@ export const THEORY_WORLD = {
       { tex: T`\text{gold if } L>1-0.5\,g-0.1+0.12\,(\xi-\tfrac12)`, note: 'Gold in the light: g is the gold slider and ξ a random number per cube, so the edge of the gold is ragged.' },
     ],
   },
+  'shadow-puppet': {
+    paragraphs: [
+      'A shadow figure is everything darker than a threshold. As in the platform level, the threshold is found by rank: the blurred brightness values are sorted and the one at the chosen fraction is used, so the figure always covers the share of the frame the slider asks for. The pierced pattern is laid out on a slanted lattice. At each lattice point a round hole is punched if the figure there is lighter than its surroundings, or if it lies in one of the bands where the heavily blurred brightness passes set levels. Those bands follow the forms of the picture like the rows of chisel marks on a leather puppet. Slits are added along the strongest inner edges.',
+      'A puppet held away from the cloth throws a soft shadow, so the mask is blurred by a radius set by the distance slider. The cloth is lit from behind by one lamp: brightness falls off with distance from the lamp along an eased curve and is mapped through three colours, from a dark edge through a warm middle to a hot centre, with a fine weave and some unevenness. Where the mask is solid the cloth is almost black. Painted hide is translucent, so with the tint slider up a little of the lamp’s light comes through in the picture’s own colours.',
+    ],
+    equations: [
+      { tex: T`\theta=L_{(\lceil q\,N\rceil)},\qquad m=1-S_{\theta-0.015,\ \theta+0.015}(L_w)`, note: 'The figure: θ is the brightness at rank qN among all pixels, L_w the blurred brightness.' },
+      { tex: T`\text{hole at }(g_x,g_y)\iff L_f-L_m>0\ \ \text{or}\ \ \big\lvert\operatorname{frac}(k\,L_m)-\tfrac12\big\rvert<0.15`, note: 'Punch rule at a lattice point: L_f is a fine blur, L_m a wide one, k between 5 and 11 bands.' },
+      { tex: T`t=S_{0,1}\!\Big(1-\frac{\lvert\mathbf x-\mathbf x_{\text{lamp}}\rvert}{R}\Big),\qquad C=\operatorname{ramp}_{\text{edge}\to\text{warm}\to\text{hot}}(t)`, note: 'The lit cloth; R is 62% of the frame’s diagonal.' },
+    ],
+  },
+  'greek-vase': {
+    paragraphs: [
+      'The picture is first given a local contrast boost, T = l + 0.85 (l - l_bar), with l_bar a wide blur, after a small blur has taken out the grain. A threshold t, from 0.16 to 0.62 with the slider for how much is painted, cuts it in two with a soft edge of 0.035. For black-figure the glaze mask is G = smoothstep(t + 0.035, t - 0.035, T), the dark shapes; for red-figure it is 1 - smoothstep(1 - t - 0.035, 1 - t + 0.035, T), the ground. The mask is blurred and sharpened again with smoothstep(0.4, 0.6) so that outlines are smooth. The border is a row of meander hooks drawn as a stroked path on a separate canvas, and added to the mask.',
+      'The clay is a base colour times a mottling of fractal noise (plus or minus 10%), a fine grain and a slight darkening next to the glaze; the glaze is near black with a faint sheen of noise. Scratched lines are where the Sobel gradient of the brightness exceeds a limit that falls as the scratch slider rises, together with thin dark features; they are mixed in as clay colour inside the glaze for black-figure, and as glaze inside the clay for red-figure. For the added colours, the blurred picture is read where the glaze is: if its chroma is above 0.14 it is painted crimson where it is warmer than blue, and white where it is cooler. Finally the pot is shaded by 1 - 0.62 c s^2.3, where s is the distance from the centre line (0 to 1) and c the curve slider, with a soft highlight on the left, and aged by stains, a net of cracks from the edges of a cellular (Voronoi) pattern, and a few chips of bare clay.',
+    ],
+    equations: [
+      { tex: T`T=\ell+0.85\,(\ell-\bar\ell),\qquad G=\operatorname{smoothstep}(t+0.035,\ t-0.035,\ T)`, note: 'Black-figure: the glaze mask G is where the boosted brightness T falls below the threshold t.' },
+      { tex: T`\text{shade}=1-0.62\,c\,|2u-1|^{2.3}`, note: 'The curve of the pot: u is the position across the picture (0 to 1) and c the curve slider.' },
+      { tex: T`\text{crack}=1-\operatorname{smoothstep}\big(0.5\sigma,\ 1.5\sigma,\ 0.9\,(d_2-d_1)\big)`, note: 'A net of cracks from a Voronoi pattern: d_1 and d_2 are the distances to the nearest and second nearest points, and sigma is the picture scale.' },
+    ],
+  },
 };

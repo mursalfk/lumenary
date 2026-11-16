@@ -148,4 +148,26 @@ export const EXTRA_SOUTHASIA = {
     terms: [['Kolam', 'A floor drawing made of rice flour or paste, drawn at the threshold.'], ['Pulli', 'The dots that form the lattice of a kolam.'], ['Array grammar', 'A set of rules for generating pictures on a grid.']],
     related: ['truchet-tiles', 'warli', 'mandala'],
   },
+
+  phulkari: {
+    facts: { from: 'Punjab, in India and Pakistan', era: 'An old Punjabi craft, at its height in the nineteenth century', bestOn: 'Warm, bold pictures with clear shapes; faces and flowers' },
+    why: 'Phulkari, which means flower work, is stitched from the back of the cloth. The embroiderer picks up a few threads of the weave at a time and carries untwisted silk floss across them in long straight stitches, so the whole pattern is built from straight lines of thread. Silk shines along its length, so stitches that run one way look different from those that run the other, and the design comes from putting the two directions side by side.',
+    how: [
+      'Cut the picture into a grid of cells, each the width of one stitch.',
+      'Give each cell a direction, across or up and down, in diamonds, in squares, or along the picture’s own edges.',
+      'Join neighbouring cells of one direction into stitches of varied length that do not line up from row to row.',
+      'Colour each stitch from the average of the picture beneath it, matched to the nearest silk colour, with a little dither between colours.',
+      'Draw each stitch as a rounded thread with a shining band, and the cloth between as a slubby plain weave.',
+      'Add a gold line and a border of crimson and white teeth, as on a shawl.',
+    ],
+    history: 'Phulkari is the embroidery of Punjab, made in homes across what is now India and Pakistan, traditionally by the women of a family. A shawl called a bagh, which means garden, covers the whole cloth in silk stitches and was made for weddings and births, often begun when a girl was born and finished for her wedding. The floss was dyed in marigold, madder and indigo and sewn onto coarse hand-spun cotton called khaddar. After the Partition of 1947, families took their phulkaris with them, and the craft became a symbol of Punjabi heritage.',
+    uses: ['Shawls, dupattas and wedding cloths', 'Cushions, bags and home textiles', 'Prints and posters of Punjabi heritage', 'Fashion and embroidery pattern design'],
+    tips: [
+      { text: 'Following the picture’s edges keeps the detail of a face better than diamonds do.', set: { pattern: 'flow', stitches: 110 } },
+      { text: 'The picture’s own silk colours on indigo cloth give a modern shawl.', set: { palette: 'picture', ground: 'indigo' } },
+      { text: 'Longer stitches and bigger blocks are closer to a true bagh.', set: { float: 7, block: 8, stitches: 60 } },
+    ],
+    terms: [['Phulkari', 'Punjabi embroidery whose name means flower work, in silk floss on coarse cotton cloth.'], ['Darning stitch', 'A long straight stitch that picks up only a few threads of the cloth, worked from the back in phulkari.'], ['Floss', 'Soft, untwisted silk or cotton thread used for embroidery.']],
+    related: ['embroidery', 'cross-stitch', 'ralli-patchwork', 'sindhi-mirror-embroidery'],
+  },
 };

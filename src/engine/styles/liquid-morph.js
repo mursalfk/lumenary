@@ -23,6 +23,8 @@ export default {
         gx = Math.ceil(W / NODE) + 2; gy = Math.ceil(H / NODE) + 2;
         fdx = new Float32Array(gx * gy); fdy = new Float32Array(gx * gy);
       },
+      // A new video frame of the same size: read the pixels again, keep the flow.
+      setFrame(work) { src = work.getContext('2d').getImageData(0, 0, W, H).data; },
       setParams(np) { p = np; },
       draw(ctx, t, dt, ptr) {
         if (!out) out = ctx.createImageData(W, H);

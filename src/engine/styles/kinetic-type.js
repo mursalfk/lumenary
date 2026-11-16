@@ -33,6 +33,8 @@ export default {
         mask = env.makeCanvas(W, H); tmp = env.makeCanvas(W, H);
         mctx = mask.getContext('2d'); tctx = tmp.getContext('2d');
       },
+      // A new video frame of the same size: lift the new frame, keep the type moving.
+      setFrame(w) { work = w; liftKey = -1; },
       setParams(np) { p = np; },
       draw(ctx, t) {
         if (liftKey !== p.lift) lift();

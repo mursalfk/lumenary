@@ -45,6 +45,8 @@ export default {
     return {
       animated: true,
       setSource(w, ww, hh) { work = w; W = ww; H = hh; built = ''; },
+      // A new video frame of the same size: new ink takes its colour from the new frame; ink already in the water stays.
+      setFrame(w) { work = w; if (built) img = work.getContext('2d').getImageData(0, 0, W, H).data; },
       setParams(np) { p = np; },
       step(dt, ptr) {
         build(); dt = Math.min(dt, 0.05); time += dt;

@@ -25,15 +25,21 @@ export default {
   create(env) {
     let W = 0, H = 0, work = null, p = {}, gw = 0, gh = 0, trail, tmp, food, img, ax, ay, aa, n = 0, built = '', small = null, sctx = null, sdata = null, r = rng(3);
 
+    // What is read from the picture: its colours at grid size, and the food map the mould is drawn to.
+    function read() {
+      const c = env.makeCanvas(gw, gh), cx = c.getContext('2d'); cx.imageSmoothingQuality = 'high'; cx.drawImage(work, 0, 0, gw, gh); img = cx.getImageData(0, 0, gw, gh).data;
+      const cells = gw * gh, L = new Float32Array(cells); let lo = 1, hi = 0;
+      if (!food || food.length !== cells) food = new Float32Array(cells);
+      for (let i = 0; i < cells; i++) { const l = (0.2126 * img[i * 4] + 0.7152 * img[i * 4 + 1] + 0.0722 * img[i * 4 + 2]) / 255; L[i] = l; if (l < lo) lo = l; if (l > hi) hi = l; }
+      for (let i = 0; i < cells; i++) { const t = (L[i] - lo) / (hi - lo + 1e-6); food[i] = p.seek === 'light' ? t : 1 - t; }
+    }
+
     function build() {
       const key = [p.agents, p.seed, p.seek, p.food, W].join('|');
       if (key === built) return;
       gw = clamp(Math.round(W / 3), 90, 240); gh = Math.round((gw * H) / W);
-      const c = env.makeCanvas(gw, gh), cx = c.getContext('2d'); cx.imageSmoothingQuality = 'high'; cx.drawImage(work, 0, 0, gw, gh); img = cx.getImageData(0, 0, gw, gh).data;
-      const cells = gw * gh; trail = new Float32Array(cells); tmp = new Float32Array(cells); food = new Float32Array(cells);
-      let lo = 1, hi = 0; const L = new Float32Array(cells);
-      for (let i = 0; i < cells; i++) { const l = (0.2126 * img[i * 4] + 0.7152 * img[i * 4 + 1] + 0.0722 * img[i * 4 + 2]) / 255; L[i] = l; if (l < lo) lo = l; if (l > hi) hi = l; }
-      for (let i = 0; i < cells; i++) { const t = (L[i] - lo) / (hi - lo + 1e-6); food[i] = p.seek === 'light' ? t : 1 - t; }
+      const cells = gw * gh; trail = new Float32Array(cells); tmp = new Float32Array(cells);
+      read();
       n = Math.round(cells * (p.agents / 100)); ax = new Float32Array(n); ay = new Float32Array(n); aa = new Float32Array(n);
       r = rng(p.seed * 29 + 11);
       for (let i = 0; i < n; i++) { ax[i] = r() * gw; ay[i] = r() * gh; aa[i] = r() * TAU; }
@@ -68,6 +74,8 @@ export default {
     return {
       animated: true,
       setSource(w, ww, hh) { work = w; W = ww; H = hh; built = ''; },
+      // A new video frame of the same size: move the food, keep the colony.
+      setFrame(w) { work = w; if (built) read(); },
       setParams(np) { p = np; },
       step(dt, ptr) {
         build();

@@ -294,4 +294,46 @@ export const EXTRA_CRAFT = {
     terms: [['Voronoi diagram', 'A division of the plane in which each point belongs to its nearest site.'], ['Came', 'The grooved lead strip that holds pieces of glass together.'], ['Backlight', 'Light shining from behind so that it passes through the material.']],
     related: ['voronoi-mosaic', 'byzantine-mosaic', 'low-poly'],
   },
+  'wool-crochet': {
+    facts: { from: 'Hooked yarn craft', era: 'Printed patterns from the 1820s', bestOn: 'Bold shapes and few colours' },
+    why: 'Crochet builds cloth one loop at a time with a single hook, and every stitch shows. A picture in crochet is a grid, like knitting, but the stitches are chunkier, each row is worked in the opposite direction to the last, and the edge is usually finished with a decorative border. The charm is in the slight unevenness of something made by hand.',
+    how: [
+      'Average the picture to one colour per stitch.',
+      'Find a few wool colours and give each stitch the nearest one.',
+      'Draw each stitch as two strands leaning into a V, each with a shadow and a highlight.',
+      'Shift every second row by half a stitch and reverse the overlap of its strands.',
+      'Work a border of shells, five stitches fanned from one foot.',
+      'Add a little fuzz: fine noise and the odd stray fibre.',
+    ],
+    history: 'Crochet as we know it appears in Europe in the early nineteenth century; the Dutch magazine Penélopé printed patterns in 1823. In Ireland during the famine of the 1840s, crocheted lace became a cottage industry that fed families. The granny square, made from leftover yarn, spread in the twentieth century, and Japan’s amigurumi, small crocheted creatures, made the craft popular with a new generation.',
+    uses: ['Blanket and cushion pattern charts', 'Gifts and baby announcements', 'Craft shop and market branding', 'Cosy seasonal posts'],
+    tips: [
+      { text: 'Fewer, bigger stitches look like chunky yarn.', set: { stitches: 28, colours: 5 } },
+      { text: 'Baby pastels redraw the picture in a soft basket of wools.', set: { wool: 'pastel', fuzz: 70 } },
+      { text: 'Many stitches without the border keep the most detail.', set: { stitches: 85, border: false } },
+    ],
+    terms: [['Single crochet', 'The basic short stitch, worked into the row below.'], ['Shell', 'Several stitches worked into one foot so that they fan out.'], ['Quantisation', 'Reducing many colours to a small fixed set.']],
+    related: ['knitted-pattern', 'cross-stitch', 'tapestry-weave'],
+  },
+
+  parchment: {
+    facts: { from: 'Manuscript books on animal skin', era: 'About 200 BC to 1500', bestOn: 'Figures and objects with clear light and shade' },
+    why: 'Before paper reached Europe, books were written on prepared animal skin, which is tough, slightly translucent and never quite flat or even in colour. Ink bit into it and has since browned. A page was planned like a building: a ruled text block, a picture in a painted frame, and a large red initial to mark where reading begins.',
+    how: [
+      'Build the skin: mottling, a darker rim, rusty foxing and fine pores.',
+      'Shade the picture with parallel pen lines that thicken as the tone darkens.',
+      'Cross them with a second set in the deepest shadows, and add outlines.',
+      'Thin the ink unevenly and fade it in patches.',
+      'Frame the picture in red and gold, rule the lines, paint the capital and write the script.',
+    ],
+    history: 'Parchment takes its name from Pergamon in Asia Minor, where by tradition it was perfected in the second century BC. From late antiquity to the nineteenth century most European writing was done in iron gall ink, made from oak galls and iron salts, which goes on pale and darkens to brown-black. Monastic scribes developed the illuminated page, with red headings called rubrics and gold leaf, as in the Book of Kells of about 800.',
+    uses: ['Wedding and event invitations', 'Fantasy maps and game handouts', 'Certificates and awards', 'Covers for history and folklore'],
+    tips: [
+      { text: 'A very old skin with heavy hatching looks like a museum leaf.', set: { age: 95, hatch: 85 } },
+      { text: 'Indigo ink on a young skin is clean and legible.', set: { ink: 'blue', age: 20 } },
+      { text: 'Give the whole page to the picture.', set: { layout: 'full', lines: 80 } },
+    ],
+    terms: [['Vellum', 'Fine parchment, usually calfskin.'], ['Rubric', 'A heading or initial written in red.'], ['Foxing', 'Rust-coloured spots that appear on old paper and skin.']],
+    related: ['banknote-engraving', 'calligraphy-portrait', 'persian-miniature'],
+  },
 };

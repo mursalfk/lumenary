@@ -5,7 +5,7 @@ export const AUTHOR = { name: 'Mursal', site: 'https://mursalfk.vercel.app' };
 export const manifesto = (count) =>
   'A photograph is a grid of numbers, and each treatment here is a different way of reading them. ' +
   'Some trace the edges, some turn brightness into height, some set it in type or press it in ink. ' +
-  `${count} readings of one picture, all worked out in your browser, none of it sent anywhere.`;
+  `${count} readings of one picture, or of one short video, all worked out in your browser, none of it sent anywhere.`;
 
 export const METHOD = {
   title: 'Every treatment is a small experiment.',

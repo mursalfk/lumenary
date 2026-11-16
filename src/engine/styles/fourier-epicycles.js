@@ -63,6 +63,8 @@ export default {
     return {
       animated: true,
       setSource(w, ww, hh) { work = w; W = ww; H = hh; built = ''; },
+      // A new video frame of the same size: trace the outline again, keep the clock running.
+      setFrame(w) { work = w; built = ''; },
       setParams(np) { p = np; },
       step(dt) { time += dt; },
       draw(ctx, t, dt, ptr) {

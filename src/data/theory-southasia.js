@@ -88,4 +88,15 @@ export const THEORY_SOUTHASIA = {
       { tex: T`w=0.11\,s\,\omega,\qquad r_{\text{dot}}=0.075\,s\,\max(0.7,\,\omega)`, note: 'Line width and dot radius from the line weight slider ω.' },
     ],
   },
+  phulkari: {
+    paragraphs: [
+      'The cloth is a grid of square cells of width w = W/n, where n is the number of stitches across. Cell (i, j) takes its direction from the pattern. For diamonds it is floor((|i - i0| + |j - j0|)/b) mod 2, where b is the block size and (i0, j0) the middle; for squares, (floor(i/b) + floor(j/b)) mod 2; for the following mode, across if the vertical gradient of the picture’s brightness at the cell is larger than the horizontal one, since a thread should run along an edge. Along each row (for across stitches) or column (for up and down ones), runs of cells with the same direction are cut into stitches of round(L (0.55 + 0.45 h)) cells, where L is the length slider and h a hash of the position, so the lengths vary and the stitches do not line up.',
+      'A stitch takes the average of the picture under it, with its saturation raised by 35% and its contrast by 12%, plus a Bayer dither offset of up to 55 levels either way from the shading slider. If its brightness is below a threshold of 0 to 0.45 it is left as bare cloth; otherwise the colour is replaced by the nearest silk colour, by redmean distance. Each stitch is a capsule, a line with round ends, of radius 0.44 w. It is shaded as a cylinder lit from the upper left, with a bright band of sheen that is strongest on across stitches (62% as strong on the others) and a darker body for up and down stitches (0.86 against 1.04). The ends dive into the cloth at 58% brightness. The cloth is a plain weave, 0.8 + 0.2 (1/2 + 1/2 sin(2 pi x/p) sin(2 pi y/p)), with slubs from two stretched noises and a shadow beside every stitch.',
+    ],
+    equations: [
+      { tex: T`d_{ij}=\Big\lfloor \frac{|i-i_0|+|j-j_0|}{b}\Big\rfloor \bmod 2`, note: 'The direction of the stitch in a cell, for diamonds: b is the block size and (i_0, j_0) the middle.' },
+      { tex: T`\text{length}=\operatorname{round}\big(L\,(0.55+0.45\,h)\big)`, note: 'Stitch length in cells: L is the length slider and h a hash of the position, from 0 to 1.' },
+      { tex: T`c=\operatorname{clamp}\big(\rho-\operatorname{dist}(\mathbf p,\ \text{stitch})+\tfrac12\big),\qquad \rho=0.44\,w`, note: 'Coverage of a stitch: the distance from a pixel to the line of its stitch, which has round ends.' },
+    ],
+  },
 };

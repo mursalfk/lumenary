@@ -2,7 +2,134 @@
 
 Follow in order. Each step says what you should see when it worked.
 
-## Update: deeper theory for all 176 treatments, an About page, a new README and the launch checklist (this release)
+## Update: 12 more treatments (212 in all) (this release)
+
+**No new packages.** `npm install` is still worth running; it changes nothing.
+
+1. **Close the dev server** if it is running (Ctrl+C).
+2. **Unzip `lumenary.zip`** somewhere temporary. Copy everything inside the `lumenary` folder into your project folder, replacing files when asked. Your `.git`, `node_modules` and `dist` are not in the zip. The zip is the whole project, so it works whether or not you applied the 200 update first.
+3. **Delete the retired share image:** `public/og-200.png`. The new one is `public/og-212.png`; the new file name makes social networks fetch the new picture instead of their cached copy. If you skipped the 200 update, also delete the files it retired (listed under "Earlier update" below: `public/og-176.png`, `src/hooks/useImageInput.js`, `src/hooks/usePasteImage.js`, `src/components/studio/ImageSection.jsx`).
+4. **Run it:**
+
+```bash
+npm install
+npm run dev
+```
+
+   Check, in this order:
+   - The homepage hero says **Two hundred twelve ways to see an image.**
+   - Open `/style/cctv`. A security-camera frame with a **CAM 03** label, today's date with a running night clock and a blinking red **REC** dot. A red box with a **MOTION** tag locks onto the busiest part of the picture. Change **Camera name** to your own text and the label follows.
+   - Open `/style/pin-art`. A grid of shining metal pins stands up in the shape of the picture. Move the cursor over it and the pins sink under it, then spring back.
+   - Open `/style/rotoscope`. The picture is redrawn about twelve times a second: flat colour, a shaky ink line, the colour slipping off the line. Set **A new drawing every** to **Frame** and it boils faster.
+   - Open `/style/chronophotograph`, `/style/slit-scan` and `/style/dust-snap`. They are live: a trail of exposures, a stretching scan, and a picture that crumbles to dust and comes back together.
+   - Open `/style/tiny-planet`, `/style/ridgeline`, `/style/photomosaic`, `/style/manga`, `/style/greek-vase` and `/style/phulkari`. These are still treatments, so each has **Save PNG**.
+   - Load a short video on **Chronophotograph** or **Slit-scan**. They now remember the last frames of the video (this is the new shared file `src/engine/history.js`), so the trail and the warp are made from the real clip. Press **Export video** at 480 px: each of the six live ones saved a 6 second MP4 in testing, in 2 to 7 seconds.
+   - Open `/theory/optical#slit-scan`, `/theory/world#greek-vase` and `/theory/southasia#phulkari`. Each has the full story and the mathematics, and **See it** buttons under Try it.
+5. **Check the data, the catalogue and the build:**
+
+```bash
+npm run check:theory
+npm run catalogue
+npm run build
+```
+
+   Check: `check:theory` prints `Theory check: 212 of 212 entries, ... 0 errors`. Warnings are only about lines that are a little long or short; they are fine. `catalogue` prints `TREATMENTS.md written: 212 open of 212`. `npm run build` first prints `public/sitemap.xml written: 242 pages`, and ends without errors. The yellow note about a large chunk is expected, and the separate `mediabunny-....js` file (about 520 kB, loaded only when someone exports a video) is on purpose.
+6. **Optional, the single-file preview:** `npm run build:single` still works (about 6.5 MB).
+7. **Commit and push when you are ready.** Use a branch first (see "Before you share" below). A commit message that fits: `212 treatments: Rotoscope, Chronophotograph, Slit-scan, CCTV, Pin Art, Dust Snap and six more`.
+8. **Share image cache.** Facebook, LinkedIn and X keep an old copy of a link's picture. After you deploy, paste the site address into the Facebook Sharing Debugger and the LinkedIn Post Inspector once, and press **Scrape again** or **Inspect**. The new file name means most will fetch it by themselves, but those two are worth a push.
+
+### What is new
+
+- **12 new treatments** (200 to 212), each with its full theory entry (the maths and the story, three tips with **See it** buttons):
+  - B Digital and technical (now 26): **CCTV** (live)
+  - E Physical and 3D feel (now 12): **Pin Art** (live)
+  - G Painterly and drawn (now 18): **Rotoscope** (live), **Manga**
+  - H Photographic and optical (now 16): **Chronophotograph** (live), **Slit-scan** (live), **Tiny Planet**
+  - I Generative and algorithmic (now 32): **Ridgeline**, **Photomosaic**
+  - J Motion and live (now 10): **Dust Snap** (live)
+  - K World cultural (now 24): **Greek Vase**
+  - M South Asian crafts (now 8): **Phulkari**
+- **176 stills and 36 live** treatments now. The section sizes are A 24, B 26, C 7, D 10, E 12, F 16, G 18, H 16, I 32, J 10, K 24, L 9, M 8, which add to 212.
+- **A shared memory of recent frames.** New file `src/engine/history.js` keeps a small ring of the last frames of a video, and a fast way to read a frame's pixels. Chronophotograph (the trail of exposures) and Slit-scan (the time warp) look back through the ring; CCTV, Rotoscope and Dust Snap use the pixel reader to work from each new video frame. A still picture gets a built-in motion instead (a swinging slit, a swung cut-out), so each of them still shows what it does.
+- **Cursor play.** Pin Art is pressed by the cursor (or a finger), and Dust Snap can start its snap from it (**Where it starts: The cursor**).
+- **Two handled with care.** **Phulkari** is a Punjabi embroidery done on cloth in long silk stitches; **Greek Vase** is Attic pottery. Both entries name the craft, say what the program does and does not capture, and credit the makers, as with the other cultural sections. Read them once, as the launch checklist below asks for sections K, L and M.
+- **New share image** `public/og-212.png`, new page title and description (212), updated About page text, sitemap (242 addresses) and `TREATMENTS.md`.
+- **README** updated: 212 treatments, 176 still and 36 live, the new section counts, the new `history.js` in the file tree, and a "looking back" note in the video section.
+
+### Things to know
+
+- **Cost on a slow machine.** Rotoscope redraws the whole picture twelve times a second (about 70 ms a drawing at 640 px), Chronophotograph and the Slit-scan time warp each take 14 to 26 ms a frame. The preview steps down in size on its own if it cannot keep up, as with the other heavy live treatments. Exported files are rendered at the size you choose.
+- **Slit-scan and Chronophotograph need motion to be interesting.** On a still picture they use a built-in motion; on a clip with a still camera and a moving subject (a person walking across the frame) they show what they are for. Try the video flow with a clip like that first.
+- **Pin Art on a phone.** There is no cursor on a touch screen, so the idle ripple does the moving; touch and drag also presses the pins.
+- **CCTV's clock is a fixed night.** The date is the visitor's today, and the time always starts at 03:17 and counts up, so every thumbnail looks like the same small hours. The **Camera name** is free text (up to 24 characters).
+
+---
+
+## Earlier update: 24 new treatments (200 in all) and video
+
+**One new package:** `mediabunny` (it reads and writes video files in the browser), so run `npm install`. It is downloaded by visitors only when they press **Export video**.
+
+1. **Close the dev server** if it is running (Ctrl+C).
+2. **Unzip `lumenary.zip`** somewhere temporary. Copy everything inside the `lumenary` folder into your project folder, replacing files when asked. Your `.git`, `node_modules` and `dist` are not in the zip.
+3. **Delete four retired files:**
+   - `public/og-176.png` (the share image is now `public/og-200.png`; the new name makes social networks fetch the new picture),
+   - `src/hooks/useImageInput.js` and `src/hooks/usePasteImage.js` (replaced by `useMediaInput.js` and `usePasteFile.js`),
+   - `src/components/studio/ImageSection.jsx` (replaced by `SourceSection.jsx`).
+4. **Install and run:**
+
+```bash
+npm install
+npm run dev
+```
+
+   Check, in this order:
+   - The homepage hero now says **Two hundred ways to see an image.**
+   - Open `/style/anime-cel`. Under the picture there is a **Picture or video** block with **Choose a file**. Choose a short video. It plays through the treatment, with **Play**, a scrubber and **Sound on** under it.
+   - Choose a video longer than 15 seconds. The panel says **Using the first 15 seconds of this video.** and the scrubber ends at 0:15.
+   - Under **Export**, leave **Longest side** at 480 px for the first test and press **Export video**. A progress bar and a time-left line appear. When it finishes, the file `lumenary-anime-cel.mp4` downloads and the line says **Video saved: ... MP4.** Play it in any player.
+   - Press **Export video** again and then **Stop**. It says **Export stopped.** and the preview carries on.
+   - Open `/style/snowfall`, load the same video, and watch it. Live treatments (snow, fireflies, rain, particles) keep moving while the video plays.
+   - Choose an ordinary photo again. The **Save PNG** button is back, and **Record 6 s clip** is back on live treatments. Pictures work exactly as before.
+5. **Check the data, the catalogue and the build:**
+
+```bash
+npm run check:theory
+npm run catalogue
+npm run build
+```
+
+   Check: `check:theory` prints `Theory check: 200 of 200 entries, ... 0 errors`. Warnings are only about lines that are a little short or long; they are fine. `catalogue` prints `TREATMENTS.md written: 200 open of 200`. `npm run build` first prints `public/sitemap.xml written: 230 pages`, then lists a separate `mediabunny-....js` file of about 520 kB (that is the lazy video library, on purpose) and ends without errors. The yellow note about a large chunk is expected.
+6. **Optional, the single-file preview:** `npm run build:single` still works. It is now about 6.6 MB because it carries the video library inside.
+7. **Commit and push when you are ready.** Use a branch first (see "Before you share" below). A commit message that fits: `200 treatments, video upload and export, new share image`.
+
+### What is new
+
+- **Video.** Upload a short video (MP4, MOV, WebM; anything your browser can play) on any treatment page, by the button, by dragging it onto the picture, or by pasting it. **Every one of the 200 treatments** now works on video: the preview plays through the treatment live, and **Export video** renders the whole clip through it and saves a new MP4 (H.264, with the original sound) or, where the browser cannot write MP4, a WebM. Output is 480, 720 or 1080 px on the long side, never larger than the original. **Only the first 15 seconds are used** (the cap is one number, `VIDEO_LIMIT` in `src/engine/runtime.js`). **Save this frame** saves the frame on screen as a PNG. Everything happens in the browser tab: nothing is uploaded. README section 22 explains how it works.
+- **24 new treatments** (176 to 200), each with its full theory entry (the maths and the story, tips with **See it** buttons):
+  - A Design movements: **Mono Essay**
+  - B Digital and technical: **Retro Console**, **Pixel Platformer**, **Hologram HUD**, **Data Bars**, **X-ray**
+  - E Physical and 3D feel: **Soft 3D**, **Sticker**, **Marble Museum**, **Felt Story**
+  - F Print and craft: **Wool Crochet**, **Parchment**
+  - G Painterly and drawn: **Anime Cel**, **Retro Anime**, **Crayon Cartoon**, **Glow Sketch**, **Chalkboard**, **Whiteboard**
+  - H Photographic and optical: **Cinematic**
+  - J Motion and live (now 9): **Night Sky**, **Underwater**, **Flying Cards**, **Pixel Dissolve** (all live)
+  - K World cultural: **Shadow Puppet**
+- **Not built, and why.** Talking Object, Song Ad, Podcast Real, UGC Real, Avatar Dashboard, Chibi 3D, ZackD Films and Flowchart are video formats, scripts or AI-generated characters, not looks a filter can give a picture. Brand and person names (Disney Pixar, PS2, Dan Koe, Lego, ZackD) were not used as treatment names. Where the look was clear it was built under a plain name: Soft 3D (a vinyl toy render), Retro Console (an early 3D console), Mono Essay (a black and white video essay frame), Data Bars, X-ray and Crayon Cartoon (a picture book page). Lego Voxel was already in.
+- **Live treatments now keep their state on video.** All 30 live treatments gained `setFrame`, so particles, rain and simulations carry on while the picture changes under them. The cartoon and cel looks keep the same palette from frame to frame, so a video does not flicker.
+- **New share image** `public/og-200.png`, new page title and description (200, "photograph or a short video"), updated About page, colophon and sitemap (230 addresses). `TREATMENTS.md` is regenerated.
+- **README** updated throughout (200, 170 still and 30 live, the new files and hooks) with a new section 22 on video.
+
+### Things to know
+
+- **Export is not real time.** It renders every frame, so a heavy treatment takes longer than the clip. In testing, 6 seconds at 480 px took 3 to 5 seconds through a fast live treatment and 17 to 30 seconds through a heavy one (Anime Cel, Felt Story, Soft 3D). A 15 second clip at 1080 px through a heavy treatment can take several minutes. The tab should stay open.
+- **Heavy treatments preview smaller on video.** The preview starts at 640 px and, if a treatment cannot keep up, steps down to as little as 320 px so it keeps moving (Felt Story and the cel looks do this on a slow machine). The size is shown under the picture. The exported file is not affected: it is rendered at the size you pick.
+- **Browsers.** Preview works wherever the browser can play the file. **Export video** needs WebCodecs: current Chrome, Edge, Safari and Firefox. Otherwise the button is greyed out and says why.
+- **Licence.** Mediabunny is MPL-2.0. You use it unmodified through npm, so nothing changes for your own code.
+- **Phones.** Test one video on your phone before sharing (the launch checklist below has it). Some phones only show a video's first frame after it starts playing; the loader handles that, but it is the first thing to look at if a phone misbehaves.
+
+---
+
+## Earlier update: deeper theory for all 176 treatments, an About page, a new README and the launch checklist
 
 **One new package:** `@vercel/analytics`, so run `npm install`. `package.json` also gains scripts (`sitemap`, `check:theory`, and a `prebuild` that writes the sitemap) and a new description.
 
@@ -78,16 +205,17 @@ If a line feels wrong, soften it or cut it; the treatment can stay.
 Pushing to `main` deploys to production at once, so use a branch first:
 
 ```bash
-git switch -c launch-176
+git switch -c video-and-200
 git add -A
-git commit -m "176 treatments, deeper theory, About page, new README, share image"
-git push -u origin launch-176
+git commit -m "200 treatments, video upload and export, new share image"
+git push -u origin video-and-200
 ```
 
 Vercel builds a preview address for the branch (in the project's Deployments tab, or as a comment if you open a pull request). On **your phone**, open the preview and try:
 
 - the homepage, one section, one treatment with one of your own photos (save a PNG),
 - one live treatment, with the cursor or a finger, and **Record 6 s clip** (Safari needs 14.1 or newer),
+- **a short video** from your phone's camera roll on one still and one live treatment: does it play, does the scrubber move, does **Export video** finish and does the saved file play with its sound?
 - a theory page with a hash link, for example `/theory/sindhi#ajrak`, and a **See it** button,
 - `/about`.
 
@@ -102,7 +230,7 @@ After the live deploy, paste `https://lumenary-studio.vercel.app` into:
 - a chat message to yourself (WhatsApp, Telegram or Slack) and look at the card,
 - Facebook's Sharing Debugger (https://developers.facebook.com/tools/debug/) and LinkedIn's Post Inspector (https://www.linkedin.com/post-inspector/), then press the refresh or "scrape again" button. These also clear old caches.
 
-The card should show the black hero with "One hundred seventy-six ways to see an image" and the title "Lumenary: 176 ways to see an image". If it shows the old "Twenty ways" picture, the network cached it: press refresh in the tool above, or rename the image (README section 21).
+The card should show the black hero with "Two hundred ways to see an image" and the title "Lumenary: 200 ways to see an image". If it shows an older picture ("One hundred seventy-six"), the network cached it: press refresh in the tool above, or rename the image (README section 21).
 
 ### 6. Tidy the repository (recommended, five minutes)
 

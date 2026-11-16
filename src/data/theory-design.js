@@ -198,4 +198,15 @@ export const THEORY_DESIGN = {
       { tex: T`\theta=0.7\,(\xi-\tfrac12)\cdot\text{scatter},\qquad \xi\sim U(0,1)`, note: 'The random rotation of each piece.' },
     ],
   },
+  'mono-essay': {
+    paragraphs: [
+      'The picture is reduced to brightness, stretched so that its darkest and lightest 2% clip, and then sunk. A smoothstep between two limits set by the “depth of the blacks” slider decides which greys survive: everything below the lower limit becomes black. The result is raised to the power 1.2 and scaled to 88%, so nothing in the frame is quite white, and a vignette takes away up to 55% more toward the corners. Grain is the sum of a per-pixel hash and a smoother value noise; a few vertical scratches and rare dust specks are drawn from the same seed.',
+      'The white contours are lines of equal brightness on a copy of the picture blurred twice with a box of radius 16 pixels. For each level, the distance from a pixel to the contour is estimated as the difference in brightness divided by the local slope, and the line is drawn where that distance is under about a pixel. Dividing by the slope is what keeps the line the same width on a gentle gradient and on a sharp edge. The circle is centred on the average position of everything that differs from the picture’s mean tone, each place weighted by the square of that difference.',
+    ],
+    equations: [
+      { tex: T`v=0.88\,S_{a,b}(L)^{1.2},\qquad a=0.08+0.3\,c,\quad b=1.02-0.12\,c`, note: 'Tone: L is the stretched brightness, S the smoothstep and c the “depth of the blacks” slider (0 to 1).' },
+      { tex: T`d\approx\frac{\lvert L_w-\ell\rvert}{\lvert\nabla L_w\rvert},\qquad \alpha=1-S_{0.5w,\,1.3w}(d)`, note: 'Distance d to the contour at level ℓ on the blurred brightness L_w, and the opacity of a line of width w.' },
+      { tex: T`\mathbf c=\frac{\sum_i w_i\,\mathbf x_i}{\sum_i w_i},\qquad w_i=\big(L_{w,i}-\bar L\big)^{2}`, note: 'Centre of the circle: the weighted mean position of what stands out from the mean tone.' },
+    ],
+  },
 };

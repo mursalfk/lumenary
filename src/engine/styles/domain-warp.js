@@ -21,10 +21,15 @@ export default {
     let W = 0, H = 0, work = null, p = {}, ow = 0, oh = 0, img = null, small = null, sctx = null, sdata = null, time = 0, dx = null, dy = null, sh = null, built = '', ox = 0, oy = 0, tx = 0, ty = 0;
     const CELL = 5;
 
+    // The picture at working size.
+    function read() {
+      const c = env.makeCanvas(ow, oh), cx = c.getContext('2d'); cx.imageSmoothingQuality = 'high'; cx.drawImage(work, 0, 0, ow, oh); img = cx.getImageData(0, 0, ow, oh).data;
+    }
+
     function build() {
       const key = W + '|' + H; if (key === built) return;
       ow = Math.round(W / 2); oh = Math.round(H / 2);
-      const c = env.makeCanvas(ow, oh), cx = c.getContext('2d'); cx.imageSmoothingQuality = 'high'; cx.drawImage(work, 0, 0, ow, oh); img = cx.getImageData(0, 0, ow, oh).data;
+      read();
       small = env.makeCanvas(ow, oh); sctx = small.getContext('2d'); sdata = sctx.createImageData(ow, oh);
       const gw = Math.ceil(ow / CELL) + 2, gh = Math.ceil(oh / CELL) + 2; dx = new Float32Array(gw * gh); dy = new Float32Array(gw * gh); sh = new Float32Array(gw * gh); built = key;
     }
@@ -44,6 +49,8 @@ export default {
     return {
       animated: true,
       setSource(w, ww, hh) { work = w; W = ww; H = hh; built = ''; },
+      // A new video frame of the same size: read it again, keep the flow.
+      setFrame(w) { work = w; if (built) read(); },
       setParams(np) { p = np; },
       step(dt, ptr) {
         build(); time += dt * (p.speed / 100) * 2.4;

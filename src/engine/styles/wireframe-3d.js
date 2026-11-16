@@ -28,6 +28,8 @@ export default {
     return {
       animated: true,
       setSource(w, ww, hh) { work = w; W = ww; H = hh; gkey = ''; },
+      // A new video frame of the same size: sample the heights again, keep the turn.
+      setFrame(w) { work = w; gkey = ''; },
       setParams(np) { p = np; },
       draw(ctx, t, dt, ptr) {
         const key = p.mode + '|' + p.lines;

@@ -26,16 +26,23 @@ export default {
   create(env) {
     let W = 0, H = 0, work = null, p = {}, cols = 0, rows = 0, cur, nxt, heat, img, tone, built = '', small = null, sctx = null, sdata = null, acc = 0, gen = 0, r = rng(5), birth = [], keep = [];
 
+    // What is read from the picture: its colours at cell size, and its tone stretched to the full range.
+    function read() {
+      const c = env.makeCanvas(cols, rows), cx = c.getContext('2d'); cx.imageSmoothingQuality = 'high'; cx.drawImage(work, 0, 0, cols, rows);
+      img = cx.getImageData(0, 0, cols, rows).data; const n = cols * rows;
+      tone = new Float32Array(n);
+      let lo = 1, hi = 0;
+      for (let i = 0; i < n; i++) { const l = (0.2126 * img[i * 4] + 0.7152 * img[i * 4 + 1] + 0.0722 * img[i * 4 + 2]) / 255; tone[i] = l; if (l < lo) lo = l; if (l > hi) hi = l; }
+      for (let i = 0; i < n; i++) tone[i] = (tone[i] - lo) / (hi - lo + 1e-6);
+    }
+
     function build() {
       const key = [p.cell, p.start, p.seed, p.rule, W].join('|');
       if (key === built) return;
       cols = Math.max(20, Math.round(W / (p.cell * (W / 720)))); rows = Math.max(20, Math.round((cols * H) / W));
-      const c = env.makeCanvas(cols, rows), cx = c.getContext('2d'); cx.imageSmoothingQuality = 'high'; cx.drawImage(work, 0, 0, cols, rows);
-      img = cx.getImageData(0, 0, cols, rows).data; const n = cols * rows;
-      cur = new Uint8Array(n); nxt = new Uint8Array(n); heat = new Float32Array(n); tone = new Float32Array(n);
-      let lo = 1, hi = 0;
-      for (let i = 0; i < n; i++) { const l = (0.2126 * img[i * 4] + 0.7152 * img[i * 4 + 1] + 0.0722 * img[i * 4 + 2]) / 255; tone[i] = l; if (l < lo) lo = l; if (l > hi) hi = l; }
-      for (let i = 0; i < n; i++) tone[i] = (tone[i] - lo) / (hi - lo + 1e-6);
+      const n = cols * rows;
+      cur = new Uint8Array(n); nxt = new Uint8Array(n); heat = new Float32Array(n);
+      read();
       r = rng(p.seed * 71 + 3); const dens = p.start / 100;
       for (let i = 0; i < n; i++) cur[i] = r() < clamp(dens * (0.25 + 1.5 * tone[i])) ? 1 : 0;
       const [b, s] = RULES[p.rule] || RULES.life; birth = new Uint8Array(9); keep = new Uint8Array(9); b.forEach((k) => (birth[k] = 1)); s.forEach((k) => (keep[k] = 1));
@@ -60,6 +67,8 @@ export default {
     return {
       animated: true,
       setSource(w, ww, hh) { work = w; W = ww; H = hh; built = ''; },
+      // A new video frame of the same size: the cells keep living, only the picture under them changes.
+      setFrame(w) { work = w; if (built) read(); },
       setParams(np) { p = np; },
       step(dt, ptr) {
         build();

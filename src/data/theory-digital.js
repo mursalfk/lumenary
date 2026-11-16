@@ -47,12 +47,12 @@ export const THEORY_DIGITAL = {
   dithering: {
     paragraphs: [
       'A dither fakes shades with a handful of colours. The picture is first shrunk (the pixel-size slider) and stretched for contrast. For palettes of four tones or fewer, only brightness is used and the nearest palette tone is found by brightness; for colour palettes the nearest colour is found with a weighting that suits human vision.',
-      'There are two families. Ordered dithering compares each pixel with a fixed pattern of thresholds (Bayer’s matrices, built by repeatedly tiling and scaling a smaller one) and rounds up or down accordingly, giving a regular crosshatch. Error diffusion rounds the pixel and pushes the rounding error onto neighbours that have not been processed yet: Floyd–Steinberg spreads it over four of them, Atkinson spreads only three quarters of it over six, which keeps highlights and shadows cleaner and is the look of the first Macintosh.',
+      'There are two families. Ordered dithering compares each pixel with a fixed pattern of thresholds (Bayer’s matrices, built by repeatedly tiling and scaling a smaller one) and rounds up or down accordingly, giving a regular crosshatch. Error diffusion rounds the pixel and pushes the rounding error onto neighbours that have not been processed yet: Floyd-Steinberg spreads it over four of them, Atkinson spreads only three quarters of it over six, which keeps highlights and shadows cleaner and is the look of the first Macintosh.',
     ],
     equations: [
       { tex: T`M_{2n}=\begin{bmatrix}4M_n&4M_n+2\\4M_n+3&4M_n+1\end{bmatrix}`, note: 'Bayer matrix recursion; the entries are then normalised to the range −½ to +½.' },
       { tex: T`e=p-q(p),\qquad p_j\leftarrow p_j+w_j\,e`, note: 'Error diffusion: p is the pixel, q(p) its palette colour and w the neighbour weights.' },
-      { tex: T`\text{Floyd–Steinberg: }\tfrac{7}{16},\tfrac{3}{16},\tfrac{5}{16},\tfrac{1}{16}\qquad\text{Atkinson: }\tfrac18\ \text{ on six neighbours}`, note: 'The two diffusion kernels.' },
+      { tex: T`\text{Floyd-Steinberg: }\tfrac{7}{16},\tfrac{3}{16},\tfrac{5}{16},\tfrac{1}{16}\qquad\text{Atkinson: }\tfrac18\ \text{ on six neighbours}`, note: 'The two diffusion kernels.' },
     ],
   },
   'night-vision': {
@@ -109,7 +109,7 @@ export const THEORY_DIGITAL = {
   'low-poly': {
     paragraphs: [
       'The picture is turned into a mesh of triangles. First points are chosen: some along the frame, so the mesh covers the whole picture, and the rest by random trial. A trial point is kept with a probability that rises with the edge strength there, and it must be at least a minimum distance from every point already kept, with a smaller minimum near edges, so triangles are small where the picture changes quickly and large on flat ground.',
-      'The points are joined by Delaunay triangulation, the unique mesh in which no point lies inside the circumscribed circle of any triangle, which avoids long thin triangles. It is built by the Bowyer–Watson method: add the points one at a time; remove every triangle whose circle contains the new point; and join the new point to the edges of the hole. Each triangle is filled with the average of four samples of the picture and a small random brightness change.',
+      'The points are joined by Delaunay triangulation, the unique mesh in which no point lies inside the circumscribed circle of any triangle, which avoids long thin triangles. It is built by the Bowyer-Watson method: add the points one at a time; remove every triangle whose circle contains the new point; and join the new point to the edges of the hole. Each triangle is filled with the average of four samples of the picture and a small random brightness change.',
     ],
     equations: [
       { tex: T`P_{\text{keep}}=(1-\beta)\,0.55+\beta\,(0.06+0.94\,e),\qquad r=b\,(0.95-0.62\,\beta\,e)`, note: 'Acceptance probability and minimum spacing r; β is “follow edges”, e the edge strength 0 to 1 and b = √(WH/N).' },
@@ -146,6 +146,73 @@ export const THEORY_DIGITAL = {
       { tex: T`D=0.62\,L_b+0.38\,\frac{y}{H}`, note: 'The invented depth, between 0 (far) and 1 (near).' },
       { tex: T`\mathbf s=\mathbf x-\mathbf c\odot\big(\kappa,\ 0.55\,\kappa\big)\,(D-f),\qquad \kappa=\text{depth}\cdot0.075\,W_b`, note: 'Where the output pixel x reads from; c is the camera position from −1 to 1 and f the focus plane.' },
       { tex: T`\mathbf c\leftarrow\mathbf c+(\mathbf c^{*}-\mathbf c)\,\big(1-e^{-6\Delta t}\big)`, note: 'Easing of the camera towards its target c*.' },
+    ],
+  },
+  'retro-console': {
+    paragraphs: [
+      'The picture is shrunk until its longer side has the chosen number of lines, and a mesh of squares about one eleventh of the frame high is laid over it. Every corner of the mesh is nudged by a random amount and then rounded to a whole pixel, which is what early consoles did to the corners of their polygons. Each square is split into two triangles, and inside a triangle the place the texture is read from is a straight blend of its three corners. That blend ignores perspective, so the picture kinks along the diagonal of every square and seems to swim. Each triangle is also lit as one flat face, a few percent lighter or darker than its neighbour.',
+      'Distance is faked by height in the frame: the upper part fades toward a fog colour taken from the average of the top third of the picture. Finally the colour is cut to the chosen depth, 32, 8 or 4 levels a channel. A value between two levels is rounded up or down by comparing its remainder with a 4 by 4 Bayer matrix, so a smooth gradient becomes a regular weave of two neighbouring shades instead of a band. Scan lines darken the lower part of every picture line, and the game display is drawn into the small frame so that its pixels match the picture’s.',
+    ],
+    equations: [
+      { tex: T`\mathbf u=(1-s-t)\,\mathbf v_{00}+s\,\mathbf v_{10}+t\,\mathbf v_{01},\qquad s+t<1`, note: 'Where a pixel reads the texture: s and t are its position inside the square, v the nudged and rounded corners. The other triangle uses the three remaining corners the same way.' },
+      { tex: T`q=\Big\lfloor\frac{c}{\Delta}\Big\rfloor+\Big[\operatorname{frac}\frac{c}{\Delta}>\tfrac12+\big(B_{x,y}-\tfrac12\big)\,a\Big],\qquad \Delta=\frac{255}{n-1}`, note: 'Ordered dithering of a channel value c to n levels: B is the Bayer threshold at the pixel (0 to 1) and a the dithering slider.' },
+      { tex: T`C\leftarrow C+(C_{\text{fog}}-C)\cdot f\cdot\max\!\Big(0,\,1-\frac{y}{0.62\,h}\Big)\,(0.55+0.45\,L)`, note: 'Fog: strongest at the top of the frame, gone below 62% of its height; f is the fog slider.' },
+    ],
+  },
+  'pixel-platformer': {
+    paragraphs: [
+      'A tile is eight game pixels square, and the number of tiles across fixes the size of a game pixel. The picture is sampled at four by four points per tile; their average gives the tile its colour and its brightness. Which tiles are solid is decided by rank, not by a fixed brightness: all the tile brightnesses are sorted, and the value at the chosen fraction of the list becomes the threshold. A dark photograph and a pale one therefore both produce a level with the same share of ground.',
+      'A solid tile is drawn as a block: its colour, a lighter edge above and to the left, a darker edge below and to the right, and two courses of brick. A solid tile with open air above it is a ledge and grows a cap of grass with a ragged lower edge. Open tiles show the picture itself at four blocks to the tile, so it stays readable behind the level. Colours are made more saturated and then rounded to 32 levels a channel, which is how sixteen-bit consoles stored them. A coin is hung above a ledge with a probability set by the slider, wherever the two tiles above it are free.',
+    ],
+    equations: [
+      { tex: T`g=\operatorname{round}\!\Big(\frac{W}{8\,n}\Big),\qquad T=8\,g`, note: 'Size of a game pixel g and of a tile T, from the canvas width W and n tiles across.' },
+      { tex: T`\theta=L_{(\lceil q\,N\rceil)},\qquad \text{solid}\iff L_{ij}\le\theta`, note: 'The threshold is the brightness of the tile at rank qN in sorted order; q is the “how much is solid” slider.' },
+      { tex: T`c'=\frac{255}{31}\,\operatorname{round}\!\Big(\frac{31\,c}{255}\Big)`, note: 'Five bits a channel: 32 levels.' },
+    ],
+  },
+  'hologram-hud': {
+    paragraphs: [
+      'The picture is turned into a layer of coloured light. Its opacity at a pixel grows with the brightness there and with the edge strength (blur, then Sobel), so outlines are the most solid part, and the colour is pushed toward white along the same outlines. The layer is added to a near-black ground, since light adds. The whole layer flickers as the product of two sine waves of unrelated frequency, and fourteen times a second a hash decides whether it drops to 45% for an instant.',
+      'Tearing is done nine times a second: up to three horizontal bands are drawn a second time, shifted sideways. Scan lines are one small strip of pattern tiled down the frame and slid upward at a steady speed, and a brighter band sweeps down every few seconds. The instruments are plain strokes: corner brackets, a reticle that eases toward the cursor (and wanders on a figure of eight when left alone), rings of ticks turning at different speeds and a row of bars whose heights follow value noise in time.',
+    ],
+    equations: [
+      { tex: T`\alpha=\operatorname{clamp}\big(0.1+0.75\,L+k\,\lvert\nabla L\rvert\big),\qquad k=2.6\cdot\text{outline}`, note: 'Opacity of the hologram layer at a pixel.' },
+      { tex: T`a(t)=\big(1-0.14f+0.14f\,\sin 31t\,\sin 7.3t\big)\cdot d(t)`, note: 'Brightness of the whole layer: f is the flicker slider, d is 0.45 during a dropout and 1 otherwise.' },
+      { tex: T`\mathbf r\leftarrow\mathbf r+(\mathbf r^{*}-\mathbf r)\,\min(1,\,6\,\Delta t)`, note: 'The reticle r eases toward its target r*, the cursor or the idle path.' },
+    ],
+  },
+  'data-bars': {
+    paragraphs: [
+      'The picture is averaged down to a grid with one cell for each bar. A cell’s value is its brightness, or one minus its brightness when bars are to stand tall on the dark parts. Each row of the grid has its own baseline, and a bar rises from it to a height in proportion to the value, never quite to nothing: the smallest bar is 3% of the full height. Read from a distance the rows of bars are a coarse halftone; read up close each row is an honest chart of the brightness along one strip of the picture.',
+      'The three looks differ only in how a bar is filled. Flat bars take the cell’s own colour, a little more saturated. Gold bars ignore the colour and read a ramp of five golds by the value, with a light stripe and a dark flank to suggest polished metal. Blocks add a side and a top, each a parallelogram pushed back and up by the same offset, one darker and one lighter than the face. That is an oblique projection, the kind used in spreadsheet charts.',
+    ],
+    equations: [
+      { tex: T`h=H_{\text{full}}\,(0.03+0.97\,v),\qquad v=L\ \text{or}\ 1-L`, note: 'Bar height from the cell value v. H_full is 86% of the row height.' },
+      { tex: T`t=0.2+0.8\,v,\qquad C_{\text{gold}}=\operatorname{ramp}(t)`, note: 'Gold look: the value picks a place on a ramp from dark bronze to pale gold.' },
+      { tex: T`(x,\,y,\,z)\ \mapsto\ \big(x+z,\ y-\tfrac12 z\big)`, note: 'Blocks: a point z behind the face is drawn to the right and half as far up.' },
+    ],
+  },
+  'x-ray': {
+    paragraphs: [
+      'A radiograph is a negative: dense things stop the rays and stay pale on the film. The treatment therefore turns the stretched brightness over, so that the dark parts of the picture shine. Structure is then added by unsharp masking: each pixel is pushed away from the average of its surroundings, taken from a copy blurred twice with a box of radius 14 pixels. Edge strength from the Sobel operator is added on top, which makes outlines glow the way the dense shell of a bone does, and a power of 1.25 deepens the mid tones.',
+      'Noise is added in proportion to how dark a pixel is, because in a real exposure the grainiest areas are the ones that received the fewest photons. The collimator, the pair of lead shutters that limits the beam, is a soft-edged rectangle that leaves the border of the film almost unexposed. Colour comes last: each channel is blended from the film’s base colour to its full density along a slightly different curve, red slowest and blue fastest, which gives the blue cast of medical film. A soft glow, a lead letter and a line of exposure data finish the plate.',
+    ],
+    equations: [
+      { tex: T`v\leftarrow\operatorname{clamp}\!\big(v+s\,(v-\bar v)+k\,\lvert\nabla L\rvert\big)^{1.25},\qquad v=1-L`, note: 'Structure: v̄ is the wide blur of v, s the structure slider times 1.5 and k the bright-edges slider times 1.6.' },
+      { tex: T`v\leftarrow v+g\,\eta\,\big(0.4+0.6\,(1-v)\big)`, note: 'Mottle: η is noise between −1 and 1, g the mottle slider times 0.16.' },
+      { tex: T`R=\operatorname{lerp}(b_R,f_R,\,0.4t^{2}+0.6t),\quad G=\operatorname{lerp}(b_G,f_G,\,t),\quad B=\operatorname{lerp}(b_B,f_B,\,t^{0.82})`, note: 'From film base b to full density f; t is the eased value 0.35 S(v) + 0.65 v.' },
+    ],
+  },
+  cctv: {
+    paragraphs: [
+      'The lens is a lookup table built once for the picture size. For a pixel at offset d from the centre, measured in half diagonals, the picture is read at the point d / f, where f = 1 - 1.6 k r^2 + 0.1 k, r is the distance from the centre and k is 0.55 times the lens slider. Because f falls towards the corners, the lookup there reaches farther out, so the corners are pulled in and the middle swells: barrel distortion. The same table holds a vignette that darkens with r, more strongly for a stronger lens. Colours are read from the nearest pixel, as a cheap sensor would.',
+      'Each camera frame is built pixel by pixel: the colour is washed to 55% saturation, or turned to grey, or mapped to a green ramp from (l - 110) x 1.45 + 120, then multiplied by the vignette and a flicker factor and added to noise taken from a hash of the pixel and the frame number. Compression then works on blocks about W/80 pixels wide: each block is pulled towards its mean by a factor that falls from 1 to 0.22 as the compression slider rises, and with probability 0.045 Q^2 a block keeps its previous contents. A new frame is made only every 1/fps seconds, and between frames the last one is shown with every other line darkened by 12%, for interlacing.',
+      'The tracking box comes from a grid 20 cells wide. On a video each cell sums the colour change since the last camera frame; on a still picture it sums the strength of the edges (a Sobel filter). The grid is blurred by one cell, the highest cell is found, and the box is the bounding box of the cells within three of it that score above 45% of it. The box moves 40% of the way to its target at every camera frame, so it follows smoothly. On a still picture the detector swaps to the second best place every 3.2 seconds.',
+    ],
+    equations: [
+      { tex: T`f=1-1.6\,k\,r^{2}+0.1\,k,\qquad \mathbf p_{\text{src}}=\mathbf c+\frac{\mathbf p-\mathbf c}{\max(0.35,\ f)}`, note: 'The barrel lens: r is the distance from the centre in half diagonals and k is 0.55 times the lens slider.' },
+      { tex: T`C'=\bar C_b+(1-0.78\,Q)\,(C-\bar C_b)`, note: 'Compression: every pixel of a block moves towards the block average; Q is the compression slider (0 to 1).' },
+      { tex: T`P(\text{block frozen})=0.045\,Q^{2}`, note: 'The chance, at each camera frame, that a block keeps its old contents.' },
     ],
   },
 };

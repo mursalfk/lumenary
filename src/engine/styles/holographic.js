@@ -30,6 +30,8 @@ export default {
           lut[i * 3] = r; lut[i * 3 + 1] = g; lut[i * 3 + 2] = b;
         }
       },
+      // A new video frame of the same size: read the pixels again.
+      setFrame(work) { this.setSource(work, W, H); },
       setParams(np) { p = np; },
       draw(ctx, t, dt, ptr) {
         if (!out) out = ctx.createImageData(W, H);

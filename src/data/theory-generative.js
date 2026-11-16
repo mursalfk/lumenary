@@ -317,4 +317,25 @@ export const THEORY_GENERATIVE = {
       { tex: T`C(\mathbf x)=k\;I\Big(\mathbf x+2A\,\big(\mathbf w-\tfrac12\big)\,W_h\Big),\qquad k=1+0.9\,s\,\big(f-\tfrac12\big)`, note: 'The warped lookup: w is the last layer’s noise, A = 0.34 × the amount slider, W_h the width of the working picture, f the noise value that shades the folds and s the shading slider.' },
     ],
   },
+  ridgeline: {
+    paragraphs: [
+      'With n lines, the spacing is d = (H - 2m) / (n + a), where m is the margin (5% of the width) and a is the height of the ridges in line spacings (0.5 to 9). Line i has its baseline at y_i = m + a d + i/(n - 1) (H - 2m - a d). Along the line, at columns whose spacing shrinks as the detail slider rises, the point is lifted by a d b^1.12, where b is the brightness of the picture beneath it after two box blurs of radius 0.42 d (or 1 - b if the ridges should rise where the picture is dark). Lines further back are drawn narrower by the factor lerp(1 - 0.42 P, 1, i/(n - 1)), with P the perspective slider.',
+      'The lines are drawn from the back, the top, to the front. Each one is first filled down to the bottom of the picture with the background colour, which is the whole of the hidden-line removal: anything drawn earlier, and now lower on the page, disappears. The line is then stroked, with a wider, fainter copy beneath it for the glow. For the picture’s own colours the stroke is a horizontal gradient whose stops are the blurred colour of the picture at the line’s row, brightened until the strongest channel reaches 255.',
+    ],
+    equations: [
+      { tex: T`y_i(x)=y_i^{0}-a\,d\,b(x,y_i^{0})^{1.12},\qquad d=\frac{H-2m}{n+a}`, note: 'The height of line i: b is the blurred brightness, a the ridge height in line spacings and n the number of lines.' },
+      { tex: T`k_i=(1-0.42\,P)+0.42\,P\,\frac{i}{n-1},\qquad x_i=c_x+(x-c_x)\,k_i`, note: 'Perspective: lines further back are drawn narrower about the centre c_x.' },
+    ],
+  },
+  photomosaic: {
+    paragraphs: [
+      'Each tile and each cell of the grid is described by a signature of 15 numbers: the mean red, green and blue of its four quarters, and of the whole. The library holds square crops at four sizes, 0.11, 0.17, 0.26 and 0.4 of the picture’s short side, at positions on a jittered grid, together with a mirrored copy of each. For a cell, the cost of tile t is D(t) = the sum of (s_cell - s_t)^2 over the first 12 numbers (the four quarters) + 0.35 lambda u_t, where u_t is the number of times t has been used and lambda rises from 1 to 1401 with the variety slider. The cheapest tile wins, except that it can never be the tile to the left or the one above.',
+      'The tile is then fitted to its cell. Its pixels v are moved towards the cell’s mean colour m_c: v\' = (1 - k) v + k (m_c + delta (v - m_t)), where m_t is the tile’s own mean, k is the colour match slider, and delta = 0.38 + 0.62 (1 - |l - 128| / 128) keeps less detail in very dark and very light cells, where a real print would have little contrast. At k = 1 every tile has exactly the average colour of its cell, and detail is all that remains of the original tile. The gap, up to 10% of a cell on each side, shows the grout.',
+    ],
+    equations: [
+      { tex: T`D(t)=\sum_{q=1}^{12}\big(\sigma_q^{\text{cell}}-\sigma_q^{t}\big)^{2}+0.35\,\lambda\,u_t,\qquad \lambda=1+1400\,V`, note: 'The cost of using tile t in a cell: u_t is how often it is already used and V is the variety slider (0 to 1).' },
+      { tex: T`v'=(1-k)\,v+k\,\big(m_c+\delta\,(v-m_t)\big)`, note: 'Colour fitting: v is a tile pixel, m_t the tile’s mean, m_c the cell’s mean and k the colour match.' },
+      { tex: T`\delta=0.38+0.62\Big(1-\frac{|\ell-128|}{128}\Big)`, note: 'How much of the tile’s own detail is kept, by the brightness l of the cell.' },
+    ],
+  },
 };

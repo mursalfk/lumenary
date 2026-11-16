@@ -17,7 +17,7 @@ export default {
     { key: 'seed', label: 'Replay', type: 'shuffle', default: 1 },
   ],
   create(env) {
-    let W = 0, H = 0, work = null, p = {}, key = '', lastSeed = null, tStart = 0, pendingReset = false, first = true;
+    let W = 0, H = 0, work = null, p = {}, key = '', lastSeed = null, tStart = 0, pendingReset = false, first = true, stale = false;
     let shade, cols = 0, rows = 0, cw = 0, ch = 0, M = 0, drum = [], target, delay, rgb, maxDelay = 0, period = 10, holdStart = 5;
 
     function build() {
@@ -45,6 +45,8 @@ export default {
     return {
       animated: true,
       setSource(w, ww, hh) { work = w; W = ww; H = hh; key = ''; first = true; },
+      // A new video frame of the same size: aim the flaps at it, without starting the board over.
+      setFrame(w) { work = w; stale = true; },
       setParams(np) {
         p = np;
         if (lastSeed !== null && np.seed !== lastSeed) pendingReset = true;
@@ -52,7 +54,8 @@ export default {
       },
       draw(ctx, t) {
         const k = p.cols + '|' + p.charset;
-        if (k !== key) { build(); key = k; tStart = first ? 0 : t; first = false; }
+        if (k !== key) { build(); key = k; tStart = first ? 0 : t; first = false; } else if (stale) build();
+        stale = false;
         if (pendingReset) { tStart = t; pendingReset = false; }
         const tau = (t - tStart) % period;
         ctx.fillStyle = '#060606'; ctx.fillRect(0, 0, W, H);

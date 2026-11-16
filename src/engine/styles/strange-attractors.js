@@ -27,11 +27,16 @@ export default {
     let W = 0, H = 0, work = null, p = {}, gw = 0, gh = 0, dens, cr, cg, cb, img, built = '', small = null, sctx = null, sdata = null, time = 0, xs, ys, r = rng(2), px = 0, py = 0;
     const K = 48;
 
+    // The picture at working size.
+    function read() {
+      const c = env.makeCanvas(gw, gh), cx = c.getContext('2d'); cx.imageSmoothingQuality = 'high'; cx.drawImage(work, 0, 0, gw, gh); img = cx.getImageData(0, 0, gw, gh).data;
+    }
+
     function build() {
       const key = [p.type, p.seed, W].join('|');
       if (key === built) return;
       gw = Math.round(W / 2); gh = Math.round((gw * H) / W);
-      const c = env.makeCanvas(gw, gh), cx = c.getContext('2d'); cx.imageSmoothingQuality = 'high'; cx.drawImage(work, 0, 0, gw, gh); img = cx.getImageData(0, 0, gw, gh).data;
+      read();
       const n = gw * gh; dens = new Float32Array(n); cr = new Float32Array(n); cg = new Float32Array(n); cb = new Float32Array(n);
       r = rng(p.seed * 13 + 1); xs = new Float32Array(K); ys = new Float32Array(K); for (let i = 0; i < K; i++) { xs[i] = r() * 2 - 1; ys[i] = r() * 2 - 1; }
       small = env.makeCanvas(gw, gh); sctx = small.getContext('2d'); sdata = sctx.createImageData(gw, gh); built = key; time = 0;
@@ -40,6 +45,8 @@ export default {
     return {
       animated: true,
       setSource(w, ww, hh) { work = w; W = ww; H = hh; built = ''; },
+      // A new video frame of the same size: read the colours again, keep the orbit.
+      setFrame(w) { work = w; if (built) read(); },
       setParams(np) { p = np; },
       step(dt, ptr) {
         build();

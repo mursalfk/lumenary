@@ -463,4 +463,46 @@ export const EXTRA_WORLD = {
     terms: [['Tessera', 'A small cube of glass or stone used in a mosaic.'], ['Andamento', 'The flow of the rows in a mosaic.'], ['Smalti', 'Opaque coloured glass used for mosaic cubes.']],
     related: ['stained-glass', 'voronoi-mosaic', 'gold-foil'],
   },
+  'shadow-puppet': {
+    facts: { from: 'Java and Bali, China, India, Turkey', era: 'More than a thousand years', bestOn: 'A dark figure in profile against a light background' },
+    why: 'A shadow puppet is not looked at, it is looked through. The audience sits on the far side of a lit cloth and sees only what the figure blocks, so the maker draws with holes: rows of small punched openings let the lamp through and pick out a jewel, a fold or an eye. Held close to the cloth the shadow is sharp; drawn back, it softens and grows.',
+    how: [
+      'Make everything darker than a threshold into one solid figure.',
+      'Lay a slanted lattice of points over the figure.',
+      'Punch a round hole wherever the figure is lighter than its surroundings, and in bands that follow its forms.',
+      'Cut slits along its strongest inner edges.',
+      'Blur the figure by its distance from the cloth.',
+      'Light a woven cloth from behind with one lamp, let a little colour through the hide, and add the rods.',
+    ],
+    history: 'Shadow theatre is old across Asia. In Java and Bali, wayang kulit figures are cut from buffalo hide, pierced with fine chisels and painted, and a single puppeteer, the dalang, performs epics through the night by the light of an oil lamp; UNESCO recognised it in 2003. Chinese shadow puppetry flourished in the Song dynasty and uses translucent coloured hide. India has several leather puppet traditions, and Turkey has Karagöz.',
+    uses: ['Theatre and festival posters', 'Storytelling and folklore illustrations', 'Book covers and title cards', 'Lantern and night market graphics'],
+    tips: [
+      { text: 'Dense piercing shows the chisel work.', set: { holes: 100, soft: 10 } },
+      { text: 'Draw the figure back from the cloth for a large soft shadow.', set: { soft: 90, holes: 30 } },
+      { text: 'Painted hide under a rose lantern glows with colour.', set: { tint: 90, cloth: 'rose' } },
+    ],
+    terms: [['Wayang kulit', 'The shadow puppet theatre of Java and Bali; kulit means skin or leather.'], ['Dalang', 'The puppeteer, who moves every figure, speaks every voice and leads the music.'], ['Penumbra', 'The soft outer part of a shadow, where the light is only partly blocked.']],
+    related: ['chinese-paper-cut', 'papel-picado', 'batik'],
+  },
+
+  'greek-vase': {
+    facts: { from: 'Ancient Greece: Corinth and Athens', era: 'Black-figure from about 700 BC, red-figure from about 530 BC', bestOn: 'Pictures with strong shapes and clear dark or light figures' },
+    why: 'Greek vase painters had no colours to mix, only one black glaze and the red of the clay. So every figure had to be a silhouette, and detail had to be scratched or drawn as line. That limit made the style: bold shapes, the profile view, and a border of repeating pattern to hold the picture in. A photograph pressed through it loses its shading and keeps its outline, which is what a silhouette is for.',
+    how: [
+      'Lift the local contrast, then cut the picture into two tones at a level set by how much is to be painted.',
+      'In black-figure the dark shapes are glaze on bare clay; in red-figure the light shapes are the clay and the ground is glazed.',
+      'Scratch fine lines through the glaze to the clay for black-figure, or draw them in glaze on the clay for red-figure.',
+      'Add red and white over the glaze where the picture is warm or cool, as painters did for cloth and skin.',
+      'Draw a meander border above and below, shade the pot darker towards its sides, and age it with stains and cracks.',
+    ],
+    history: 'Black-figure pottery began in Corinth about 700 BC and was perfected in Athens, where painters drew figures in a slip that turned black in a three-stage firing and scratched details through to the clay. Around 530 BC the Andokides Painter and his circle reversed it: red-figure left the figures the colour of the clay and painted the ground, so that details could be drawn with a brush. The meander, or Greek key, is a running hook pattern and among the oldest decorations of the Greek world.',
+    uses: ['Museum shop prints and book covers', 'Packaging for olive oil, wine and food', 'Tattoo and ceramic design', 'Posters for classical events and plays'],
+    tips: [
+      { text: 'Red-figure on pale clay gives the crisp look of a classical vase painting.', set: { mode: 'red', clay: 'pale' } },
+      { text: 'More painted area and strong scratching keep the details of a face.', set: { figures: 62, incise: 85 } },
+      { text: 'Less age and no border make it a clean, modern pot design.', set: { age: 10, border: false } },
+    ],
+    terms: [['Black-figure', 'A vase painting style in which figures are black glaze on the clay and details are scratched through it.'], ['Red-figure', 'A vase painting style in which figures are left the colour of the clay and the ground is painted black.'], ['Meander', 'A continuous line that turns back on itself in right angles, also called the Greek key.']],
+    related: ['greek-meander', 'byzantine-mosaic', 'hala-blue-pottery'],
+  },
 };

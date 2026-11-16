@@ -69,4 +69,59 @@ export const THEORY_PHYSICAL = {
       { tex: T`\text{fold}\ \in\ \{4\text{ triangles about the centre},\ \diagdown\ \text{split},\ \diagup\ \text{split}\},\qquad P\approx 0.34,\ 0.33,\ 0.33`, note: 'The three fold types, chosen with roughly equal chance (0.34, 0.33 and 0.33).' },
     ],
   },
+  'soft-3d': {
+    paragraphs: [
+      'The picture is first simplified into a handful of flat shapes: smoothing that keeps edges, a small palette found by k-means, and a majority filter that rounds the shapes off. Height is then invented for each shape. A map that is 0 on every outline and 1 elsewhere is blurred twice, so the zeros spread inward as a slope, and the result is raised to the power 2.2. Each shape ends up with the cross-section of a cushion: low at the seam, level in the middle. The inflation slider sets the blur radius, that is, how far in from the seam the swelling reaches.',
+      'The slopes of that height map give a surface normal at every pixel, and the normal is lit. Diffuse light is wrapped, so the side turned away from the lamp is dim, not black, as on a soft translucent toy. The sheen is the Blinn-Phong highlight computed twice, once tight and once broad. Seams are darkened, each shape drops a small shadow on its neighbour on the side away from the light, and a rim of cool light is added where the surface turns away from the viewer. The colour underneath is four parts flat paint to one part smoothed picture, so faces keep a little of their gradient.',
+    ],
+    equations: [
+      { tex: T`h=\Big(B_{r/2}^{2}\,B_{r}^{2}\,[\text{not an outline}]\Big)^{2.2}`, note: 'Height: B² is two box blurs of the given radius; r runs from 4 to 11 pixels with the inflation slider.' },
+      { tex: T`d=\operatorname{clamp}\big(0.62\,(\mathbf n\cdot\mathbf l)+0.42\big),\qquad \mathbf n=\frac{(s_x,\ s_y,\ 1)}{\sqrt{s_x^{2}+s_y^{2}+1}}`, note: 'Wrapped diffuse light from the normal n, built from the slopes of h, and the light direction l.' },
+      { tex: T`s=g\,\big(0.85\,(\mathbf n\cdot\mathbf h)^{46}+0.12\,(\mathbf n\cdot\mathbf h)^{7}\big),\qquad \mathbf h=\frac{\mathbf l+\mathbf v}{\lvert\mathbf l+\mathbf v\rvert}`, note: 'Sheen: a tight and a broad highlight around the half vector h; v points at the viewer, g is the sheen slider.' },
+    ],
+  },
+  sticker: {
+    paragraphs: [
+      'There is no trained model here to find the subject, so it is guessed from two cheap clues. The colour of the frame’s border is averaged over a band 4% wide, and every pixel is scored by how unlike that colour it is, plus a little for being near the middle. The score is blurred and cut at a threshold set by the slider. Of the patches that survive, the largest connected one is kept, found by flood fill, and its holes are closed by flooding the outside from the border and keeping whatever the flood could not reach. If the patch is under 5% or over 90% of the frame the guess has failed, and a rounded square is used.',
+      'The white border is the shape grown outward. Blurring the shape and taking a low level of the blur does that, and rounds every notch on the way, which is how a cutting plotter treats a sticker too. The artwork is the flat-colour cartoon of the picture, with a dark keyline where it meets the border. The sticker is built on a sheet larger than the picture, so the border has room where the subject runs off the frame. Gloss is a slanted band of light kept to the sticker’s own pixels, and the peel is a true reflection: everything beyond a diagonal line is removed and drawn again mirrored in that line, in grey.',
+    ],
+    equations: [
+      { tex: T`\text{score}=0.8\,\operatorname{clamp}\!\Big(\frac{\lVert C-C_{\text{edge}}\rVert_{1}}{300}\Big)+0.2\,\big(1-\operatorname{clamp}(u^{2}+v^{2})\big)`, note: 'How likely a pixel is to be subject: distance of its colour C from the border’s average, and closeness to the centre (u, v from −1 to 1).' },
+      { tex: T`\text{border}=S_{0.035,\,0.075}\!\Big(B_{b}^{2}\,B_{4}^{2}\,M\Big)`, note: 'The sticker’s outline: the mask M blurred, then blurred again by the border width b, and cut at a low level.' },
+      { tex: T`(x,\ y)\ \mapsto\ (c-y,\ c-x)`, note: 'The peel: reflection in the fold line x + y = c.' },
+    ],
+  },
+  'marble-museum': {
+    paragraphs: [
+      'A relief keeps the big forms of its subject and only hints at the small ones. The height map is therefore mostly a well-blurred copy of the brightness with a share of the sharp picture mixed in, set by the “fine chisel work” slider. Slopes of that map give a normal at every pixel. Marble lets light a little way in before scattering it back, so the diffuse term is gentle and clamped well above black. Hollows collect shade: where the surface lies below its own local average it is darkened by up to half. Polish adds a tight highlight and a faint broad one.',
+      'The stone itself is three layers of noise. Soft clouding blends the two body colours. Veins appear where a warped fractal noise crosses its middle value: folding the noise about one half turns that crossing into a ridge, and a high power thins the ridge to a line. A second, finer set is added the same way. On the gallery wall the slab is drawn at four fifths of the width with a shadow thrown away from the spotlight, its cut edges are lit or dimmed according to the side the light comes from, and a brass plate carries the title.',
+    ],
+    equations: [
+      { tex: T`h=(1-\tfrac12 q)\,B_{7}^{2}L+\tfrac12 q\,B_{1.5}L`, note: 'Height: broad forms plus a share q of fine detail (the chisel slider, 0 to 1).' },
+      { tex: T`I=\operatorname{clamp}\big(0.36+0.84\,(\mathbf n\cdot\mathbf l),\ 0.2,\ 1.3\big)\cdot\Big(1-\operatorname{clamp}\big(3.2\,(\bar h-h),\,0,\,0.5\big)\Big)`, note: 'Shading: soft diffuse light times the darkening of hollows; h̄ is the local average height.' },
+      { tex: T`\text{vein}=\operatorname{clamp}\Big(1.1\,\big(1-\lvert 2N_1-1\rvert\big)^{9}+0.5\,\big(1-\lvert 2N_2-1\rvert\big)^{12}\Big)`, note: 'N₁ and N₂ are warped fractal noises at two scales; the fold makes a ridge where each crosses one half.' },
+    ],
+  },
+  'felt-story': {
+    paragraphs: [
+      'The picture is cut into a few pieces of felt: smoothing that keeps edges, a small palette, and a majority filter applied twice so that every piece is a simple shape. Felt is dyed wool, strong in colour but never glossy, so each colour loses some saturation and its lightness is squeezed toward the middle. Scissors do not cut felt cleanly, so the boundary of every piece is displaced by fine noise before anything is drawn. The nap is three noises of different size added to the brightness, with the odd lighter hair.',
+      'Stitching needs to know how far each pixel is from the edge of its piece. A one-pixel outline, blurred twice with a box of radius r, becomes a ridge whose height falls off in a straight line with distance; multiplied by the box width it runs from 1 on the edge to 0 about 2r pixels in. The running stitch is the band where that value corresponds to six and a half pixels from the edge. It is broken into dashes by the pixel’s position along whichever axis the edge runs, and the thread is light on dark felt and dark on light. Layers are told apart by shadow: a pixel is shaded when the felt three pixels up and to the left is a different piece.',
+    ],
+    equations: [
+      { tex: T`n=(2r+1)\,B_{r}^{2}E\ \approx\ 1-\frac{d}{2r+1}`, note: 'Nearness to the edge: E is the one-pixel outline, B² two box blurs of radius r = 5, d the distance from the edge in pixels.' },
+      { tex: T`\text{stitch}\iff\Big\lvert n-\Big(1-\frac{6.5}{2r+1}\Big)\Big\rvert<\frac{1.1}{2r+1}\ \ \text{and}\ \ \operatorname{frac}\frac{a}{\ell}<0.58`, note: 'A dashed line 6.5 px in from the edge: a is the position along the edge and ℓ the dash length.' },
+      { tex: T`f=1+0.12\,(N_{0.9}-\tfrac12)+0.10\,(N_{0.22}-\tfrac12)+0.09\,(\eta-\tfrac12)`, note: 'The nap: two value noises and a per-pixel hash η, as a factor on the felt’s colour.' },
+    ],
+  },
+  'pin-art': {
+    paragraphs: [
+      'Each pin is a damped spring chasing a target height. The target comes from the brightness l of the picture over the pin, with the contrast lifted: t = clamp(1.3 (l - 0.5) + 0.5)^0.8, or 1 minus that if the dark parts should stand out, plus a travelling ripple 0.08 w sin(2 pi (1.3 x/n_x + 0.9 y/n_y) - 1.5 tau), with w the ripple slider and tau the time. The height h obeys h\'\' = k (t - h) - c h\', stepped in pieces of at most 16 ms. The springiness slider sets k between 60 and 14 and the damping c from just over critical to about a third of it, which is the difference between a pin that creeps into place and one that rebounds.',
+      'The cursor is a Gaussian of width 0.075 of the picture. Where it is, a pin is pushed down at once to a cap of 1 - g, where g is the Gaussian times a hold factor that eases to 1 while the cursor is inside; its velocity is cut so that it does not bounce upward, and the spring takes it back as the cursor moves on. Each pin is then drawn in its cell as a sphere of radius rho = 0.6 + 0.33 H, where H is its height times the relief slider. The normal at offset (u, v) is (u, v, sqrt(rho^2 - u^2 - v^2)) / rho; the diffuse term is its dot product with the light direction (-0.42, -0.52, 0.74), normalised, and the highlight is (2 n_z (n . L) - L_z)^36, stronger for tall pins. The head is brightened by (0.3 + 0.9 diffuse)(0.3 + 1.05 H), and the gap between pins is near black with a thin rim of light on the shaft of tall ones.',
+    ],
+    equations: [
+      { tex: T`h''=k\,(t-h)-c\,h',\qquad k\in[14,60],\quad c=2\sqrt{k}\,\big(1.05-0.73\,s\big)`, note: 'A pin chases its target t; s is the springiness slider (0 to 1).' },
+      { tex: T`\rho=0.6+0.33\,H,\qquad \mathbf n=\Big(\tfrac{u}{\rho},\ \tfrac{v}{\rho},\ \sqrt{1-\tfrac{u^{2}+v^{2}}{\rho^{2}}}\Big)`, note: 'A head’s radius grows with its height H, and its normal follows the sphere.' },
+      { tex: T`B=(0.3+0.9\,\mathbf n\!\cdot\!\mathbf L)(0.3+1.05\,H),\qquad S=(2n_z\,\mathbf n\!\cdot\!\mathbf L-L_z)^{36}`, note: 'Brightness of a head and its specular highlight.' },
+    ],
+  },
 };

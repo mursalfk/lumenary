@@ -25,39 +25,50 @@ export default {
       for (let i = 0; i < N; i++) { x[i] = rand() * W; y[i] = rand() * H; vx[i] = 0; vy[i] = 0; }
     }
 
+    // Colour and size of every particle, read from the picture. It runs again for each new video frame, so the
+    // particles keep their places and only change what they show.
+    function paint() {
+      const cols = Math.round(p.density), step = W / cols, rows = Math.max(1, Math.round(H / step));
+      if (cols * rows !== N) return;
+      const d = sampleImage(env, work, cols, rows).data, map = new Map();
+      for (let k = 0; k < N; k++) {
+        const o = k * 4, l = lumOf(d[o], d[o + 1], d[o + 2]);
+        let key, css;
+        if (p.mode === 'white') {
+          key = 0; css = '#f2f2f0';
+          rad[k] = step * 0.5 * p.size * (0.12 + 0.95 * Math.sqrt(l));
+        } else {
+          const r = (d[o] >> 4) * 17, g = (d[o + 1] >> 4) * 17, b = (d[o + 2] >> 4) * 17;
+          key = (r << 16) | (g << 8) | b; css = `rgb(${r},${g},${b})`;
+          rad[k] = step * 0.5 * p.size * 0.95;
+        }
+        let grp = map.get(key);
+        if (!grp) { grp = { css, ids: [] }; map.set(key, grp); }
+        grp.ids.push(k);
+      }
+      groups = Array.from(map.values()).map((g) => ({ css: g.css, ids: Uint32Array.from(g.ids) }));
+    }
+
     function build() {
       const cols = Math.round(p.density), step = W / cols, rows = Math.max(1, Math.round(H / step));
-      const d = sampleImage(env, work, cols, rows).data;
       N = cols * rows;
       x = new Float32Array(N); y = new Float32Array(N); vx = new Float32Array(N); vy = new Float32Array(N);
       tx = new Float32Array(N); ty = new Float32Array(N); rad = new Float32Array(N);
-      const map = new Map();
       for (let j = 0; j < rows; j++) {
         for (let i = 0; i < cols; i++) {
-          const k = j * cols + i, o = k * 4;
+          const k = j * cols + i;
           tx[k] = (i + 0.5 + (rand() - 0.5) * 0.7) * step; ty[k] = (j + 0.5 + (rand() - 0.5) * 0.7) * step;
-          const l = lumOf(d[o], d[o + 1], d[o + 2]);
-          let key, css;
-          if (p.mode === 'white') {
-            key = 0; css = '#f2f2f0';
-            rad[k] = step * 0.5 * p.size * (0.12 + 0.95 * Math.sqrt(l));
-          } else {
-            const r = (d[o] >> 4) * 17, g = (d[o + 1] >> 4) * 17, b = (d[o + 2] >> 4) * 17;
-            key = (r << 16) | (g << 8) | b; css = `rgb(${r},${g},${b})`;
-            rad[k] = step * 0.5 * p.size * 0.95;
-          }
-          let grp = map.get(key);
-          if (!grp) { grp = { css, ids: [] }; map.set(key, grp); }
-          grp.ids.push(k);
         }
       }
-      groups = Array.from(map.values()).map((g) => ({ css: g.css, ids: Uint32Array.from(g.ids) }));
+      paint();
       scatter();
     }
 
     return {
       animated: true,
       setSource(w, ww, hh) { work = w; W = ww; H = hh; builtKey = ''; },
+      // A new video frame of the same size: recolour the particles, leave them where they are.
+      setFrame(w) { work = w; if (builtKey) paint(); },
       setParams(np) {
         p = np;
         if (lastSeed !== null && np.seed !== lastSeed && N) scatter();

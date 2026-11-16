@@ -1,3 +1,4 @@
+// src/hooks/useRuntime.js
 import { useEffect, useRef, useState } from 'react';
 import { createRuntime } from '../engine/runtime.js';
 import { env, ensureFonts } from '../env.js';
@@ -16,7 +17,7 @@ export default function useRuntime(style, canvasRef, params, source) {
     rtRef.current = rt;
     applied.current = { params: p, source: s };
     rt.setStyle(style, p);
-    rt.setSource(s.canvas);
+    rt.setSource(s);
     rt.start();
     ensureFonts().then(() => rt.invalidate());
     return () => { rt.dispose(); rtRef.current = null; };
@@ -31,7 +32,7 @@ export default function useRuntime(style, canvasRef, params, source) {
   useEffect(() => {
     if (!rtRef.current || applied.current.source === source) return;
     applied.current.source = source;
-    rtRef.current.setSource(source.canvas);
+    rtRef.current.setSource(source);
   }, [source]);
 
   return { rtRef, dim };

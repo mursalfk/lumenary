@@ -424,6 +424,10 @@ body {
       background: $paper;
       color: $ink;
     }
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
   }
 }
 
@@ -1350,7 +1354,57 @@ $fit: calc(100vh - 220px);
   }
 }
 
-// ImageSection / ExportSection
+// Transport
+.transport {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 10px 14px;
+  margin-top: 14px;
+  .button {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+  .time {
+    color: $soft;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  @include below($bp-sm) {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    .slider {
+      grid-column: 1 / -1;
+      grid-row: 1;
+    }
+    .time {
+      text-align: center;
+    }
+  }
+}
+
+// ProgressBar
+.progress {
+  height: 2px;
+  margin-top: 18px;
+  overflow: hidden;
+  background: $line-2;
+  .fill {
+    height: 100%;
+    background: $paper;
+    transform-origin: 0 50%;
+    transition: transform 0.25s linear;
+  }
+}
+
+// VideoExport
+.video-export {
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid $line;
+}
+
+// SourceSection / ExportSection
 .image-actions,
 .export-actions {
   display: flex;

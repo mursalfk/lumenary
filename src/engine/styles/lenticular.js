@@ -41,6 +41,8 @@ export default {
     return {
       animated: true,
       setSource(w, ww, hh) { work = w; W = ww; H = hh; built = ''; lensKey = ''; },
+      // A new video frame of the same size: build both views again, keep the tilt.
+      setFrame(w) { work = w; built = ''; },
       setParams(np) { p = np; },
       step(dt, ptr) {
         time += dt;

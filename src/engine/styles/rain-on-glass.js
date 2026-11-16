@@ -19,14 +19,19 @@ export default {
   create(env) {
     let W = 0, H = 0, work = null, p = {}, fog = null, mask = null, mctx = null, tmp = null, tctx = null, drops = [], built = '', r = rng(1), spawnAcc = 0, lastPtr = null, fade = 0;
 
+    // The misted pane: the picture blurred and greyed.
+    function read() {
+      if (!fog || fog.width !== W || fog.height !== H) fog = env.makeCanvas(W, H); const fx = fog.getContext('2d'), s = env.makeCanvas(Math.max(8, W / 10), Math.max(8, H / 10)), sx = s.getContext('2d');
+      sx.imageSmoothingQuality = 'high'; sx.drawImage(work, 0, 0, s.width, s.height);
+      fx.imageSmoothingQuality = 'high'; fx.drawImage(s, 0, 0, W, H);
+      const f = p.fog / 100; fx.fillStyle = `rgba(196,208,222,${0.12 + 0.5 * f})`; fx.fillRect(0, 0, W, H);
+    }
+
     function build() {
       const key = [p.fog, p.rain, p.seed, W].join('|');
       if (key === built) return;
       r = rng(p.seed * 67 + 5); const sc = W / 720;
-      fog = env.makeCanvas(W, H); const fx = fog.getContext('2d'), s = env.makeCanvas(Math.max(8, W / 10), Math.max(8, H / 10)), sx = s.getContext('2d');
-      sx.imageSmoothingQuality = 'high'; sx.drawImage(work, 0, 0, s.width, s.height);
-      fx.imageSmoothingQuality = 'high'; fx.drawImage(s, 0, 0, W, H);
-      const f = p.fog / 100; fx.fillStyle = `rgba(196,208,222,${0.12 + 0.5 * f})`; fx.fillRect(0, 0, W, H);
+      read();
       mask = env.makeCanvas(W, H); mctx = mask.getContext('2d'); tmp = env.makeCanvas(W, H); tctx = tmp.getContext('2d');
       drops = [];
       const n0 = Math.round((p.rain / 100) * 340 * (W * H) / (720 * 900));
@@ -40,6 +45,8 @@ export default {
     return {
       animated: true,
       setSource(w, ww, hh) { work = w; W = ww; H = hh; built = ''; },
+      // A new video frame of the same size: mist the new frame, leave the drops where they are.
+      setFrame(w) { work = w; if (built) read(); },
       setParams(np) { p = np; },
       step(dt, ptr) {
         build(); dt = Math.min(dt, 0.05);

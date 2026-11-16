@@ -26,22 +26,28 @@ export default {
       x.fillStyle = g; x.fillRect(0, 0, s, s); return c;
     }
 
+    function read() {
+      // the still backdrop: the picture under a cold light, with snow banked along the ground
+      if (!back || back.width !== W || back.height !== H) back = env.makeCanvas(W, H); const b = back.getContext('2d'); b.drawImage(work, 0, 0, W, H);
+      const f = p.frost / 100; b.fillStyle = `rgba(120,160,215,${0.22 * f})`; b.fillRect(0, 0, W, H);
+      b.globalCompositeOperation = 'luminosity'; b.fillStyle = `rgba(160,175,200,${0.35 * f})`; b.fillRect(0, 0, W, H); b.globalCompositeOperation = 'source-over';
+      const d = p.drift / 100; if (d > 0) { const g = b.createLinearGradient(0, H * (1 - 0.16 * d), 0, H); g.addColorStop(0, 'rgba(245,250,255,0)'); g.addColorStop(1, `rgba(245,250,255,${0.9 * d})`); b.fillStyle = g; b.fillRect(0, H * (1 - 0.2 * d), W, H); }
+    }
+
     function build() {
       const key = [p.amount, p.seed, p.frost, p.drift, W].join('|'); if (key === built) return;
       r = rng(p.seed * 97 + 1); fl = []; const n = Math.round(60 + (p.amount / 100) * 940 * (W * H) / (720 * 900));
       for (let i = 0; i < n; i++) fl.push({ x: r() * W, y: r() * H, z: Math.pow(r(), 1.6), ph: r() * TAU, sw: 0.5 + r() * 1.2 });
       sprite = spr(true); soft = spr(false);
-      // the still backdrop: the picture under a cold light, with snow banked along the ground
-      back = env.makeCanvas(W, H); const b = back.getContext('2d'); b.drawImage(work, 0, 0, W, H);
-      const f = p.frost / 100; b.fillStyle = `rgba(120,160,215,${0.22 * f})`; b.fillRect(0, 0, W, H);
-      b.globalCompositeOperation = 'luminosity'; b.fillStyle = `rgba(160,175,200,${0.35 * f})`; b.fillRect(0, 0, W, H); b.globalCompositeOperation = 'source-over';
-      const d = p.drift / 100; if (d > 0) { const g = b.createLinearGradient(0, H * (1 - 0.16 * d), 0, H); g.addColorStop(0, 'rgba(245,250,255,0)'); g.addColorStop(1, `rgba(245,250,255,${0.9 * d})`); b.fillStyle = g; b.fillRect(0, H * (1 - 0.2 * d), W, H); }
+      read();
       built = key;
     }
 
     return {
       animated: true,
       setSource(w, ww, hh) { work = w; W = ww; H = hh; built = ''; },
+      // A new video frame of the same size: repaint the backdrop, let the snow keep falling.
+      setFrame(w) { work = w; if (built) read(); },
       setParams(np) { p = np; },
       step(dt, ptr) {
         build(); dt = Math.min(dt, 0.05); time += dt;

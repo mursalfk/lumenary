@@ -21,14 +21,19 @@ export default {
   create(env) {
     let W = 0, H = 0, work = null, p = {}, n = 0, x, y, vx, vy, px, py, img, gx, gy, paint = null, pctx = null, built = '', r = rng(1), head, next, cellN = 0, gcols = 0, grows = 0;
 
-    function build() {
-      const key = [p.count, p.seed, p.bg, W].join('|');
-      if (key === built) return;
+    // What is read from the picture: its colours, and the slopes the flock steers by.
+    function read() {
       img = work.getContext('2d').getImageData(0, 0, W, H).data;
       const L = new Float32Array(W * H); let lo = 1, hi = 0;
       for (let i = 0; i < L.length; i++) { const l = (0.2126 * img[i * 4] + 0.7152 * img[i * 4 + 1] + 0.0722 * img[i * 4 + 2]) / 255; L[i] = l; if (l < lo) lo = l; if (l > hi) hi = l; }
       for (let i = 0; i < L.length; i++) L[i] = (L[i] - lo) / (hi - lo + 1e-6);
       const s = sobel(L, W, H, 1); gx = s.gx; gy = s.gy;
+    }
+
+    function build() {
+      const key = [p.count, p.seed, p.bg, W].join('|');
+      if (key === built) return;
+      read();
       r = rng(p.seed * 91 + 7); n = p.count;
       x = new Float32Array(n); y = new Float32Array(n); vx = new Float32Array(n); vy = new Float32Array(n); px = new Float32Array(n); py = new Float32Array(n);
       for (let i = 0; i < n; i++) { x[i] = r() * W; y[i] = r() * H; const a = r() * TAU; vx[i] = Math.cos(a) * 60; vy[i] = Math.sin(a) * 60; px[i] = x[i]; py[i] = y[i]; }
@@ -39,6 +44,8 @@ export default {
     return {
       animated: true,
       setSource(w, ww, hh) { work = w; W = ww; H = hh; built = ''; },
+      // A new video frame of the same size: read it again, and leave the flock where it is.
+      setFrame(w) { work = w; if (built) read(); },
       setParams(np) { p = np; },
       step(dt, ptr) {
         build();

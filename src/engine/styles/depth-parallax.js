@@ -37,6 +37,8 @@ export default {
     return {
       animated: true,
       setSource(w, ww, hh) { work = w; W = ww; H = hh; key = ''; },
+      // A new video frame of the same size: rebuild the depth map, keep the camera where it is.
+      setFrame(w) { work = w; key = ''; },
       setParams(np) { p = np; },
       draw(ctx, t, dt, ptr) {
         const k = p.near + '|' + W;

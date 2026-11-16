@@ -185,6 +185,9 @@ export function still(def) {
       return {
         animated: false,
         setSource(w, ww, hh) { work = w; W = ww; H = hh; cache = {}; },
+        // A new video frame of the same size: everything worked out from the old pixels is thrown away, except what the
+        // style put in `cache.keep` for the next frame. It comes back as `cache.last`, and is only ever present in a video.
+        setFrame(w) { work = w; cache = cache.keep ? { last: cache.keep } : {}; },
         setParams(np) { p = np; },
         draw(ctx) { if (work) def.render(ctx, work, p, env, W, H, cache); },
         dispose() {},

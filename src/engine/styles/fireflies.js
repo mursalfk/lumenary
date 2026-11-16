@@ -38,6 +38,8 @@ export default {
     return {
       animated: true,
       setSource(w, ww, hh) { work = w; W = ww; H = hh; built = ''; },
+      // A new video frame of the same size: the picture is drawn fresh every frame, so only the reference changes.
+      setFrame(w) { work = w; },
       setParams(np) { p = np; },
       step(dt, ptr) {
         build(); dt = Math.min(dt, 0.05); time += dt;

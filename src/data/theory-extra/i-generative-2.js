@@ -315,4 +315,46 @@ export const EXTRA_GENERATIVE_2 = {
     terms: [['Noise', 'Smooth random values used to create natural looking variation.'], ['fbm', 'Fractal Brownian motion, a sum of noise at several scales.'], ['Displacement', 'Moving a point from where it is to somewhere else.']],
     related: ['liquid-morph', 'ink-in-water', 'heat-haze'],
   },
+
+  ridgeline: {
+    facts: { from: 'Pulsar astronomy and album art', era: 'The pulsar plot of 1970; the album sleeve of 1979', bestOn: 'Pictures with a bright subject on a dark or plain ground' },
+    why: 'A stack of lines, each lifted where the picture is bright, gives the strongest sense of a hill from the least ink. Because every line hides those behind it, the eye does the rest: it reads the bumps as a surface with a light on it, and fills in the face. It is about the cheapest way to draw a shape, and it is why the pulsar plot looked like a mountain range.',
+    how: [
+      'Blur the picture so that a ridge follows shapes and not noise.',
+      'Space horizontal baselines evenly down the picture.',
+      'Lift each baseline, point by point, by the brightness of the picture beneath it.',
+      'Fill below each line with the background colour, so that it hides the lines behind it.',
+      'Stroke the line, with a soft glow, in white, amber, green or the picture’s own colours.',
+    ],
+    history: 'In 1967 Jocelyn Bell Burnell found the first pulsars, and in 1970 the astronomer Harold Craft plotted successive pulses of the pulsar CP 1919 as stacked lines, each hiding those behind it. The picture appeared in the Cambridge Encyclopaedia of Astronomy (1977), and in 1979 the designer Peter Saville used it, as white on black, for Joy Division’s album Unknown Pleasures. It has been copied ever since. The method itself, a hidden-line plot, goes back to the first computer graphics of the 1960s.',
+    uses: ['Album and poster art', 'Portraits in a single colour', 'Data art and science posters', 'T-shirts and prints'],
+    tips: [
+      { text: 'Fewer, taller ridges on black look like the original pulsar plot.', set: { lines: 60, relief: 400, ink: 'white' } },
+      { text: 'Black ink on paper with the hidden lines left showing gives an engraved look.', set: { ink: 'paper', hidden: false, glow: 0 } },
+      { text: 'The picture’s own colours with some perspective make a glowing landscape.', set: { ink: 'picture', persp: 70 } },
+    ],
+    terms: [['Hidden-line removal', 'Drawing a 3D shape so that lines behind a nearer surface are not shown.'], ['Baseline', 'The flat line a ridge would lie on if the picture beneath it were completely dark.'], ['Polyline', 'A line made of many short straight segments joined end to end.']],
+    related: ['oscilloscope', 'contour-lines', 'wireframe-3d'],
+  },
+
+  photomosaic: {
+    facts: { from: 'Computer graphics and mosaic art', era: 'Photomosaic software of the 1990s', bestOn: 'Pictures with a variety of colours; faces and landscapes' },
+    why: 'Seen from far away the picture is one thing; seen up close it is made of hundreds of others. The eye blends whatever is smaller than it can resolve, so a tile needs only the right average colour to disappear into the whole, while keeping enough detail of its own to reward a closer look. Here the tiles are pieces of the same photograph, so the picture is built out of itself.',
+    how: [
+      'Cut the picture into pieces at four sizes, and add a mirrored copy of each.',
+      'Describe every piece by the average colour of its four quarters and of the whole.',
+      'Describe every cell of the grid in the same way, from the picture itself.',
+      'Pick for each cell the piece with the nearest description, with a growing penalty for pieces already used, and never the same as a neighbour.',
+      'Shift the tile’s colours towards what the cell needs, a little less in the darkest and lightest cells, and lay it down with a small gap.',
+    ],
+    history: 'Mosaics of small stones, called tesserae, are thousands of years old, and the Romans and Byzantines used tiny coloured pieces to make pictures that read from across a hall. The photographic version came in the 1990s: in 1993 Robert Silvers, then at MIT, developed software that built a picture from many small photographs, and mosaic posters made of family snapshots were familiar by the end of the decade. The matching step is a nearest-neighbour search, now used all over computing.',
+    uses: ['Posters and wedding gifts', 'Brand walls and event backdrops', 'Memory collages from a photo album', 'Large prints seen from far and near'],
+    tips: [
+      { text: 'More tiles with a thin gap give the effect of a screen.', set: { tiles: 90, gap: 2 } },
+      { text: 'Tiles that each show the whole picture make a classic mosaic of copies.', set: { from: 'whole', tiles: 40 } },
+      { text: 'A low colour match keeps the tiles’ own colours and shows more of each small picture.', set: { match: 35, mix: 80 } },
+    ],
+    terms: [['Tessera', 'One small piece of stone, glass or tile in a mosaic.'], ['Nearest neighbour', 'The item in a collection whose description is closest to a given one.'], ['Signature', 'The short list of numbers, here average colours, that stands for a tile when matching.']],
+    related: ['voronoi-mosaic', 'byzantine-mosaic', 'hexagon-mosaic'],
+  },
 };

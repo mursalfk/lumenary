@@ -141,4 +141,26 @@ export const THEORY_CRAFT = {
       { tex: T`(h,\ s,\ l)\mapsto\big(h,\ \operatorname{clamp}(1.35\,s+0.12),\ \operatorname{clamp}(0.78\,l+0.14,\ 0.22,\ 0.78)\big)`, note: 'Colour of a piece, in hue, saturation and lightness.' },
     ],
   },
+  'wool-crochet': {
+    paragraphs: [
+      'The picture is averaged down to one colour for each stitch, and a small palette of wools is found on that tiny image by k-means. Every stitch then takes the wool nearest to its own colour. Wool is matt, so the palette loses a little saturation and its lightness is squeezed away from pure black and white. When a basket of fixed colours is chosen instead, each palette colour is given a different colour from the basket, matched by its rank from dark to light and then by hue, so the picture keeps its tonal order.',
+      'One stitch is two strands of yarn leaning together into a V. Each strand is drawn three times along the same line: wide and dark, then narrower in the wool’s colour, then a thin light line off to one side. Together they read as a round thread lit from the left. Rows are worked back and forth, so every second row sits half a stitch across and its strands overlap the other way round. The shell border is the same stitch repeated five times around a shared foot, fanned by a fixed angle. Fuzz is a little noise and the occasional bright fibre over the whole piece.',
+    ],
+    equations: [
+      { tex: T`w=\frac{W-2e}{n},\qquad \text{rows}=\operatorname{round}\!\Big(\frac{H-2e}{0.86\,w}\Big)`, note: 'Stitch width w from n stitches across and the border width e. Stitches are a little shorter than wide.' },
+      { tex: T`\text{strand}:\ (0.22w,\ 0.1h)\to(0.5w,\ 0.92h),\qquad (0.78w,\ 0.1h)\to(0.5w,\ 0.92h)`, note: 'The two strands of one stitch, in a cell w wide and h tall. Line width is 0.36 w.' },
+      { tex: T`\theta_q=(q-2)\cdot0.42\ \text{rad},\qquad q=0,\dots,4`, note: 'The five stitches of one shell, fanned about its foot.' },
+    ],
+  },
+  parchment: {
+    paragraphs: [
+      'The skin is built first. A fractal noise gives broad mottling, the distance to the nearest edge (with its threshold wobbled by more noise) gives the darker rim that handling leaves, and the product of two thresholded noises gives foxing, the rusty freckles of old leaves. These add up to a stain amount that blends a pale vellum colour toward a brown one; the age slider scales all three. A fine hash and a value noise stand in for the pores of the hide.',
+      'The picture is drawn the way an engraver shades: with parallel lines whose thickness carries the tone. The lines run on a slight slant and a slow wave. At each pixel the distance to the nearest line centre is compared with a width that grows with darkness, so pale areas get hairlines and dark areas nearly solid ink. Past a darker threshold a second set crosses the first. Outlines come from the Sobel operator. The ink is then thinned by noise, since it sits unevenly on skin, and faded in patches. The border, the ruled lines, the red capital and the script are ordinary canvas drawing on top.',
+    ],
+    equations: [
+      { tex: T`s=\operatorname{clamp}\big(0.9\,a\,(m-0.35)+\text{rim}\,(0.35+0.5a)+0.5\,a\,\text{fox}\big)`, note: 'Stain amount: m is the mottling noise, a the age slider. The skin colour is a blend from vellum to brown by s.' },
+      { tex: T`\alpha_1=1-S_{0.8w,\,0.8w+0.22}(d_1),\qquad w=\operatorname{clamp}\big(1.25\,(D-0.22)\big)\cdot h`, note: 'Hatching: d₁ is the distance to the nearest line centre (0 to 1), D the darkness of the picture, h the hatching slider.' },
+      { tex: T`d_1=2\,\Big\lvert\operatorname{frac}\!\Big(\frac{y+0.35x+6\sin(0.012y+0.004x)}{p}\Big)-\tfrac12\Big\rvert`, note: 'Lines every p = 5.2 px, slanted and gently waved.' },
+    ],
+  },
 };
